@@ -17,6 +17,7 @@ app.get('/rest/id/:id', (req, res) => {
     /* /path/:parameter/:parameter */
     /* parameter는 앞에 :를 줘서 구분 */
     let id = req.params.id;
+    /* req.params 객체로 들어온다! */
     res.send(`<h1>id: ${id}</h1>`);
 });
 

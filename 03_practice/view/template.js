@@ -10,7 +10,9 @@ module.exports = {
         for (let file of filelist) {
             let filename = file.substring(0, file.length - 4);
             /* filename for문 안에서만 선언되고 밖에서는 없어지는 지역변수 */
-            list += `<li><a href="/?id=${filename}">${filename}</a></li>\n`;
+            // list += `<li><a href="/?id=${filename}">${filename}</a></li>\n`;
+            list += `<li><a href="/id/${filename}">${filename}</a></li>\n`;
+            // REST가 id/:id로 되어 있다고 id/:${filename}로 쓰면 안됨
         }
         list += '</ul>'
         // console.log(list);
@@ -31,15 +33,15 @@ module.exports = {
         } else {
             return `
             <button onclick="location.href='/create'">추가</button>
-            <button onclick="location.href='/update?id=${title}'">수정</button>
-            <button onclick="location.href='/delete?id=${title}'">삭제</button>
+            <button onclick="location.href='/update/id/${title}'">수정</button>
+            <button onclick="location.href='/delete/id/${title}'">삭제</button>
             `
         }
 
     },
     createForm: function () {
         return `
-        <form  action="/create_proc" method="POST">
+        <form  action="/create" method="POST" >
             <table>
                 <tr>
                     <td><label>제목</label></td>
@@ -54,24 +56,42 @@ module.exports = {
                 </tr>
             </table>
         </form>
+        
         `
+        // <form  action="/create" method="POST" enctype="multipart/form-data">
+        //     <table>
+        //         <tr>
+        //             <td><label for="file">첨부파일: </label></td>
+        //             <td><input type="file" name="image" id="file" value="file"></td>
+        //         </tr>
+        //     </table>
+        // </form>
     },
     deleteForm: function (subject) {
         return `
-        ${subject} 을/를 삭제하겠습니까?
-        <form action="/delete_proc" method="POST">
-        
-          <input type="hidden" name="subject" value=${subject}>
+        <form action="/delete" method="POST">
+          <label for="original">${subject} 을/를 삭제하겠습니까?</label>
+          <br>
+          <input type="hidden" id="original" name="subject" value=${subject}>
           <input type="submit" value="삭제">
                    
         </form>
         `
     }, /* hidden으로 하면 화면에는 안 보이지만 여전히 name데이터로 어떤 애를 삭제하는지 보낼 수 있다. */
     updateForm: function (subject, description) {
+        /* 밑에 이거를 hidden으로 잡는다고 */
+        /* label의 설명 https://dasima.xyz/html-label/ */
+        /* label의 for와 input의 id를 일치시키면 두 개 디자인이 동화되어 쓰기 쉽다. */
+
+        /* name 호수, value는 편지봉투 내용 */
+        /* input의 type=submit으로 들어오면 value값은 빈칸에 들어간다. */
+        /* 왜? 서버가 value(편지봉투 내용)값을 받아서 바로 빈칸에 뿌리는 것 */
+
         return `
-        ${subject} 을/를 업데이트하시겠습니까?
-        <form action="/update_proc" method="POST">
-            <input type="hidden" name="original" value="${subject}">
+
+        <form action="/update" method="POST">
+            <label for="original"></label>
+            <input type="hidden" id="original" name="original" value="${subject}">
             <table>
                 <tr>
                     <td><label>제목</label></td>
@@ -88,8 +108,7 @@ module.exports = {
           
         </form>        
         `
-        /* original은 오직 app.js에서 param.속성으로 찾아올 수 있는 지표일 뿐
-        form 구조에서는 안 보이게 hidden으로 만든다. */
+
     }
 
 }

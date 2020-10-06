@@ -15,6 +15,7 @@ exports.index = function (title, list, content, control) {
         <hr>
         <p>
             ${content}
+        
         </p>
         <hr>
         ${control}       
