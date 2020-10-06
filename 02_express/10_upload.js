@@ -27,18 +27,18 @@ let upload = multer({ dest: __dirname + '/public/upload' })
 
 
 app.post('/', (req, res) => {
-    // let comment = req.body.comment;
-    // let filename = req.files.image.name;
+    let comment = req.body.comment;
+    let filename = req.files.image.name;
 
-    // let filetype = req.files.image.type;
-    // let uploadPath = req.files.image.path;
+    let filetype = req.files.image.type;
+    let uploadPath = req.files.image.path;
 
     console.log(req.files);
     // 파일을 post에서 받았을 때 서버에서는 어떤 변화가 생길까?
     console.log(req.body); /* 얘네 형태를 보면 Class객체라는 걸 알 수 있음 */
     // console.log(comment);
     // console.log(filename);
-    // console.log(filetype);
+    console.log(filetype);
     // console.log(uploadPath);
 
     // 받은 파일이 이미지면, 시스템에서 무작위로 들어온 이름을 변경하고 아니면 제거함
