@@ -1,6 +1,4 @@
-const { response } = require('express');
 const express = require('express');
-const { request } = require('http');
 const morgan = require('morgan');
 const app = express();
 
@@ -11,9 +9,8 @@ const app = express();
 
 app.use(morgan('short'))
 
-app.use((request, response) => {
-    response.send(`<h1>morgan Middleware</h1>`);
-
+app.use((req, res) => {
+    res.send(`<h1>morgan Middleware</h1>`);
 })
 
 app.listen(3000, () => console.log('Server running at http//localhost:3000'));

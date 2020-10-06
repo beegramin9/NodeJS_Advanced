@@ -133,7 +133,7 @@ app.post('/update', (req, res) => {
 
         let uploadPath = req.files.image.path; console.log(uploadPath)
         let uploadType = req.files.image.type; console.log(uploadType)
-
+        /* 자꾸 이상한 파일들이 들어와서...          , */
         if (uploadType.indexOf('image') >= 0) {
             // 이미지 처리  
             let imageName = subject + '.jpg';
