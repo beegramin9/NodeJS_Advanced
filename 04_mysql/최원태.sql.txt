@@ -1,0 +1,32 @@
+1번
+SELECT * FROM girl_group
+	WHERE DATE_FORMAT(debut,'%Y')=2009
+
+2번
+SELECT gg.hit_song_id, gg.name, gg.debut, s.title
+	FROM girl_group AS gg
+	left joiN song AS s
+	ON s.sid = gg.hit_song_id
+	where DATE_format(gg.debut, '%Y')=2009
+
+3번
+SELECT continent, COUNT(NAME) AS num_con, SUM(gnp), round(AVG(gnp)) AS AVG_gnp FROM country 
+GROUP BY continent
+
+4번
+SELECT con.continent AS 대륙명, con.name AS 국가명 , cit.name AS 도시명, cit.population AS 인구수
+	FROM city AS cit
+	inner join country AS con
+	ON cit.countrycode = con.code
+	WHERE con.continent = 'asia'
+	ORDER BY cit.population desc
+	LIMIT 10
+
+5번
+SELECT  cit.name AS 도시명, cit.population AS 인구수, lng.language AS 언어명
+FROM	city AS cit
+INNER JOIN countrylanguage AS lng
+ON lng.countrycode = cit.countrycode
+WHERE lng.isofficial = 'T'
+ORDER BY cit.population DESC
+LIMIT 10

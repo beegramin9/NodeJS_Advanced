@@ -47,7 +47,7 @@ app.get('/id/:id', (req, res) => {
         let control = template.buttonGen(title)
         let filename = 'data/' + title + '.txt'
         fs.readFile(filename, 'utf8', (e, buffer/* 파일에서 읽은 내용이 */) => {
-            buffer = buffer.replace(/\n/g, '<br>');
+            // buffer = buffer.replace(/\n/g, '<br>');
             //  "/ 다음엔 정규표현식이다", /g 옵션은 전역에 적용되게
             // Create나 Update할 때 쓰는 게 아니라
             // 파일을 읽을 때 \n를 <br>로 바꿔주는 것
@@ -82,8 +82,12 @@ app.post('/create', (req, res) => {
     // let image = __dirname + 'public/upload/' + req.files.image.name
     /* fs.writeFile(경로, 내용, 콜백(에러, 하고싶은 일)) */
     fs.writeFile(filepath, description, error => {
-
+        console.log(error);
+        console.log('왜? 파일에 적어놓긴 했으나 화면에 뿌리지 않았잖아')
+        console.log('에러발생했으나 callback함수로 redirect됨')
         res.status(302).redirect(`/id/${subject}`)
+        console.log('여기서 "id/${subject}로 간 거야"')
+
         // res.writeHead(302, { 'Location': encoded });
         // res.end();
     });
@@ -134,8 +138,10 @@ app.post('/update', (req, res) => {
         if (original !== subject) {
             fs.renameSync(filepath, `data/${subject}.txt`)
         }
-
+        console.log('왜? 파일에 적어놓긴 했으나 화면에 뿌리지 않았잖아')
+        console.log('에러발생했으나 callback함수로 redirect됨')
         res.status(302).redirect(`/id/${subject}`)
+        console.log('여기서 "id/${subject}로 간 거야"')
 
 
     });

@@ -42,7 +42,7 @@ app.get('/', (req, res) => {
 
 app.get('/id/:id', (req, res) => {
     fs.readdir("data", (e, filelist) => {
-        let title = req.params.id
+        let title = req.params.id /* 파일이름, 페이지 등등... */
         let list = template.listGen(filelist);
         let control = template.buttonGen(title)
         let filename = 'data/' + title + '.txt'

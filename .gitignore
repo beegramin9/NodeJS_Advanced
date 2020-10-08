@@ -1,6 +1,7 @@
 package-lock.json
 자바스크립트 강의교재
-tmp/ 
+tmp/
+mysql.json
 # tmp랑 tmp 안에 있는 파일/폴더들은 깃에 올라가지 않는다
 
 # Logs
