@@ -3,6 +3,8 @@ const url = require('url')
 const mysql = require('mysql');
 const fs = require('fs');
 const db = require('./db')
+
+/* 패스워드를 숨기기 위한 과정 */
 let info = fs.readFileSync('./mysql.json', 'utf8');
 let connInfo = JSON.parse(info)
 
@@ -24,10 +26,10 @@ LIMIT 10`;
 
 
 
-let content
 http.createServer((req, res) => {
     // conn.connect();
     conn.query(sql, (error, rows, fields) => {
+        let content = '';
         for (let row of rows) {
             content += `<tr>
             <td>${row.name}</td>
