@@ -24,7 +24,7 @@ app.get('/insert', (req, res) => {
 app.post('/insert', (req, res) => {
     let ggname = req.body.ggname;
     let debut = req.body.debut;
-    let hitSongId = req.body.hitSongId;
+    let hitSongId = req.body.hit_song_Id;
     let params = [ggname, debut, hitSongId]
     dm.insertGroup(params, () => {
         res.redirect('/')
@@ -44,10 +44,17 @@ app.get('/update/:ggid', (req, res) => {
         const view = require('./view/update')
         let html = view.updateForm(result);
         res.send(html);
+        /* result = function(ggid) */
+        // songToUpdate 함수를 쓸 때는
+        // 내가 ggid를 parameter로 주고
+        // 그 결과를 callback으로 받겠다
+        // callback을 rows[0]로 받으면
+
+        // 실제 mvc.js에서 사용할 때는
+        // getSong(sid, result) <-- result는 getSong함수에서 받은 결과 callback(rows[0])
+        // 즉 result는 rows[0]가 된다.
     })
 })
-
-
 
 app.post('/update', (req, res) => {
     let ggid = parseInt(req.body.ggid);

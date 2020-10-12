@@ -22,6 +22,10 @@ module.exports = {
     getAllLists: function (callback) {
         let conn = this.getConnection()
         let sql = `SELECT * FROM girl_group ORDER BY ggid desc LIMIT 5`
+        /* heidiSQL에서는 확인차 * 을 사욜하는 것도 좋지만 */
+        /* 내가 필드명을 일일히 나열해줘야지 나중에 */
+        /* insert.js ,update.js form에서 name, value를 받을 때 */
+        /* 기억하기 쉽다. 왜? 필드명이 100% 똑같아야 하기 때문이다! */
         conn.query(sql, (error, rows, fields) => {
             if (error)
                 console.log(`getAllLists 에러 발생: ${error}`);
