@@ -13,8 +13,8 @@ exports.insertForm = function () {
         <form action="/insert" method="post">
             <table>
                 <tr>
-                    <td><label for="ggname">걸그룹 이름</label></td>
-                    <td><input type="text" name="ggname" id="ggname"></td>
+                    <td><label for="NAME">걸그룹 이름</label></td>
+                    <td><input type="text" name="NAME" id="NAME"></td>
                 </tr>
                 <tr>
                     <td><label for="debut">데뷔일</label></td>

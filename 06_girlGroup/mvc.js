@@ -22,18 +22,33 @@ app.get('/insert', (req, res) => {
 })
 
 app.post('/insert', (req, res) => {
-    let ggname = req.body.ggname;
+    let ggname = req.body.NAME;
     let debut = req.body.debut;
     let hitSongId = req.body.hit_song_Id;
     let params = [ggname, debut, hitSongId]
     dm.insertGroup(params, () => {
+        /* insertGroup을 정의할 때 */
+        /* parameter 하나와 리턴값이 없게 정의했으니 */
+        /* 사용할 때도 parameter 하나, 그리고 리턴값이 없으니 */
+        /* 화살표함수 인자에 아무것도 없는 것이다. */
         res.redirect('/')
     });
 })
 
 app.get('/delete/:ggid', (req, res) => {
-    let ggid = req.params.ggid;
+    let ggid = parseInt(req.params.ggid);
+    /* params나 body를 거쳐 나온 애들은 무조건 string */
+    /* 그래서 id같이 db에서 int로 만든 애들은 다시 */
+    /* parseInt를 해 주자 */
+
+    console.log(req.route.path);
+    /* 따로 "삭제하시겠습니까?" 따위의 deleteForm을 만들지 않았기에 */
+    /* 삭제 버튼만 누르면 바로 되는 것처럼 보이지만 */
+    /* 실제로는 주소창에 localhost:3000/delete/ggid가 */
+    /* 만들어지고, req.params.ggid로 받는 것이다. */
+
     dm.deleteGroup(ggid, () => {
+        /* 여기도 deleteGroup 정의할 때 리턴값이 없다. */
         res.redirect('/')
     })
 })
@@ -44,23 +59,15 @@ app.get('/update/:ggid', (req, res) => {
         const view = require('./view/update')
         let html = view.updateForm(result);
         res.send(html);
-        /* result = function(ggid) */
-        // songToUpdate 함수를 쓸 때는
-        // 내가 ggid를 parameter로 주고
-        // 그 결과를 callback으로 받겠다
-        // callback을 rows[0]로 받으면
 
-        // 실제 mvc.js에서 사용할 때는
-        // getSong(sid, result) <-- result는 getSong함수에서 받은 결과 callback(rows[0])
-        // 즉 result는 rows[0]가 된다.
     })
 })
 
 app.post('/update', (req, res) => {
-    let ggid = parseInt(req.body.ggid);
     let ggname = req.body.NAME;
     let debut = req.body.debut;
     let hitSongId = req.body.hit_song_Id;
+    let ggid = parseInt(req.body.ggid);
     let params = [ggname, debut, hitSongId, ggid]
     dm.updateGroup(params, () => {
         res.redirect('/');
