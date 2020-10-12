@@ -9,7 +9,8 @@ let conn = mysql.createConnection({
     user: config.user,
     password: config.password,
     port: config.port,
-    database: config.database
+    database: config.database,
+    multipleStatements: true /* 다중쿼리용 설정 */
 });
 
 conn.connect();
