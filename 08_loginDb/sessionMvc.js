@@ -11,7 +11,12 @@ const { generateHash } = require('./db/userDb-module');
 
 /* 세션 사용하기 */
 const session = require('express-session')
+/* 세션은 쿠키를 response로 받는다 */
+/* 처리를 미들웨어가 알아서 다 해줍니다. 그래서 나는 response로 세션에서 받을 게 없음*/
+/* 즉, session의 모든 함수는 req */
+
 /* 세션을 파일로 관리 */
+/* sessions라는 파일에 이상한 놈들이 막 생기지? */
 const FileStore = require('session-file-store')(session);
 
 
@@ -30,7 +35,8 @@ app.use(session({
 
 
 app.get('/', (req, res) => {
-    console.log(req.session.uid);
+    console.log(req.session);
+    /* 아까 /login에서 받았던 uin, uname과 같은 정보들이 세션에 저장됨 */
     if (!req.session.uid) {
         res.redirect('/login')
         /* 쿠키가 없다면 로그인 창으로 */
@@ -60,6 +66,7 @@ app.post('/login', (req, res) => {
     dm.getUserInfo(uid, result => {
         console.log(result);
         if (!result) {
+            /* uid가 DB에 없으면 아예 쿼리가 작동되지 않에서 DB에서 아무것도 안 주겠다 */
             let html = aM.alertMsg(`Sign in failed, ${uid} to be the wrong uid`, '/login');
             /* Alert창에는 에러가 딱 한 줄로만 있어야 함! */
             /* Template literal에서 엔터쳐도 되잖아. alert창에서는 두 줄로 나눠지면 에러 발생 */
@@ -89,7 +96,8 @@ app.post('/login', (req, res) => {
 })
 
 app.get('/logout', (req, res) => {
-    res.session.destory();
+    req.session.destroy()
+    /* 세션 없애기 */
     res.redirect('/login')
 })
 
