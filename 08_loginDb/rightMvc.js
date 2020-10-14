@@ -6,9 +6,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 const dm = require('./db/userDb-module');
 const ut = require('./util/util')
-const { get } = require('http');
-const dbModule = require('../06_girlGroup/db/db-module');
-const { generateHash } = require('./db/userDb-module');
 
 /* 세션 사용하기 */
 const session = require('express-session')
