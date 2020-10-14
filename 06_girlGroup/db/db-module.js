@@ -69,6 +69,7 @@ module.exports = {
                 console.log(`updateGroup 에러 발생: ${error}`);
             callback(params)
         })
-    }
+    },
+
 
 }

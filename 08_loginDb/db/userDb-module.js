@@ -39,10 +39,13 @@ module.exports = {
             callback(results[0]);
         })
     },
-    generateHash: function (sth) {
-        const crypto = require('crypto')
-        const shasum = crypto.createHash('sha256')
-        shasum.update(sth)
-        return shasum.digest('base64')
+    deleteUser: function (uid, callback) {
+        let conn = this.getConnection()
+        let sql = `update users set isDeleted=1 where uid like ?`
+        conn.query(sql, uid, (error, fields) => {
+            if (error)
+                console.log(`updateUser 에러 발생: ${error}`);
+            callback();
+        })
     }
 }
