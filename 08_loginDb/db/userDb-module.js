@@ -44,7 +44,16 @@ module.exports = {
         let sql = `update users set isDeleted=1 where uid like ?`
         conn.query(sql, uid, (error, fields) => {
             if (error)
-                console.log(`updateUser 에러 발생: ${error}`);
+                console.log(`deleteUser 에러 발생: ${error}`);
+            callback();
+        })
+    },
+    updatePwdUser: function (params, callback) {
+        let conn = this.getConnection()
+        let sql = `update users set pwd=? where uid like ?`
+        conn.query(sql, params, (error, fields) => {
+            if (error)
+                console.log(`updatePwdUser 에러 발생: ${error}`);
             callback();
         })
     }

@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
 
 const dm = require('./db/userDb-module');
+const ut = require('./util/util')
 const { get } = require('http');
 const dbModule = require('../06_girlGroup/db/db-module');
 const { generateHash } = require('./db/userDb-module');
@@ -19,6 +20,11 @@ const session = require('express-session')
 /* sessions라는 파일에 이상한 놈들이 막 생기지? */
 const FileStore = require('session-file-store')(session);
 
+/* 패비콘 가져오기 */
+
+const favicon = require('express-favicon')
+app.use(express.static(__dirname + '/public'))
+app.use(favicon(__dirname + '/public/favicon.ico'))
 
 const aM = require('./view/alertMsg')
 
@@ -33,7 +39,6 @@ app.use(session({
     store: new FileStore({ logFn: function () { } })
 }))
 
-const ut = require('./util/util')
 
 app.get('/', ut.isLoggedIn, (req, res) => {
     dm.getAllLists(rows => {
@@ -57,6 +62,37 @@ app.get('/delete/:uid', ut.isLoggedIn, (req, res) => {
     }
 })
 
+app.get('/update/:uid', ut.isLoggedIn, (req, res) => {
+    if (req.params.uid === req.session.uid) { /* 권한 있음 */
+        dm.getUserInfo(req.params.uid, (result) => {
+            const view = require('./view/usePwdUpdate')
+            let html = view.updatePwdForm(result);
+            res.send(html);
+        })
+    } else {
+        let html = aM.alertMsg(`수정 권한이 없습니다.`, '/'); /* 로그인은 됐는데 권한이 없으니 루트로 */
+        res.send(html);
+    }
+})
+
+app.post('/update', (req, res) => {
+    /* post는 어짜피 루트로 가서 db에서 뿌려주기 때문에 */
+    /* 로그인 됐는지 확인 안 해도 된다. (어짜피 사용자가 post페이지로 못 들어가니까) */
+    /* ut.isLoggedIn 안 써줘도 됨 */
+    let uid = req.body.uid;
+    let pwd = req.body.pwd;
+    let pwd2 = req.body.pwd2;
+    if (pwd === pwd2) {
+        let pwdHash = ut.generateHash(pwd);
+        let params = [pwdHash, uid];
+        dm.updatePwdUser(params, () => {
+            res.redirect('/');
+        })
+    } else {
+        let html = aM.alertMsg(`패스워드가 일치하지 않습니다.`, `/update/${uid}`); /* 로그인은 됐는데 권한이 없으니 루트로 */
+        res.send(html);
+    }
+})
 
 app.get('/login', (req, res) => {
     const view = require('./view/userLogin');

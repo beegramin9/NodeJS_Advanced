@@ -26,10 +26,9 @@ let output = shasum.digest('base64')
 // values ('admin','${output}','관리자')`
 // 처럼 default로 들어가는 행은 아예 안 넣어도 된다.
 
-let sql = `insert into users (uid, pwd, uname)
-values (?,?,?)`;
+let sql = `insert into users (uid, pwd, uname) values (?,?,?)`;
 
-let params = ['admin', output, '관리자'];
+let params = ['yhlee', output, '이용훈'];
 
 conn.query(sql, params, (error, fields) => {
     if (error)
