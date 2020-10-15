@@ -1,23 +1,24 @@
 const template = require('./00_template');
 
-exports.signUpPage = function (rows) {
+exports.contentPage = function (rows) {
     let tableRow = '';
-    for (let row of rows) {
-        tableRow += `
+    /* 한 줄만 받을 때는 반복문 쓰면 안 되나...? */
+    /* 상관없이 됐던 것 같은데... */
+    tableRow += `
                     <tr>
-                        <td style="padding-right:20px;">${row.bbs_title}</td>
-                        <td style="padding-right:20px;">${row.bbs_bid}</td>
-                        <td style="padding-right:20px;">${row.bbs_modTime}</td>
-                        <td style="padding-right:20px;">${row.users_uid}</td>
-                        <td style="padding-right:20px;">${row.bbs_viewCount}</td>
-                        <td style="padding-right:20px;">${row.reply_NumComments}</td>
-                        <td style="padding-right:20px;">${row.bbs_content}</td>
-                        <td style="padding-right:20px;">${row.reply_comments}</td>
-                        <td style="padding-right:20px;">${row.reply_isMine}</td>
+                        <td style="padding-right:20px;">${rows.bbs_title}</td>
+                        <td style="padding-right:20px;">${rows.bbs_bid}</td>
+                        <td style="padding-right:20px;">${rows.bbs_content}</td>
+                        <td style="padding-right:20px;">${rows.bbs_modTime}</td>
+                        <td style="padding-right:20px;">${rows.users_uid}</td>
+                        <td style="padding-right:20px;">${rows.bbs_viewCount}</td>
+                        <td style="padding-right:20px;">${rows.reply_comments}</td>
+                        <td style="padding-right:20px;">${rows.reply_NumComments}</td>
+                        <td style="padding-right:20px;">${rows.reply_isMine}</td>
                     </tr>
         
         `
-    }
+    // console.log(row.bbs_bid);
     return `
     ${template.header()}
     ${template.headNavBar()}
@@ -26,15 +27,15 @@ exports.signUpPage = function (rows) {
         <hr>
         <table>
             <tr>
-                <th>번호</th>
                 <th>제목</th>
-                <th>글쓴이</th>
+                <th>글번호</th>
+                <th>내용</th>
                 <th>날짜</th>
+                <th>유저아이디</th>
                 <th>조회수</th>
-                <th>조회수</th>
-                <th>조회수</th>
-                <th>조회수</th>
-                <th>조회수</th>
+                <th>리플</th>
+                <th>남의댓글</th>
+                <th>내댓글</th>
             </tr>
             ${tableRow}
             <tr>

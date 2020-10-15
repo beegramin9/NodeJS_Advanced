@@ -13,7 +13,10 @@ exports.mainPage = function (rows) {
         tableRow += `
                     <tr>
                         <td style="padding-right:20px;">${row.bbs_bid}</td>
-                        <td style="padding-right:20px;">${row.bbs_title}${row.reply_NumComments}</td>
+                        <td style="padding-right:20px;">
+                            <a href="/content/bid/${row.bbs_bid}">${row.bbs_title}
+                            ${row.reply_NumComments}
+                        </td>
                         <td style="padding-right:20px;">${row.users_uid}</td>
                         <td style="padding-right:20px;">${row.bbs_modTime}</td>
                         <td style="padding-right:20px;">${row.bbs_viewCount}</td>

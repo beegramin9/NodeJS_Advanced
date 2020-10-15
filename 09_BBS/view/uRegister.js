@@ -25,7 +25,15 @@ exports.uRegister = function () {
                         </tr>
                         <tr>
                             <td>이름</td>
-                            <td><input type="password" name="uname" id="uname"></td>
+                            <td><input type="text" name="uname" id="uname"></td>
+                        </tr>
+                        <tr>
+                            <td>전화번호</td>
+                            <td><input type="text" name="tel" id="tel"></td>
+                        </tr>
+                        <tr>
+                            <td>이메일</td>
+                            <td><input type="text" name="email" id="email"></td>
                         </tr>
                         <tr>
                             <td colspan="2" style="text-align: center;">

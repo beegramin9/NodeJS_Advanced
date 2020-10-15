@@ -26,8 +26,12 @@ app.use(express.static(__dirname + '/public'))
 /* 제일 나중에 오는 애는(여기서는 아이콘) 위에 bootstrap, popper, jquery를 제외한 애들은 */
 /* public에서 하겠다는 뜻임 */
 
-const uRouter = require('./userRouter')
+const uRouter = require('./_userRouter')
 app.use('/user', uRouter);
+const cRouter = require('./_contentRouter')
+app.use('/content', cRouter);
+
+
 /* app.js에서는 /home, /login, /logout만 처리하고 */
 /* userRouter는 사용자 관리 /user/list, /user/reqister, /user/update, /user/delete */
 /* bbsRouter는 글,댓글 보는 경로 /bbs/create, /bbs/list, /bbs/view, /bbs/update , /bbs/delete */
@@ -35,7 +39,9 @@ app.use('/user', uRouter);
 const dm = require('./db/dbModule');
 const ut = require('./util/util')
 
-app.get('/',/*  ut.isLoggedIn, */(req, res) => {
+
+
+app.get('/', /* ut.isLoggedIn, */(req, res) => {
     dm.mainPageGetLists(rows => {
         const view = require('./view/02_mainPage');
         let html = view.mainPage(rows);
