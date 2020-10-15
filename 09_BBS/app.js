@@ -32,24 +32,25 @@ app.use('/user', uRouter);
 /* userRouter는 사용자 관리 /user/list, /user/reqister, /user/update, /user/delete */
 /* bbsRouter는 글,댓글 보는 경로 /bbs/create, /bbs/list, /bbs/view, /bbs/update , /bbs/delete */
 
-const dm = require('./db/userDb-module');
+const dm = require('./db/dbModule');
 const ut = require('./util/util')
 
-app.get('/', ut.isLoggedIn, (req, res) => {
-
-
-
-    // dm.getAllLists(rows => {
-    //     const view = require('./view/rightList');
-    //     let html = view.mainForm(req.session.uname, rows);
-    //     res.send(html);
-    // })
+app.get('/',/*  ut.isLoggedIn, */(req, res) => {
+    dm.mainPageGetLists(rows => {
+        const view = require('./view/02_mainPage');
+        let html = view.mainPage(rows);
+        res.send(html);
+    })
 })
 
-
+app.get('/signup', (req, res) => {
+    const view = require('./view/uRegister')
+    let html = view.signUpPage();
+    res.send(html);
+})
 
 app.get('/login', (req, res) => {
-    const view = require('./view/loginPage');
+    const view = require('./view/01_loginPage');
     let html = view.loginPage();
     res.send(html);
 })

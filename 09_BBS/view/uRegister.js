@@ -1,18 +1,15 @@
-const template = require('./template');
+const template = require('./00_template');
 
-exports.register = function () {
+exports.uRegister = function () {
+    /* 바디 아래부터 */
     return `
-        ${template.header()}
+    ${template.header()}
+    ${template.headNavBar()} 
         <div class="container">
         <div class="row">
-        <div class="col-12">
-        <h3>회원 가입</h3>
-        <hr>
-        </div>
-        <div class="col-3">
-        </div>
-        <div class="col-6">
-        <form action="/user/register" method="post">
+            <div class="col3"></div>
+            <div class="col6">
+                <form action="/user/register" method="post">
                     <table class="table table-borderless">
                         <tr>
                             <td><label for="uid">사용자 아이디</label></td>
@@ -28,7 +25,7 @@ exports.register = function () {
                         </tr>
                         <tr>
                             <td>이름</td>
-                            <td><input type="text" name="uname" id="uname"></td>
+                            <td><input type="password" name="uname" id="uname"></td>
                         </tr>
                         <tr>
                             <td colspan="2" style="text-align: center;">
@@ -40,9 +37,10 @@ exports.register = function () {
                     </table>
                 </form>
             </div>
-            <div class="col-3"></div>
+            <div class="col3"></div>
         </div>
     </div>
-        ${template.footer()}
+    ${template.footNavBar()}
+    ${template.footer()}
     `
 }

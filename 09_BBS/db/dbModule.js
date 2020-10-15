@@ -19,14 +19,24 @@ module.exports = {
         })
         return conn;
     },
-    getAllLists: function (callback) {
+    mainPageGetLists: function (callback) {
         let conn = this.getConnection()
-        let sql = `SELECT uid, uname, DATE_FORMAT(regDate, '%y-%m-%d %T') AS regDate
-        FROM users where isDeleted=0
-        ORDER BY regDate desc LIMIT 10`
+        let sql = `
+            SELECT bbs.bid as bbs_bid  , 
+	        bbs.title as bbs_title, 
+	        users.uid as users_uid, 
+            DATE_FORMAT(bbs.modTime, '%y-%m-%d %T') as bbs_modTime,
+	        bbs.viewCount as bbs_viewCount, 
+	        reply.NumComments as reply_NumComments
+	        FROM bbs
+	        JOIN users
+	        ON bbs.uid = users.uid
+	        JOIN reply
+	        ON bbs.bid = reply.bid
+	        WHERE bbs.isDeleted = 0`
         conn.query(sql, (error, rows, fields) => {
             if (error)
-                console.log(`getAllLists 에러 발생: ${error}`);
+                console.log(`mainPageGetLists 에러 발생: ${error}`);
             callback(rows);
         })
     },

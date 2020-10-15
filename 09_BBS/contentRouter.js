@@ -20,3 +20,5 @@ uRouter.post('/register', (req, res) => {
 })
 
 module.exports = uRouter;
+
+/* 콘텐츠. 즉 글 들어갔을 때 */
