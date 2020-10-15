@@ -19,7 +19,6 @@ app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist')
 /* 경로를 바로  /node_modules/bootstrap/dist 로 잡아주겠다.*/
 /* template을 보면 /bootstrap/css/bootstrap.min.css 으로 되어있는데 */
 /* 이게 사실 /bootstrap과 /css/bootstrap.min.css 사이에 위 static에서의 경로가 끼어들어가는 것 */
-
 app.use('/popper', express.static(__dirname + '/node_modules/@popperjs/core/dist/umd'))
 app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist'))
 app.use(express.static(__dirname + '/public'))
@@ -29,18 +28,33 @@ app.use(express.static(__dirname + '/public'))
 
 const uRouter = require('./userRouter')
 app.use('/user', uRouter);
-
 /* app.js에서는 /home, /login, /logout만 처리하고 */
 /* userRouter는 사용자 관리 /user/list, /user/reqister, /user/update, /user/delete */
 /* bbsRouter는 글,댓글 보는 경로 /bbs/create, /bbs/list, /bbs/view, /bbs/update , /bbs/delete */
 
-app.get('/', (req, res) => {
-    fs.readFile('./view/index.html', 'utf8', (error, data) => {
-        res.send(data);
-    })
-    // const view = require('./view/test');
-    // let html = view.test();
-    // res.send(html);
+const dm = require('./db/userDb-module');
+const ut = require('./util/util')
+
+app.get('/', ut.isLoggedIn, (req, res) => {
+
+
+
+    // dm.getAllLists(rows => {
+    //     const view = require('./view/rightList');
+    //     let html = view.mainForm(req.session.uname, rows);
+    //     res.send(html);
+    // })
 })
+
+
+
+app.get('/login', (req, res) => {
+    const view = require('./view/loginPage');
+    let html = view.loginPage();
+    res.send(html);
+})
+
+
+
 
 app.listen(3000, () => { console.log('Server Running at http://127.0.0.1:3000') });
