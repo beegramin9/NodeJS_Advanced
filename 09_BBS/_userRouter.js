@@ -21,8 +21,6 @@ uRouter.post('/register', (req, res) => {
     let uid = req.body.uid;
     let pwd = req.body.pwd;
     let pwd2 = req.body.pwd2;
-    console.log('uid가 정의되지 않았다고?');
-    console.log(uid);
 
     if (pwd === pwd2) {
         let pwdHash = ut.generateHash(pwd);

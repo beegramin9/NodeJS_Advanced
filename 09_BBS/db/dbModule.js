@@ -21,23 +21,25 @@ module.exports = {
     },
     mainPageGetLists: function (callback) {
         let conn = this.getConnection()
+        console.log('실행됨');
         let sql = `
-            SELECT bbs.bid as bbs_bid  , 
-	        bbs.title as bbs_title, 
-	        users.uid as users_uid, 
-            DATE_FORMAT(bbs.modTime, '%y-%m-%d %T') as bbs_modTime,
-	        bbs.viewCount as bbs_viewCount, 
-	        reply.NumComments as reply_NumComments
-	        FROM bbs
-	        JOIN users
-	        ON bbs.uid = users.uid
-	        JOIN reply
-	        ON bbs.bid = reply.bid
-	        WHERE bbs.isDeleted = 0`
+        SELECT bbs.bid as bbs_bid  , 
+        bbs.title as bbs_title, 
+        users.uid as users_uid, 
+        bbs.modTime as bbs_modTime, 
+        bbs.viewCount as bbs_viewCount, 
+        reply.NumComments as reply_NumComments
+        FROM bbs
+        JOIN users
+        ON bbs.uid = users.uid
+        JOIN reply
+        ON bbs.bid = reply.bid
+        WHERE bbs.isDeleted = 0`
         conn.query(sql, (error, rows, fields) => {
             if (error)
                 console.log(`mainPageGetLists 에러 발생: ${error}`);
             callback(rows);
+            console.log(rows, '실행됨?');
         })
     },
     getContent: function (bid, callback) {
@@ -82,7 +84,7 @@ module.exports = {
     },
     newUser: function (params, callback) {
         let conn = this.getConnection()
-        let sql = `insert into users (uid, pwd, uname, tel, email),
+        let sql = `insert into users (uid, pwd, uname, tel, email)
             values (?,?,?,?,?)`
         conn.query(sql, params, (error, results, fields) => {
             if (error)

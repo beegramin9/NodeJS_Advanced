@@ -42,6 +42,7 @@ const aM = require('./view/alertMsg')
 
 app.get('/', /* ut.isLoggedIn, */(req, res) => {
     dm.mainPageGetLists(rows => {
+        /* 페이지를 두개로 나눠야 돼...? */
         const view = require('./view/02_mainPage');
         let html = view.mainPage(rows);
         res.send(html);
@@ -90,9 +91,9 @@ app.post('/login', (req, res) => {
 
                 let uname = result.uname
                 dm.mainPageGetLists(rows => {
-                    const view = require('./view/02_mainPage');
+                    const view = require('./view/02_afterLoginMainPage');
                     console.log(rows)
-                    let html = view.mainPage(uname, rows);
+                    let html = view.afterLoginMainPage(uname, rows);
                     res.send(html);
                 })
                 // req.session.save(function () {

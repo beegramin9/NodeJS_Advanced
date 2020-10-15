@@ -1,6 +1,6 @@
 const template = require('./00_template');
 
-exports.mainPage = function (rows) {
+exports.afterLoginMainPage = function (uname, rows) {
 
     // let today = new Date();
     // let whatToday = today.getTime()
@@ -28,6 +28,7 @@ exports.mainPage = function (rows) {
         ${template.header()}
         ${template.headNavBar()}
             <h3>사용자 조회</h3>
+            <p>${uname}님 환영합니다. &nbsp;&nbsp; <a href="/logout">로그아웃</a></p>
             <hr>
             <table>
                 <tr>
