@@ -38,8 +38,7 @@ app.use('/content', cRouter);
 
 const dm = require('./db/dbModule');
 const ut = require('./util/util')
-
-
+const aM = require('./view/alertMsg')
 
 app.get('/', /* ut.isLoggedIn, */(req, res) => {
     dm.mainPageGetLists(rows => {
@@ -61,7 +60,61 @@ app.get('/login', (req, res) => {
     res.send(html);
 })
 
+app.post('/login', (req, res) => {
+    let uid = req.body.uid;
+    let pwd = req.body.pwd;
+    console.log('나와라!', uid, pwd);
+    let pwdHash = ut.generateHash(pwd);
+
+    dm.getUserInfo(uid, (result) => {
+        /* 로그인해서 정보 받는거랑 */
+        /* 화면에 뿌려주는거랑 다르게 해야할거같은데 */
+        /* 콜백함수를 두번쓰는거지. 콜백지옥? */
+        if (!result) {
+            /* uid가 DB에 없으면 아예 쿼리가 작동되지 않에서 DB에서 아무것도 안 주겠다 */
+            let html = aM.alertMsg(`Sign in failed, ${uid} to be the wrong uid`, '/login');
+            /* Alert창에는 에러가 딱 한 줄로만 있어야 함! */
+            /* Template literal에서 엔터쳐도 되잖아. alert창에서는 두 줄로 나눠지면 에러 발생 */
+            res.send(html)
+            /* 여기에 res.redirect('/')을 넣으면  */
+            /* 읽을 때는 html으로 alert창 띄운 다음에 /로 가야할 것 같은데 */
+            /* 비동기 처리방식 때문에 한 번에 html과 /로 요청을 동시에 보내서 */
+            /* 어딜 가야할지 몰라 오류가 발생한다. */
+
+            /* 그래서 alertForm에 url을 인자로 넣는 것 */
+        } else {
+            if (result.pwd === pwdHash) {
+                // req.session.uid = uid;
+                // req.session.uname = result.uname;
+                console.log('Signed in');
+
+                let uname = result.uname
+                dm.mainPageGetLists(rows => {
+                    const view = require('./view/02_mainPage');
+                    console.log(rows)
+                    let html = view.mainPage(uname, rows);
+                    res.send(html);
+                })
+                // req.session.save(function () {
+                // })
+
+            } else {
+                console.log(pwdHash, result.pwd);
+                let html = aM.alertMsg(`Sign in failed, wrong password`, '/login');
+                res.send(html)
+            }
+        }
 
 
+
+
+        /* 아니면 로그인으로 할 수 있나...? */
+        /* 왜냐면 여기서 rows가 나와야하긴해 */
+    })
+})
+
+
+/* 이제 세션으로 해서! 로그인 된 정보를 캐리할 수 있게 해줘야 함 */
+/* 회원가입 비밀번호 해시 */
 
 app.listen(3000, () => { console.log('Server Running at http://127.0.0.1:3000') });

@@ -67,19 +67,36 @@ module.exports = {
         })
     },
     /* 내댓글, 남의댓글 바꿔야겠네... */
+
+    getUserInfo: function (uid, callback) {
+        let conn = this.getConnection()
+        let sql = `select uid,
+                    pwd, 
+                    uname
+                    from users where uid like ?`
+        conn.query(sql, uid, (error, results, fields) => {
+            if (error)
+                console.log(`getUserInfo 에러 발생: ${error}`);
+            callback(results[0]);
+        })
+    },
     newUser: function (params, callback) {
         let conn = this.getConnection()
-        let sql = `insert into users (uid, pwd, uname, tel, email)
-        values(?,?,?,?,?)`
-        conn.query(sql, params, (error, fields) => {
+        let sql = `insert into users (uid, pwd, uname, tel, email),
+            values (?,?,?,?,?)`
+        conn.query(sql, params, (error, results, fields) => {
             if (error)
                 console.log(`newUser 에러 발생: ${error}`);
-            callback()
+            callback();
         })
-    }
+
+    },
 
 
-    ,
+
+
+
+
     updatePwdUser: function (params, callback) {
         let conn = this.getConnection()
         /*  사용자 아이디, 패스워드, 패스워드확인, 이름 */

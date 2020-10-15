@@ -61,12 +61,12 @@ exports.loginPage = function () {
                 <form action="/login" method="POST">
                     <!-- form action에 랜딩페이지 1. smartphone.html을 주면 버튼에 굳이 a href 링크를 달 필요 없다 -->
                     <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="email" class="form-control" id="email" placeholder="Enter email">
+                        <label for="email">ID:</label>
+                        <input type="text" class="form-control" id="uid" name="uid" placeholder="Enter ID">
                     </div>
                     <div class="form-group">
                         <label for="pwd">Password:</label>
-                        <input type="password" class="form-control" id="pwd" placeholder="Enter password">
+                        <input type="password" class="form-control" id="pwd" name="pwd" placeholder="Enter password">
                     </div>
                     <!-- 그리드 사용해서 버튼 오른쪽으로 밀기 -->
                     <!-- 빈 그리드 -->

@@ -1,10 +1,10 @@
 const template = require('./00_template');
 
-exports.mainPage = function (rows) {
+exports.mainPage = function (uname, rows) {
 
-    let today = new Date();
-    let whatToday = today.getTime()
-    console.log(new Date(whatToday))
+    // let today = new Date();
+    // let whatToday = today.getTime()
+    // console.log(new Date(whatToday))
     // 시간 맞추는 건 나중에
     // row.bbs_modTime
 
@@ -28,7 +28,7 @@ exports.mainPage = function (rows) {
         ${template.header()}
         ${template.headNavBar()}
             <h3>사용자 조회</h3>
-            <p>님 환영합니다. &nbsp;&nbsp; <a href="/logout">로그아웃</a></p>
+            <p>${uname}님 환영합니다. &nbsp;&nbsp; <a href="/logout">로그아웃</a></p>
             <hr>
             <table>
                 <tr>
