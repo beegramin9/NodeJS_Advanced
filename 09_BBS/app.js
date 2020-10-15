@@ -43,6 +43,7 @@ const aM = require('./view/alertMsg')
 app.get('/', /* ut.isLoggedIn, */(req, res) => {
     dm.mainPageGetLists(rows => {
         /* 페이지를 두개로 나눠야 돼...? */
+        /* 삼항연산자 아니면 함수 파라미터 줄 떄 파이썬처럼 디폴트값이 있나 */
         const view = require('./view/02_mainPage');
         let html = view.mainPage(rows);
         res.send(html);
