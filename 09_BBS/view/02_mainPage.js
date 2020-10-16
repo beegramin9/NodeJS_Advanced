@@ -1,6 +1,6 @@
 const template = require('./00_template');
 
-exports.mainPage = function (rows) {
+exports.mainPage = function (rows, uname = '일반 사용자') {
 
     // let today = new Date();
     // let whatToday = today.getTime()
@@ -25,13 +25,17 @@ exports.mainPage = function (rows) {
     }
     /* 로그인 안 된 상태에서 누르면 로그인페이지로 갈 수 있도록 */
     /* 경고창 띄우면서; */
+    // ${template.afterLogin(uname)}
+
+    // if (uname !=='일반 사용자')
+    /* 로그인이 되면 ...로그인 안 나오게 해야 하는데... */
     return `
         ${template.header()}
         ${template.headNavBar()}
-            <h3>사용자 조회</h3>
-            
-            <p><a href="/login">로그인</a></p>
-            <p><a href="/login">글 쓰기</a></p>
+        <h3>사용자 조회</h3>
+            <p>${uname}님 환영합니다. &nbsp;&nbsp; <a href="/logout">로그아웃</a></p>
+            ${uname === '일반 사용자' ? ' <p><a href="/login">로그인</a></p>' : ''}
+            <p><a href="/content/create">글 쓰기</a></p>
             <hr>
             <table>
                 <tr>

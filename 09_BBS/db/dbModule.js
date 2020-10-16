@@ -22,18 +22,62 @@ module.exports = {
     mainPageGetLists: function (callback) {
         let conn = this.getConnection()
         let sql = `
-        SELECT bbs.bid as bbs_bid  , 
-        bbs.title as bbs_title, 
-        users.uid as users_uid, 
-        bbs.modTime as bbs_modTime, 
-        bbs.viewCount as bbs_viewCount, 
-        reply.NumComments as reply_NumComments
+        SELECT 
+        bid AS bbs_bid, 
+        title AS bbs_title, 
+        uid AS users_uid, 
+        modTime AS bbs_modTime,
+     
+        viewCount AS bbs_viewCount
+        
         FROM bbs
-        JOIN users
-        ON bbs.uid = users.uid
-        JOIN reply
+        WHERE isDeleted = 0
+        ORDER BY bid DESC LIMIT 30
+        `
+        /* SELECT 
+        bbs.bid AS bbs_bid, 
+        bbs.title AS bbs_title, 
+        bbs.uid AS users_uid, 
+        bbs.modTime AS bbs_modTime,
+        reply.NumComments as reply_NumComments 
+        bbs.viewCount AS bbs_viewCount 
+        FROM bbs
+        join reply
         ON bbs.bid = reply.bid
-        WHERE bbs.isDeleted = 0`
+        WHERE bbs.isDeleted = 0
+        ORDER BY bbs.bid DESC LIMIT 30 */
+
+        /* SELECT bbs.bid as bbs_bid  , 
+                bbs.title as bbs_title, 
+                users.uid as users_uid, 
+                bbs.modTime as bbs_modTime, 
+                bbs.viewCount as bbs_viewCount, 
+                reply.NumComments as reply_NumComments
+                FROM bbs
+                JOIN users
+                ON bbs.uid = users.uid
+                JOIN reply
+                ON bbs.bid = reply.bid
+                WHERE bbs.isDeleted = 0
+                order by bbs.bid desc limit 30 */
+
+        /*  SELECT bbs.bid as bbs_bid  , 
+         bbs.title as bbs_title, 
+         users.uid as users_uid, 
+         bbs.modTime as bbs_modTime, 
+         bbs.viewCount as bbs_viewCount, 
+         reply.NumComments as reply_NumComments
+         FROM bbs
+         JOIN users
+         ON bbs.uid = users.uid
+         JOIN reply
+         ON bbs.bid = reply.bid
+         WHERE bbs.isDeleted = 0
+         order by bbs.bid desc limit 30 */
+
+        /* 아이디가...참. 흠 */
+
+
         conn.query(sql, (error, rows, fields) => {
             if (error)
                 console.log(`mainPageGetLists 에러 발생: ${error}`);
@@ -63,8 +107,7 @@ module.exports = {
         conn.query(sql, bid, (error, results, fields) => {
             if (error)
                 console.log(`getContent 에러 발생: ${error}`);
-            callback(results)
-            console.log('안 나오나?', results);
+            callback(results[0])
         })
     },
     /* 내댓글, 남의댓글 바꿔야겠네... */
@@ -95,16 +138,17 @@ module.exports = {
     makeNewContent: function (params, callback) {
         let conn = this.getConnection()
         let sql = `INSERT into bbs (uid, title, content)
-        VALUES(?,?,?);
-        select bid from bbs order by bid desc LIMIT 1;
+        VALUES(?,?,?)
         `
-        conn.query(sql, params, (error, result_bid, fields) => {
-            if (error)
-                console.log(`newUser 에러 발생: ${error}`);
+        /* 구문이 두개로 나눠져있네... 시발 */
 
-            console.log(result_bid);
+        conn.query(sql, params, (error, fields) => {
+            if (error)
+                console.log(`makeNewContent 에러 발생: ${error}`);
+
+            console.log();
             /* 이게 왜 안 나오지? */
-            callback('나오냐?', result_bid);
+            callback();
         })
         /* 여기엔 문제가 없다. 하이디에서 잘 들어오니까 */
 
@@ -113,7 +157,16 @@ module.exports = {
     },
     /* showNewContent 같은것도 만들어야 하나? */
     /* getContent를 쓰면 됨 */
+    getBid: function (callback) {
+        let conn = this.getConnection()
+        let sql = `select bid from bbs order by bid desc LIMIT 1;`
+        conn.query(sql, (error, result_bid, fields) => {
+            if (error)
+                console.log(`getBid 에러 발생: ${error}`);
+            callback(result_bid[0]);
+        })
 
+    },
 
 
 

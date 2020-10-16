@@ -24,16 +24,21 @@ exports.createContentPage = function (uname) {
 
     //     `
     // console.log(row.bbs_bid);
+
+    /* form을 hidder으로 해서 uname을 받아야겠네... */
     return `
     ${template.header()}
     ${template.headNavBar()}
         <h3>글 쓰기</h3>
-        <p>${uname}님 환영합니다. &nbsp;&nbsp; <a href="/logout">로그아웃</a></p>
+        <p>${uname}님 글을 작성하시겠습니까? &nbsp;&nbsp; <a href="/logout">로그아웃</a></p>
         <div class="container">
         <div class="row">
             <div class="col3"></div>
             <div class="col6">
                 <form action="/content/create" method="post">
+                    
+                    <input type="hidden" name="uname" id="uname" value="${uname}">
+                
                     <table class="table table-borderless">
                         <tr>
                             <td><label for="title">글 제목</label></td>

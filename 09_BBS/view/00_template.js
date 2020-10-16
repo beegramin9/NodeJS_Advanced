@@ -40,7 +40,15 @@ module.exports = {
         </nav>
         `
     },
-
+    afterLogin: function (uname) {
+        if (!uname) {
+            return ``
+        } else {
+            return `
+        <p>${uname}님 환영합니다. &nbsp;&nbsp; <a href="/logout">로그아웃</a></p>
+        `
+        }
+    },
 
     /* 하단 NAVBAR까지 */
     footNavBar: function () {

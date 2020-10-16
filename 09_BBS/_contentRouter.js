@@ -42,27 +42,41 @@ cRouter.post('/create', (req, res) => {
     /* form으로 받아서 새로운 bid를 가진 getContent로 쏴주면 되겠군 */
     let title = req.body.title
     let content = req.body.content
-    /* bid 1 늘어나는 걸 어떻게 해야하지 */
-    /* 하이디에서는 바로 됐는데... */
     let params = [req.session.uid, title, content]
     console.log(params);
 
-    dm.makeNewContent(params, (result_bid) => {
-        let bid = result_bid
-        console.log('makeNewContent', bid);
+
+    // let uname = req.body.uname
+    // console.log('유저네임 안들어옴', uname);
+    /* uname이 안나와서 그래? */
+
+    dm.makeNewContent(params, () => {
+        // let bid = result_bid
+        // console.log('bid값나오냐', bid);
 
         /* bid가 undefined니까 아예 안나오는거야 */
-        dm.getContent(bid, result => {
-            req.session.uname = result.users_uname;
-            /* 얘도 정의가 안되어있음 */
-            console.log(req.session.uname);
-            /* 이렇게 써주면 회원가입할 때 정보가 계속 들어오지 */
-            /* 여기 화면이 제대로 안 되어있어서 오류가 나는거야. 트랜잭션처럼 한 곳에서 오류나면 */
-            /* 딴 데서 아예 안 나오게 하는거지  */
-            const view = require('./view/03_contentPage')
-            let html = view.contentPage(req.session.uname, result);
-            res.send(html);
-        })
+        // dm.getBid(result_bid => {
+        //     let bid = result_bid.bid
+        //     console.log(bid);
+        //     dm.getContent(bid, result => {
+        //         // result 이것도 안 건너옴.
+        //         console.log('안나오나', result);
+
+        //         /* uname을 세션에서 받는게 아니라 hidden 폼에서 받는거야 */
+
+        //         /* 얘도 정의가 안되어있음 */
+        //         console.log(uname);
+        //         /* 이렇게 써주면 회원가입할 때 정보가 계속 들어오지 */
+        //         /* 여기 화면이 제대로 안 되어있어서 오류가 나는거야. 트랜잭션처럼 한 곳에서 오류나면 */
+        //         /* 딴 데서 아예 안 나오게 하는거지  */
+        //         const view = require('./view/03_contentPage')
+        //         let html = view.contentPage(uname, result);
+        //         res.send(html);
+        //         // res.redirect(`/content/bid/${bid}`)
+        //     })
+        // })
+
+        res.redirect('/')
     })
 })
 

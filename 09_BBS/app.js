@@ -42,13 +42,18 @@ const dm = require('./db/dbModule');
 const ut = require('./util/util')
 const aM = require('./view/alertMsg')
 
-app.get('/', ut.isLoggedIn, (req, res) => {
+app.get('/', /* ut.isLoggedIn, */(req, res) => {
+    /* 로그인 안해도 볼 수 있게 하려면 */
+    /* 내가 만든 삼항연산자 + 함수 기본값으로 지랄을 해야 가능 */
+    /* ㅋㅋㅋㅋ 머리 깨지는줄 */
+
     /* 지금 여기부터 쿠키가 들어가서 로그인으로 패싱이 안 되어있음 */
     /* 로그아웃을 하고, 세션디스트로이가 안 들어가서 그렇다. */
     dm.mainPageGetLists(rows => {
         /* 페이지를 두개로 나눠야 돼...? */
         const view = require('./view/02_mainPage');
-        let html = view.mainPage(rows);
+        let html = view.mainPage(rows, req.session.uname);
+        /* 함수 기본값 매개변수로 하자 */
         res.send(html);
     })
 })
@@ -86,20 +91,11 @@ app.post('/login', (req, res) => {
             if (result.pwd === pwdHash) {
                 req.session.uid = uid;
                 req.session.uname = result.uname;
-                console.log('나와라!', req.session.uid, req.session.uname);
+                // console.log('나와라!', req.session.uid, req.session.uname);
                 /* 오케, 세션도 잘 들어왔어! */
 
                 req.session.save(function () {
-                    dm.mainPageGetLists(rows => {
-                        /* 페이지를 두개로 나눠야 돼...? */
-                        const view = require('./view/02_afterLoginMainPage');
-                        let html = view.afterLoginMainPage(req.session.uname, rows);
-                        res.send(html);
-                        /* 여기서 끊겨버리니까 안 되는거같은데 */
-                        /* 이 페이지에서 뭐 글쓰기나 이런데를 갈 때도 */
-                        /* 가지고 갈 수 있도록 afterloginm 페이지에서 수정을 해야겠따*/
-                        /*  */
-                    })
+                    res.redirect('/')
                 })
             } else {
                 let html = aM.alertMsg(`Sign in failed, wrong password`, '/login');

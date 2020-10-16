@@ -1,4 +1,4 @@
-const template = require('./00_template');
+const template = require('./09_BBS/view/00_template');
 
 exports.afterLoginMainPage = function (uname, rows) {
 
