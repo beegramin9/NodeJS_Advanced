@@ -21,7 +21,6 @@ module.exports = {
     },
     mainPageGetLists: function (callback) {
         let conn = this.getConnection()
-        console.log('실행됨');
         let sql = `
         SELECT bbs.bid as bbs_bid  , 
         bbs.title as bbs_title, 
@@ -39,7 +38,6 @@ module.exports = {
             if (error)
                 console.log(`mainPageGetLists 에러 발생: ${error}`);
             callback(rows);
-            console.log(rows, '실행됨?');
         })
     },
     getContent: function (bid, callback) {
@@ -49,6 +47,7 @@ module.exports = {
             bbs.bid as bbs_bid, 
             DATE_FORMAT(bbs.modTime, '%y-%m-%d %T') as bbs_modTime,
             USERs.uid as users_uid,
+            users.uname AS users_uname,
             bbs.viewCount as bbs_viewCount, 
             reply.NumComments as reply_NumComments,
             bbs.content as bbs_content, 
@@ -59,13 +58,13 @@ module.exports = {
             ON bbs.uid = users.uid
             JOIN reply
             ON bbs.bid = reply.bid
-            WHERE bbs.isDeleted=0 and bbs.bid like ?
+            WHERE bbs.isDeleted=0 and bbs.bid LIKE ?
             `
         conn.query(sql, bid, (error, results, fields) => {
             if (error)
                 console.log(`getContent 에러 발생: ${error}`);
-            callback(results[0])
-            console.log(results[0]);
+            callback(results)
+            console.log('안 나오나?', results);
         })
     },
     /* 내댓글, 남의댓글 바꿔야겠네... */
@@ -86,15 +85,34 @@ module.exports = {
         let conn = this.getConnection()
         let sql = `insert into users (uid, pwd, uname, tel, email)
             values (?,?,?,?,?)`
-        conn.query(sql, params, (error, results, fields) => {
+        conn.query(sql, params, (error, fields) => {
             if (error)
                 console.log(`newUser 에러 발생: ${error}`);
             callback();
         })
 
     },
+    makeNewContent: function (params, callback) {
+        let conn = this.getConnection()
+        let sql = `INSERT into bbs (uid, title, content)
+        VALUES(?,?,?);
+        select bid from bbs order by bid desc LIMIT 1;
+        `
+        conn.query(sql, params, (error, result_bid, fields) => {
+            if (error)
+                console.log(`newUser 에러 발생: ${error}`);
 
+            console.log(result_bid);
+            /* 이게 왜 안 나오지? */
+            callback('나오냐?', result_bid);
+        })
+        /* 여기엔 문제가 없다. 하이디에서 잘 들어오니까 */
 
+        /* 이제 여기서 뭘 받아와야 하는지... */
+        /* select 해서 row를 받는게 아니니까 콜백이 없지 */
+    },
+    /* showNewContent 같은것도 만들어야 하나? */
+    /* getContent를 쓰면 됨 */
 
 
 

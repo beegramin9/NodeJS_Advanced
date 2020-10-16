@@ -1,18 +1,8 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const session = require('express-session')
-const FileStore = require('session-file-store')(session);
 app.use(bodyParser.urlencoded({ extended: false }));
 const fs = require('fs');
-const cookieParser = require('cookie-parser');
-app.use(cookieParser('1q2w3e4r'));
-app.use(session({
-    secret: '1q2w3e4r',
-    resave: false,
-    saveUninitialized: true,
-    store: new FileStore({ logFn: function () { } })
-}))
 
 app.use('/bootstrap', express.static(__dirname + '/node_modules/bootstrap/dist'))
 /* template script 주소에서 /bootstrap으로 시작하는 애들은 */
@@ -25,6 +15,18 @@ app.use(express.static(__dirname + '/public'))
 /* 순서 지키는 거 중요함. */
 /* 제일 나중에 오는 애는(여기서는 아이콘) 위에 bootstrap, popper, jquery를 제외한 애들은 */
 /* public에서 하겠다는 뜻임 */
+
+
+const session = require('express-session')
+const FileStore = require('session-file-store')(session);
+const cookieParser = require('cookie-parser');
+app.use(cookieParser('1q2w3e4r'));
+app.use(session({
+    secret: '1q2w3e4r',
+    resave: false,
+    saveUninitialized: true,
+    store: new FileStore({ logFn: function () { } })
+}))
 
 const uRouter = require('./_userRouter')
 app.use('/user', uRouter);
@@ -40,19 +42,15 @@ const dm = require('./db/dbModule');
 const ut = require('./util/util')
 const aM = require('./view/alertMsg')
 
-app.get('/', /* ut.isLoggedIn, */(req, res) => {
+app.get('/', ut.isLoggedIn, (req, res) => {
+    /* 지금 여기부터 쿠키가 들어가서 로그인으로 패싱이 안 되어있음 */
+    /* 로그아웃을 하고, 세션디스트로이가 안 들어가서 그렇다. */
     dm.mainPageGetLists(rows => {
         /* 페이지를 두개로 나눠야 돼...? */
         const view = require('./view/02_mainPage');
         let html = view.mainPage(rows);
         res.send(html);
     })
-})
-
-app.get('/signup', (req, res) => {
-    const view = require('./view/uRegister')
-    let html = view.signUpPage();
-    res.send(html);
 })
 
 app.get('/login', (req, res) => {
@@ -64,7 +62,8 @@ app.get('/login', (req, res) => {
 app.post('/login', (req, res) => {
     let uid = req.body.uid;
     let pwd = req.body.pwd;
-    console.log('나와라!', uid, pwd);
+
+    // console.log('나와라!', uid, pwd);
     let pwdHash = ut.generateHash(pwd);
 
     dm.getUserInfo(uid, (result) => {
@@ -85,22 +84,24 @@ app.post('/login', (req, res) => {
             /* 그래서 alertForm에 url을 인자로 넣는 것 */
         } else {
             if (result.pwd === pwdHash) {
-                // req.session.uid = uid;
-                // req.session.uname = result.uname;
-                console.log('Signed in');
+                req.session.uid = uid;
+                req.session.uname = result.uname;
+                console.log('나와라!', req.session.uid, req.session.uname);
+                /* 오케, 세션도 잘 들어왔어! */
 
-                let uname = result.uname
-                dm.mainPageGetLists(rows => {
-                    const view = require('./view/02_afterLoginMainPage');
-                    console.log(rows)
-                    let html = view.afterLoginMainPage(uname, rows);
-                    res.send(html);
+                req.session.save(function () {
+                    dm.mainPageGetLists(rows => {
+                        /* 페이지를 두개로 나눠야 돼...? */
+                        const view = require('./view/02_afterLoginMainPage');
+                        let html = view.afterLoginMainPage(req.session.uname, rows);
+                        res.send(html);
+                        /* 여기서 끊겨버리니까 안 되는거같은데 */
+                        /* 이 페이지에서 뭐 글쓰기나 이런데를 갈 때도 */
+                        /* 가지고 갈 수 있도록 afterloginm 페이지에서 수정을 해야겠따*/
+                        /*  */
+                    })
                 })
-                // req.session.save(function () {
-                // })
-
             } else {
-                console.log(pwdHash, result.pwd);
                 let html = aM.alertMsg(`Sign in failed, wrong password`, '/login');
                 res.send(html)
             }
@@ -113,6 +114,13 @@ app.post('/login', (req, res) => {
         /* 왜냐면 여기서 rows가 나와야하긴해 */
     })
 })
+
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+    /* 세션 없애기 */
+    res.redirect('/login')
+})
+
 
 
 /* 이제 세션으로 해서! 로그인 된 정보를 캐리할 수 있게 해줘야 함 */

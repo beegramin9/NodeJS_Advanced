@@ -1,6 +1,6 @@
 const template = require('./00_template');
 
-exports.contentPage = function (rows) {
+exports.contentPage = function (uname, rows) {
     let tableRow = '';
     /* 한 줄만 받을 때는 반복문 쓰면 안 되나...? */
     /* 상관없이 됐던 것 같은데... */
@@ -21,9 +21,9 @@ exports.contentPage = function (rows) {
     // console.log(row.bbs_bid);
     return `
     ${template.header()}
-    ${template.headNavBar()}
-        <h3>사용자 조회</h3>
-        <p>님 환영합니다. &nbsp;&nbsp; <a href="/logout">로그아웃</a></p>
+    ${template.headNavBar(uname)}
+        <h3>글 목록</h3>
+        <p><a href="/logout">로그아웃</a></p>
         <hr>
         <table>
             <tr>
@@ -40,7 +40,7 @@ exports.contentPage = function (rows) {
             ${tableRow}
             <tr>
                 <td colspan="4" style="text-align:center;">
-                    <button onclick="location.href='/login'">로그인</button>
+                    <button onclick="location.href='/content/bid/${rows.bbs_bid}/update'">수정</button>
                 </td>
             </tr>
         </table>

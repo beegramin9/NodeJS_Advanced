@@ -7,7 +7,6 @@ exports.mainPage = function (rows) {
     // console.log(new Date(whatToday))
     // 시간 맞추는 건 나중에
     // row.bbs_modTime
-    console.log(rows);
     let tableRow = '';
     for (let row of rows) {
         tableRow += `
@@ -24,10 +23,15 @@ exports.mainPage = function (rows) {
         
         `
     }
+    /* 로그인 안 된 상태에서 누르면 로그인페이지로 갈 수 있도록 */
+    /* 경고창 띄우면서; */
     return `
         ${template.header()}
         ${template.headNavBar()}
             <h3>사용자 조회</h3>
+            
+            <p><a href="/login">로그인</a></p>
+            <p><a href="/login">글 쓰기</a></p>
             <hr>
             <table>
                 <tr>

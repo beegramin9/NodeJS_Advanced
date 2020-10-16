@@ -34,12 +34,13 @@ module.exports = {
                 </li>
             </ul>
             <div class="navbar-text fixed-right" id="weather">
-                홍길동님 반갑습니다.&nbsp;&nbsp;&nbsp;&nbsp;
+                님 반갑습니다.&nbsp;&nbsp;&nbsp;&nbsp;
                 <i class="fas fa-cloud-sun"></i> 20&deg;C
             </div>
         </nav>
         `
     },
+
 
     /* 하단 NAVBAR까지 */
     footNavBar: function () {
