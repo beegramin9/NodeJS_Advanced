@@ -28,9 +28,10 @@ module.exports = {
         /* 여기서 bbs_bid를 제대로 안 주니까 다 1001로 나오잖아 */
         let sql = `
         SELECT users.uname as reply_uname, 
-		reply.comments as reply_comments, 
-		reply.regTime as reply_regTime,
-		reply.bid as reply_bid
+        reply.comments as reply_comments, 
+		DATE_FORMAT(reply.regTime, '%y-%m-%d %T') as reply_regTime,
+        reply.bid as reply_bid,
+        reply.rid as reply_rid
 	    FROM reply
 	    LEFT JOIN users
 	    ON users.uid = reply.uid
@@ -49,8 +50,9 @@ module.exports = {
         let sql = `
         SELECT users.uname as reply_uname, 
 		reply.comments as reply_comments, 
-		reply.regTime as reply_regTime,
-		reply.bid as reply_bid
+        DATE_FORMAT(reply.regTime, '%y-%m-%d %T') as reply_regTime,
+        reply.bid as reply_bid,
+        reply.rid as reply_rid
 	    FROM reply
 	    LEFT JOIN users
 	    ON users.uid = reply.uid
@@ -80,7 +82,7 @@ module.exports = {
     deleteMyComment: function (rid, callback) {
         let conn = this.getConnection()
         let sql = ` delete from reply where rid = ?`
-        conn.query(sql, params, (error, fields) => {
+        conn.query(sql, rid, (error, fields) => {
             if (error)
                 console.log(`deleteMyComment 에러 발생: ${error}`);
             console.log();

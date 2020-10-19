@@ -1,12 +1,11 @@
 const template = require('./00_template');
 
-exports.contentPage = function (uname, rows, othersReplies, myReplies) {
-    let tableRow = '';
+exports.contentPage = function (uname, result, othersReplies, myReplies) {
     /* 한 줄만 받을 때는 반복문 쓰면 안 되나...? */
     /* 상관없이 됐던 것 같은데... */
     // tableRow += `
     //                 <tr>
-    //                     <td style="padding-right:20px;">${rows.bbs_title}</td>
+    //                     <td style="padding-right:20px;">${result.bbs_title}</td>
     //                     <td style="padding-right:20px;">${rows.bbs_bid}</td>
     //                     <td style="padding-right:20px;">${rows.bbs_content}</td>
     //                     <td style="padding-right:20px;">${rows.bbs_modTime}</td>
@@ -24,31 +23,35 @@ exports.contentPage = function (uname, rows, othersReplies, myReplies) {
 
     /* contentPage에서 rid를 어떻게 받을지를 알아야 함 */
 
+    let mine = '';
+    for (let myReply of myReplies)
+        mine += `
+        <div>
+            <div>${myReply.reply_uname} ${myReply.reply_regTime} 
+            <form action="/content/reply/delete" method="post">
+                <input type="hidden" name="rid" id="rid" value="${myReply.reply_rid}">
+                <input type="hidden" name="bid" id="bid" value="${result.bbs_bid}">
+                <button type="submit" class="btn btn-outline-primary btn-sm active">삭제</button>
+            </form>
+            <a href="">댓글삭제</a></div>
+            <div>${myReply.reply_comments}</div>
+        </div>
+            `
+
     let others = '';
     for (let othersReply of othersReplies)
         others += `
         <div>
             <div>${othersReply.reply_uname} ${othersReply.reply_regTime} 
             <form action="/content/reply/delete" method="post">
-                <input type="hidden" name="rid" value="${rows.bbs_bid}">
+                <input type="hidden" name="rid" id="rid" value="${othersReply.reply_rid}">
+                <input type="hidden" name="bid" id="bid" value="${result.bbs_bid}">
                 <button type="submit" class="btn btn-outline-primary btn-sm active">삭제</button>
             </form>
             <a href="">댓글삭제</a></div>
             <div>${othersReply.reply_comments}</div>
         </div>
         `
-    let mine = '';
-    for (let myReply of myReplies)
-        mine += `
-        <div>
-            <div>${myReply.reply_uname} ${myReply.reply_regTime} 
-            <a href="">댓글삭제</a></div>
-            <div>${myReply.reply_comments}</div>
-        </div>
-            `
-    /* 여기 위에서 제대로 안 들어옴 */
-
-    // console.log(row.bbs_bid);
     return `
     ${template.header()}
     ${template.headNavBar(uname)}
@@ -56,18 +59,18 @@ exports.contentPage = function (uname, rows, othersReplies, myReplies) {
         <div class="row">
             <div class="col-10">
                 <div>
-                    <strong>${rows.bbs_title}</strong>
+                    <strong>${result.bbs_title}</strong>
                 </div>
                 <div>
-                    <strong>글 번호: ${rows.bbs_bid} | ${rows.bbs_modTime}</strong>
+                    <strong>글 번호: ${result.bbs_bid} | ${result.bbs_modTime}</strong>
                 </div>
             </div>
             <div class="col-2 ml-auto">
                 <div>
-                    <strong>${rows.users_uname}</strong>
+                    <strong>${result.users_uname}</strong>
                 </div>
                 <div>
-                    <strong>조회 ${rows.bbs_viewCount} 리플 ${rows.reply_NumComments}</strong>
+                    <strong>조회 ${result.bbs_viewCount} 리플 ${result.reply_NumComments}</strong>
                 </div>
             </div>
         </div>
@@ -76,32 +79,32 @@ exports.contentPage = function (uname, rows, othersReplies, myReplies) {
         <div class="row">
             <div class="col-10 mr-auto">
                 <div>
-                    <strong>${rows.bbs_content}</strong>
+                    <strong>${result.bbs_content}</strong>
                 </div>
             </div>
         <br>
         </div>
          <div class="row">
             <div class="col-2 ml-auto">
-                <a href="/content/bid/${rows.bbs_bid}/update">수정</a>
-                <a href="/content/bid/${rows.bbs_bid}/delete">삭제</a>
+                <a href="/content/bid/${result.bbs_bid}/update">수정</a>
+                <a href="/content/bid/${result.bbs_bid}/delete">삭제</a>
             </div>
         </div>
         <br>
         <hr>
         <div class="row">
             <div class="col-8 mr-auto">
-                ${mine}
+                ${others}
             </div>
             <div class="col-8 ml-auto">
-               ${others}
+                ${mine}
             </div>
         </div>
         <br><br>
         <div class="row">
             <div class="col-10 ml-auto">
-            <form action="/content/reply" method="post">
-                <input type="hidden" name="bid" value="${rows.bbs_bid}">
+            <form action="/content/reply/create" method="post">
+                <input type="hidden" name="bid" value="${result.bbs_bid}">
                 <textarea class="form-control" name="comments" id="comments"></textarea>
         
             </div>

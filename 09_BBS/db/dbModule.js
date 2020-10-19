@@ -25,7 +25,7 @@ module.exports = {
         SELECT bbs.bid AS bbs_bid, 
         bbs.title AS bbs_title, 
         bbs.uid AS users_uid, 
-        bbs.modTime AS bbs_modTime,
+        DATE_FORMAT(bbs.modTime, '%y-%m-%d %T') AS bbs_modTime,
         reply.NumComments as reply_NumComments, 
         bbs.viewCount AS bbs_viewCount  
         FROM bbs 
@@ -35,7 +35,7 @@ module.exports = {
         SELECT bbs.bid AS bbs_bid, 
         bbs.title AS bbs_title, 
         bbs.uid AS users_uid, 
-        bbs.modTime AS bbs_modTime,
+        DATE_FORMAT(bbs.modTime, '%y-%m-%d %T') AS bbs_modTime,
      	reply.NumComments as reply_NumComments, 
         bbs.viewCount AS bbs_viewCount 
         FROM bbs 
