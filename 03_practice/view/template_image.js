@@ -39,6 +39,8 @@ module.exports = {
         }
 
     },
+
+    /* hidden 어케 하는지 찾아봐 */
     createForm: function () {
         return `
         <form  action="/create" method="POST" enctype="multipart/form-data" >

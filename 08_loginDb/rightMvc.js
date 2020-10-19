@@ -19,9 +19,7 @@ const FileStore = require('session-file-store')(session);
 
 /* 패비콘 가져오기 */
 
-const favicon = require('express-favicon')
 app.use(express.static(__dirname + '/public'))
-app.use(favicon(__dirname + '/public/favicon.ico'))
 
 const aM = require('./view/alertMsg')
 
@@ -121,6 +119,9 @@ app.post('/login', (req, res) => {
                 req.session.uid = uid;
                 req.session.uname = result.uname;
 
+
+
+
                 console.log('Signed in');
                 req.session.save(function () {
                     res.redirect('/');
@@ -142,8 +143,8 @@ app.get('/logout', (req, res) => {
 
 
 
-app.listen(3000, () => {
-    console.log('Server Running at http://127.0.0.1:3000');
+app.listen(3001, () => {
+    console.log('Server Running at http://127.0.0.1:3001');
 });
 
 /* 서버의 세션을 이용해서 로그인하는 방법 */

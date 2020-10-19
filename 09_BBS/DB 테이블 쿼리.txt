@@ -132,3 +132,26 @@ reply.isMine as reply_isMine
 
 조회수 증가시키는 쿼리
 update bbs set viewCount = viewCount + 1;
+
+페이지네이션
+url 자체가 bbs/list/페이지번호
+주소창 params에도 /1, /2 처럼 들어가 있어야 함
+offset = (page-1) * 10
+
+콘텐트라우터에서 offset과 totalPage(총 몇 페이지가 있어야 하는지 알아야 하잖아)
+
+디비에서도 바꿔줘야 함
+select 다 하고
+
+	limit 10 offset 0 (첫번째 페이지 1~10)
+	limit 10 offset 10 (첫번째 페이지 11~20)
+
+	param으로 주려면 limit 10 offset ?; 이렇게 주는거
+
+콘텐츠화면에서도
+왼쪽 화살표, 오른쪽 화살표
+
+붓스트랩에서 페이지네이션 가져와서 쓰면 됨
+
+페이지네이션할때 페이지 번호를 세션에 넣어서 가지고 다니는 것도 방법
+

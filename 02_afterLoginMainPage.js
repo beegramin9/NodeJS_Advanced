@@ -1,4 +1,4 @@
-const template = require('./00_template');
+const template = require('./09_BBS/view/00_template');
 
 exports.afterLoginMainPage = function (uname, rows) {
 
@@ -7,7 +7,6 @@ exports.afterLoginMainPage = function (uname, rows) {
     // console.log(new Date(whatToday))
     // 시간 맞추는 건 나중에
     // row.bbs_modTime
-    console.log(rows);
     let tableRow = '';
     for (let row of rows) {
         tableRow += `
@@ -29,6 +28,7 @@ exports.afterLoginMainPage = function (uname, rows) {
         ${template.headNavBar()}
             <h3>사용자 조회</h3>
             <p>${uname}님 환영합니다. &nbsp;&nbsp; <a href="/logout">로그아웃</a></p>
+            <p><a href="/content/create">글 쓰기</a></p>
             <hr>
             <table>
                 <tr>
