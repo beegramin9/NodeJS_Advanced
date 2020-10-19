@@ -1,28 +1,6 @@
 const template = require('./00_template');
 
 exports.contentPage = function (uname, result, othersReplies, myReplies) {
-    /* 한 줄만 받을 때는 반복문 쓰면 안 되나...? */
-    /* 상관없이 됐던 것 같은데... */
-    // tableRow += `
-    //                 <tr>
-    //                     <td style="padding-right:20px;">${result.bbs_title}</td>
-    //                     <td style="padding-right:20px;">${rows.bbs_bid}</td>
-    //                     <td style="padding-right:20px;">${rows.bbs_content}</td>
-    //                     <td style="padding-right:20px;">${rows.bbs_modTime}</td>
-    //                     <td style="padding-right:20px;">${rows.users_uid}</td>
-    //                     <td style="padding-right:20px;">${rows.bbs_viewCount}</td>
-    //                     <td style="padding-right:20px;">${rows.reply_comments}</td>
-    //                     <td style="padding-right:20px;">${rows.reply_NumComments}</td>
-    //                     <td style="padding-right:20px;">${rows.reply_isMine}</td>
-    //                 </tr>
-
-    //     `
-
-    // console.log(tableRow);
-    /* 이거 위에 키면 오류난다;;;; 왜 그러는진 모르겠음 */
-
-    /* contentPage에서 rid를 어떻게 받을지를 알아야 함 */
-
     let mine = '';
     for (let myReply of myReplies)
         mine += `

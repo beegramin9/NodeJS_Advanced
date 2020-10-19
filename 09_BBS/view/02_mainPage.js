@@ -44,6 +44,7 @@ exports.mainPage = function (rows, uname = '일반 사용자') {
         return `
         ${template.header()}
         ${template.headNavBar(uname)}
+            <div class="container">
             <p>글을 쓰려면 로그인이 필요합니다.</p>
             <hr>
             <table>
@@ -61,6 +62,7 @@ exports.mainPage = function (rows, uname = '일반 사용자') {
                     </td>
                 </tr>
             </table>
+            </div>
         ${template.footNavBar()}
         ${template.footer()}
     `
@@ -68,6 +70,7 @@ exports.mainPage = function (rows, uname = '일반 사용자') {
         return `
         ${template.header()}
         ${template.headNavBar(uname)}
+            <div class="container">
             <p><a href="/content/create">글 쓰기</a></p>
             <hr>
             <table>
@@ -85,6 +88,7 @@ exports.mainPage = function (rows, uname = '일반 사용자') {
                     </td>
                 </tr>
             </table>
+            </div>
         ${template.footNavBar()}
         ${template.footer()}
         `

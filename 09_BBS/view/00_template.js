@@ -35,12 +35,14 @@ module.exports = {
                         <a class="nav-link" href="/login">로그인</a>
                     </li>
                 </ul>
+                
                 <div class="navbar-text fixed-right" id="weather">
                     ${uname}님 반갑습니다.&nbsp;&nbsp;&nbsp;&nbsp;
                     <i class="fas fa-cloud-sun"></i> 20&deg;C
                 </div>
             </nav>
             `
+            /* 아마 디자인을 column으로 나눠야 하나...? */
         } else {
             return `
             <body style="padding-top:70px">
@@ -57,6 +59,7 @@ module.exports = {
                         <a class="nav-link" href="/logout">로그아웃</a>
                     </li>
                 </ul>
+               
                 <div class="navbar-text fixed-right" id="weather">
                     ${uname}님 반갑습니다.&nbsp;&nbsp;&nbsp;&nbsp;
                     <i class="fas fa-cloud-sun"></i> 20&deg;C

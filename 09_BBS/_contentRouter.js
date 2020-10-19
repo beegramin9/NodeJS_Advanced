@@ -97,11 +97,9 @@ cRouter.post('/reply/create', (req, res) => {
     let bid = req.body.bid;
     req.session.bid = bid
 
-    console.log(bid);
-    // req.session.uid
     let comments = req.body.comments;
     let params = [bid, req.session.uid, comments]
-    replyDM.createMyComment(params, () => {
+    replyDM.createMyComment(params, (ㅉ) => {
         res.redirect(`/content/bid/${bid}`)
     })
 })
