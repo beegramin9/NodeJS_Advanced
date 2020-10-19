@@ -22,11 +22,17 @@ exports.contentPage = function (uname, rows, othersReplies, myReplies) {
     // console.log(tableRow);
     /* 이거 위에 키면 오류난다;;;; 왜 그러는진 모르겠음 */
 
+    /* contentPage에서 rid를 어떻게 받을지를 알아야 함 */
+
     let others = '';
     for (let othersReply of othersReplies)
         others += `
         <div>
             <div>${othersReply.reply_uname} ${othersReply.reply_regTime} 
+            <form action="/content/reply/delete" method="post">
+                <input type="hidden" name="rid" value="${rows.bbs_bid}">
+                <button type="submit" class="btn btn-outline-primary btn-sm active">삭제</button>
+            </form>
             <a href="">댓글삭제</a></div>
             <div>${othersReply.reply_comments}</div>
         </div>

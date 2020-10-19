@@ -22,22 +22,6 @@ cRouter.get('/bid/:bid', (req, res) => {
     })
 })
 
-cRouter.post('/reply', (req, res) => {
-    /* 화면은 띄우지 않고 데이터 받을 것만 받은 이후에 */
-    /* res.resdirect('/bid/${bid}')로 가면 됨 */
-    /* db reply에 집어 넣는거랑, 댓글 개수 올라갈 때? 두개?? */
-    let bid = req.body.bid;
-    // req.session.uid
-    let comments = req.body.comments;
-    let params = [bid, req.session.uid, comments]
-    console.log(params);
-    replyDM.createMyComment(params, () => {
-        res.redirect(`/content/bid/${bid}`)
-    })
-})
-
-
-/* */
 
 /* 삭제는 글 안에 들어가서 할 수 있도록 */
 cRouter.get('/create', (req, res) => {
@@ -146,9 +130,24 @@ cRouter.post('/bid/:bid/delete', (req, res) => {
 })
 
 
+cRouter.post('/reply', (req, res) => {
+    /* 화면은 띄우지 않고 데이터 받을 것만 받은 이후에 */
+    /* res.resdirect('/bid/${bid}')로 가면 됨 */
+    /* db reply에 집어 넣는거랑, 댓글 개수 올라갈 때? 두개?? */
+    let bid = req.body.bid;
+    // req.session.uid
+    let comments = req.body.comments;
+    let params = [bid, req.session.uid, comments]
+    replyDM.createMyComment(params, () => {
+        res.redirect(`/content/bid/${bid}`)
+    })
+})
 
-/* 리플 쓰기 */
-/* 리플 수정 어케 하지 */
-/* 리플 삭제 */
+cRouter.post('/reply/delete', (req, res) => {
+    let rid = req.body.rid;
+    // req.session.uid
+    replyDM.deleteMyComment(rid, () => {
+        res.redirect(`/content/bid/${bid}`)
+    })
+})
 
-/* 그 전에 화면을 좀 바꿔야 쓰곘다..그래야 보이지 */
