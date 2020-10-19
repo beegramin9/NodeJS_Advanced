@@ -21,7 +21,7 @@ exports.contentPage = function (uname, rows) {
     // console.log(row.bbs_bid);
     return `
     ${template.header()}
-    ${template.headNavBar()}
+    ${template.headNavBar(uname)}
         <h3>글 목록</h3>
         <p><a href="/logout">로그아웃</a></p>
         <hr>

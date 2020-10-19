@@ -9,7 +9,7 @@ module.exports = cRouter;
 
 cRouter.get('/bid/:bid', (req, res) => {
     let bid = req.params.bid;
-
+    console.log(bid);
     dm.getContent(bid, result => {
         req.session.uname = result.users_uname;
         /* 이렇게 써주면 회원가입할 때 정보가 계속 들어오지 */
@@ -40,6 +40,9 @@ cRouter.get('/create', (req, res) => {
 cRouter.post('/create', (req, res) => {
     /* form으로 받아야겠네... */
     /* form으로 받아서 새로운 bid를 가진 getContent로 쏴주면 되겠군 */
+    /* 타이틀이... */
+    /* db함수에 insert가 잘못되어서 잘못들어가는건지 */
+    /* 잘 들어간다! */
     let title = req.body.title
     let content = req.body.content
     let params = [req.session.uid, title, content]
@@ -80,17 +83,46 @@ cRouter.post('/create', (req, res) => {
     })
 })
 
+/* 좋아 여기까지 잘 들어왔어! */
+cRouter.get('/bid/:bid/update', (req, res) => {
+    let bid = parseInt(req.params.bid)
+    dm.contentToUpdate(bid, result => {
+        const view = require('./view/05_updateContentPage')
+        let html = view.updateContentPage(req.session.uname, result);
+        res.send(html);
+    })
+})
 
+/* 이제 포스트만 하면 돼 */
 
-// app.get('/create', (req, res) => {
-//     fs.readdir("data", (e, filelist) => {
-//         let list = template.listGen(filelist);
-//         let control = template.buttonGen()
-//         let content = template.createForm()
-//         let html = view.index('글 생성', list, content, control);
-//         res.send(html);
-//     });
-// })
+/* 여기까진 되는데... 그 뭐냐 제목이 수정이 안됨 */
+/* 데이터베이스를...흠 */
+
+/* 글 번호가 안 맞는데? */
+cRouter.post('/bid/:bid/update', (req, res) => {
+    let title = req.body.title
+    let content = req.body.content
+    let bid = parseInt(req.body.bid)
+    let params = [title, content, bid]
+    /* 타이틀이... */
+    /* db함수에 insert가 잘못되어서 잘못들어가는건지 */
+    /* 잘 들어간다! */
+    console.log(params);
+    dm.updateContent(params, () => {
+        res.redirect('/')
+    })
+})
+
+cRouter.get('/bid/:bid/delete', (req, res) => {
+    /* 수정하기! */
+})
+
+cRouter.post('/bid/:bid/delete', (req, res) => {
+    /* 수정하기! */
+
+    //  res.redirect('/')
+    /* 요거해줘야함 */
+})
 
 
 

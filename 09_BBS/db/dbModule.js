@@ -42,51 +42,11 @@ module.exports = {
         RIGHT JOIN reply
         ON bbs.bid = reply.bid
         WHERE bbs.isDeleted = 0
-        ORDER BY bbs_bid DESC LIMIT 30
+        ORDER BY bbs_bid DESC
         `
-        /* SELECT 
-        bbs.bid AS bbs_bid, 
-        bbs.title AS bbs_title, 
-        bbs.uid AS users_uid, 
-        bbs.modTime AS bbs_modTime,
-        reply.NumComments as reply_NumComments 
-        bbs.viewCount AS bbs_viewCount 
-        FROM bbs
-        join reply
-        ON bbs.bid = reply.bid
-        WHERE bbs.isDeleted = 0
-        ORDER BY bbs.bid DESC LIMIT 30 */
-
-        /* SELECT bbs.bid as bbs_bid  , 
-                bbs.title as bbs_title, 
-                users.uid as users_uid, 
-                bbs.modTime as bbs_modTime, 
-                bbs.viewCount as bbs_viewCount, 
-                reply.NumComments as reply_NumComments
-                FROM bbs
-                JOIN users
-                ON bbs.uid = users.uid
-                JOIN reply
-                ON bbs.bid = reply.bid
-                WHERE bbs.isDeleted = 0
-                order by bbs.bid desc limit 30 */
-
-        /*  SELECT bbs.bid as bbs_bid  , 
-         bbs.title as bbs_title, 
-         users.uid as users_uid, 
-         bbs.modTime as bbs_modTime, 
-         bbs.viewCount as bbs_viewCount, 
-         reply.NumComments as reply_NumComments
-         FROM bbs
-         JOIN users
-         ON bbs.uid = users.uid
-         JOIN reply
-         ON bbs.bid = reply.bid
-         WHERE bbs.isDeleted = 0
-         order by bbs.bid desc limit 30 */
-
-        /* 아이디가...참. 흠 */
-
+        /* 내가 이름 지어주는 걸 완료했으면 */
+        /* order by 할 때는 내가 지어준 이름으로! */
+        /* ORDER BY bbs_bid DESC LIMIT 30 */
 
         conn.query(sql, (error, rows, fields) => {
             if (error)
@@ -96,24 +56,28 @@ module.exports = {
     },
     getContent: function (bid, callback) {
         let conn = this.getConnection()
+        /* 아마 이것도 full outer join인가봐... */
+        /* 테이블 3개 합치기 */
+        /* params로 들어가는 건 잘 받았는데. */
+        /* 여기서 bbs_bid를 제대로 안 주니까 다 1001로 나오잖아 */
         let sql = `
-            SELECT bbs.title as bbs_title, 
-            bbs.bid as bbs_bid, 
-            DATE_FORMAT(bbs.modTime, '%y-%m-%d %T') as bbs_modTime,
-            USERs.uid as users_uid,
-            users.uname AS users_uname,
-            bbs.viewCount as bbs_viewCount, 
-            reply.NumComments as reply_NumComments,
-            bbs.content as bbs_content, 
-            reply.comments as reply_comments, 
-            reply.isMine as reply_isMine
-            FROM bbs
-            JOIN users
-            ON bbs.uid = users.uid
-            JOIN reply
-            ON bbs.bid = reply.bid
-            WHERE bbs.isDeleted=0 and bbs.bid LIKE ?
-            `
+        SELECT bbs.title as bbs_title,
+        bbs.bid as bbs_bid,
+        DATE_FORMAT(bbs.modTime, '%y-%m-%d %T') as bbs_modTime,
+        users.uname AS users_uname,
+        bbs.viewCount as bbs_viewCount, 
+        reply.NumComments as reply_NumComments,
+        bbs.content as bbs_content, 
+        reply.comments as reply_comments, 
+        reply.isMine as reply_isMine
+        FROM bbs 
+        LEFT outer JOIN reply 
+        ON bbs.bid = reply.bid
+        LEFT OUTER JOIN users
+        ON USERs.uid = bbs.uid
+        WHERE bbs.isDeleted = 0 and bbs.bid = ?
+    
+        `
         conn.query(sql, bid, (error, results, fields) => {
             if (error)
                 console.log(`getContent 에러 발생: ${error}`);
@@ -177,7 +141,24 @@ module.exports = {
         })
 
     },
-
+    contentToUpdate: function (bid, callback) {
+        let conn = this.getConnection();
+        let sql = `select * from bbs where bid =?`
+        conn.query(sql, bid, (error, rows, fields) => {
+            if (error)
+                console.log(`contentToUpdate 에러 발생: ${error}`);
+            callback(rows[0])
+        })
+    },
+    updateContent: function (params, callback) {
+        let conn = this.getConnection();
+        let sql = `update bbs set title=?, content=? where bid=?  `
+        conn.query(sql, params, (error, fields) => {
+            if (error)
+                console.log(`updateContent 에러 발생: ${error}`);
+            callback()
+        })
+    },
 
 
     updatePwdUser: function (params, callback) {

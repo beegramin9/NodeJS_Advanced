@@ -1,6 +1,6 @@
 const template = require('./00_template');
 
-exports.createContentPage = function (uname) {
+exports.updateContentPage = function (uname, result) {
     /* 여기에 새 게시물 아이디도 필요함. 이따가 post할 때 params로 넣어주려면 */
     /* 그러면 이제 어떻게 bbs_bid를 1 더하냐... */
     /* sql문에 쿼리를 두개, 어쩌면 3개까지도 써야할지도 */
@@ -29,23 +29,23 @@ exports.createContentPage = function (uname) {
     return `
     ${template.header()}
     ${template.headNavBar(uname)}
-        <h3>글 쓰기</h3>
+        <h3>글 수정</h3>
         <div class="container">
-        <div class="row">
+        <div class="row">   
             <div class="col3"></div>
             <div class="col6">
-                <form action="/content/create" method="post">
+                <form action="/content/bid/:bid/update" method="post">
                     
-                    <input type="hidden" name="uname" id="uname" value="${uname}">
+                    <input type="hidden" name="bid" id="bid" value="${result.bid}">
                 
                     <table class="table table-borderless">
                         <tr>
                             <td><label for="title">글 제목</label></td>
-                            <td><input type="text" name="title" id="title"></td>
+                            <td><input type="text" name="title" id="title" value="${result.title}"></td>
                         </tr>
                         <tr>
                             <td><label for="content">글 내용</label></td>
-                            <td><input type="text" name="content" id="content"></td>
+                            <td><input type="text" name="content" id="content" value="${result.content}"></td>
                         </tr>
                         <tr>
                             <td colspan="2" style="text-align: center;">
