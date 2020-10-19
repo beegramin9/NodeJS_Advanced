@@ -159,7 +159,15 @@ module.exports = {
             callback()
         })
     },
-
+    deleteContent: function (bid, callback) {
+        let conn = this.getConnection();
+        let sql = `delete from bbs where bid = ?`
+        conn.query(sql, bid, (error, fields) => {
+            if (error)
+                console.log(`deleteContent 에러 발생: ${error}`);
+            callback()
+        })
+    },
 
     updatePwdUser: function (params, callback) {
         let conn = this.getConnection()

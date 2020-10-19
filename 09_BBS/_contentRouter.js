@@ -115,12 +115,19 @@ cRouter.post('/bid/:bid/update', (req, res) => {
 
 cRouter.get('/bid/:bid/delete', (req, res) => {
     /* 수정하기! */
+    let bid = parseInt(req.params.bid)
+    const view = require('./view/06_deleteContentPage')
+    let html = view.deleteContentPage(req.session.uname, bid);
+    res.send(html);
 })
 
 cRouter.post('/bid/:bid/delete', (req, res) => {
     /* 수정하기! */
-
-    //  res.redirect('/')
+    let bid = parseInt(req.body.bid)
+    console.log(bid);
+    dm.deleteContent(bid, () => {
+        res.redirect('/')
+    })
     /* 요거해줘야함 */
 })
 

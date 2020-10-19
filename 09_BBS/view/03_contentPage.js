@@ -42,6 +42,9 @@ exports.contentPage = function (uname, rows) {
                 <td colspan="4" style="text-align:center;">
                     <button onclick="location.href='/content/bid/${rows.bbs_bid}/update'">수정</button>
                 </td>
+                <td colspan="4" style="text-align:center;">
+                    <button onclick="location.href='/content/bid/${rows.bbs_bid}/delete'">삭제</button>
+                </td>
             </tr>
         </table>
 
