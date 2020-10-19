@@ -22,17 +22,27 @@ module.exports = {
     mainPageGetLists: function (callback) {
         let conn = this.getConnection()
         let sql = `
-        SELECT 
-        bid AS bbs_bid, 
-        title AS bbs_title, 
-        uid AS users_uid, 
-        modTime AS bbs_modTime,
-     
-        viewCount AS bbs_viewCount
-        
-        FROM bbs
-        WHERE isDeleted = 0
-        ORDER BY bid DESC LIMIT 30
+        SELECT bbs.bid AS bbs_bid, 
+        bbs.title AS bbs_title, 
+        bbs.uid AS users_uid, 
+        bbs.modTime AS bbs_modTime,
+        reply.NumComments as reply_NumComments, 
+        bbs.viewCount AS bbs_viewCount  
+        FROM bbs 
+        LEFT JOIN reply
+        ON bbs.bid = reply.bid
+        UNION
+        SELECT bbs.bid AS bbs_bid, 
+        bbs.title AS bbs_title, 
+        bbs.uid AS users_uid, 
+        bbs.modTime AS bbs_modTime,
+     	reply.NumComments as reply_NumComments, 
+        bbs.viewCount AS bbs_viewCount 
+        FROM bbs 
+        RIGHT JOIN reply
+        ON bbs.bid = reply.bid
+        WHERE bbs.isDeleted = 0
+        ORDER BY bbs_bid DESC LIMIT 30
         `
         /* SELECT 
         bbs.bid AS bbs_bid, 
