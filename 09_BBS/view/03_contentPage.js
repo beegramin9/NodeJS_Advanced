@@ -26,22 +26,19 @@ exports.contentPage = function (uname, rows, othersReplies, myReplies) {
     for (let othersReply of othersReplies)
         others += `
         <div>
-            <span>${othersReply.reply_uname}<span>
-            <span>${othersReply.reply_comments}<span>
-            <span>${othersReply.reply_regTime}<span>
-            <span>${othersReply.reply_bid}<span>
+            <div>${othersReply.reply_uname} ${othersReply.reply_regTime} 
+            <a href="">댓글삭제</a></div>
+            <div>${othersReply.reply_comments}</div>
         </div>
         `
     let mine = '';
     for (let myReply of myReplies)
         mine += `
         <div>
-            <span>${myReply.reply_uname}<span>
-            <span>${myReply.reply_comments}<span>
-            <span>${myReply.reply_regTime}<span>
-            <span>${myReply.reply_bid}<span>
+            <div>${myReply.reply_uname} ${myReply.reply_regTime} 
+            <a href="">댓글삭제</a></div>
+            <div>${myReply.reply_comments}</div>
         </div>
-
             `
     /* 여기 위에서 제대로 안 들어옴 */
 
@@ -79,11 +76,11 @@ exports.contentPage = function (uname, rows, othersReplies, myReplies) {
         <br>
         </div>
          <div class="row">
-             <div class="col-2 ml-auto">
-                 <span>수정버튼</span>
-                 <span>삭제버튼</span>
-             </div>
-         </div>
+            <div class="col-2 ml-auto">
+                <a href="/content/bid/${rows.bbs_bid}/update">수정</a>
+                <a href="/content/bid/${rows.bbs_bid}/delete">삭제</a>
+            </div>
+        </div>
         <br>
         <hr>
         <div class="row">
