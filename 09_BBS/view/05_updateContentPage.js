@@ -41,11 +41,11 @@ exports.updateContentPage = function (uname, result) {
                     <table class="table table-borderless">
                         <tr>
                             <td><label for="title">글 제목</label></td>
-                            <td><input type="text" name="title" id="title" value="${result.title}"></td>
+                            <td><input class="form-control" type="text" name="title" id="title" value="${result.title}"></td>
                         </tr>
                         <tr>
                             <td><label for="content">글 내용</label></td>
-                            <td><input type="text" name="content" id="content" value="${result.content}"></td>
+                            <td><textarea class="form-control" name="content" id="content">${result.content}</textarea>
                         </tr>
                         <tr>
                             <td colspan="2" style="text-align: center;">

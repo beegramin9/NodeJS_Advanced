@@ -1,5 +1,6 @@
 const express = require('express');
 const dm = require('./db/dbModule');
+const replyDM = require('./db/dbReply')
 let cRouter = express.Router();
 module.exports = cRouter;
 
@@ -11,13 +12,20 @@ cRouter.get('/bid/:bid', (req, res) => {
     let bid = req.params.bid;
     console.log(bid);
     dm.getContent(bid, result => {
-        req.session.uname = result.users_uname;
         /* 이렇게 써주면 회원가입할 때 정보가 계속 들어오지 */
-
-        const view = require('./view/03_contentPage')
-        let html = view.contentPage(req.session.uname, result);
-        res.send(html);
+        replyDM.getMyComment(bid, othersReplies => {
+            replyDM.getOthersComment(bid, myReplies => {
+                console.log(othersReplies);
+                console.log(myReplies);
+                const view = require('./view/03_contentPage')
+                let html = view.contentPage(req.session.uname, result, othersReplies, myReplies);
+                res.send(html);
+            })
+        })
     })
+    /* 얘네 둘이 한 화면에 어떻게 합치지? */
+
+
 })
 
 /* */
@@ -128,15 +136,10 @@ cRouter.post('/bid/:bid/delete', (req, res) => {
     dm.deleteContent(bid, () => {
         res.redirect('/')
     })
-    /* 요거해줘야함 */
 })
 
+/* 리플 쓰기 */
+/* 리플 수정 어케 하지 */
+/* 리플 삭제 */
 
-
-/* 이제 여기서 수정, 삭제, create를 해줘야하는데*/
-
-/* 글목록에서 create, 삭제가능하게 */
-/* 실제로 글을 들어가서 수정 */
-
-
-/* 콘텐츠. 즉 글 들어갔을 때 */
+/* 그 전에 화면을 좀 바꿔야 쓰곘다..그래야 보이지 */

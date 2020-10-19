@@ -169,6 +169,25 @@ module.exports = {
         })
     },
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     updatePwdUser: function (params, callback) {
         let conn = this.getConnection()
         /*  사용자 아이디, 패스워드, 패스워드확인, 이름 */
