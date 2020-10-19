@@ -45,7 +45,8 @@ exports.createContentPage = function (uname) {
                         </tr>
                         <tr>
                             <td><label for="content">글 내용</label></td>
-                            <td><input type="text" name="content" id="content"></td>
+                            <td><textarea class="form-control" type="text" name="content" id="content"></textarea></td>
+                          
                         </tr>
                         <tr>
                             <td colspan="2" style="text-align: center;">

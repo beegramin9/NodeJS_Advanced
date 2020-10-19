@@ -109,7 +109,7 @@ module.exports = {
         })
 
     },
-    makeNewContent: function (params, callback) {
+    createContent: function (params, callback) {
         let conn = this.getConnection()
         let sql = `INSERT into bbs (uid, title, content)
         VALUES(?,?,?)
@@ -118,7 +118,7 @@ module.exports = {
 
         conn.query(sql, params, (error, fields) => {
             if (error)
-                console.log(`makeNewContent 에러 발생: ${error}`);
+                console.log(`createContent 에러 발생: ${error}`);
 
             console.log();
             /* 이게 왜 안 나오지? */
@@ -169,7 +169,7 @@ module.exports = {
         })
     },
 
-
+    /* viewCount 올리는 함수도 해야 함 */
 
 
 

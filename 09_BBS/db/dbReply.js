@@ -64,27 +64,28 @@ module.exports = {
     }
     ,
     createMyComment: function (params, callback) {
-
-    }
-    ,
-    makeNewContent: function (params, callback) {
         let conn = this.getConnection()
-        let sql = `INSERT into bbs (uid, title, content)
-        VALUES(?,?,?)
+        let sql = ` INSERT INTO reply (bid, uid, comments)
+        VALUES (?, ?, ?)
         `
-        /* 구문이 두개로 나눠져있네... 시발 */
-
         conn.query(sql, params, (error, fields) => {
             if (error)
                 console.log(`makeNewContent 에러 발생: ${error}`);
-
             console.log();
             /* 이게 왜 안 나오지? */
             callback();
         })
-        /* 여기엔 문제가 없다. 하이디에서 잘 들어오니까 */
-
-        /* 이제 여기서 뭘 받아와야 하는지... */
-        /* select 해서 row를 받는게 아니니까 콜백이 없지 */
     },
+    /* 댓글은 수정이 안 되도록, 실제로 안 되잖아 */
+    deleteMyComment: function (rid, callback) {
+        let conn = this.getConnection()
+        let sql = ` delete from reply where rid = ?`
+        conn.query(sql, params, (error, fields) => {
+            if (error)
+                console.log(`deleteMyComment 에러 발생: ${error}`);
+            console.log();
+            /* 이게 왜 안 나오지? */
+            callback();
+        })
+    }
 }

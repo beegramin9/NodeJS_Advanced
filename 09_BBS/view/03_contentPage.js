@@ -4,21 +4,24 @@ exports.contentPage = function (uname, rows, othersReplies, myReplies) {
     let tableRow = '';
     /* 한 줄만 받을 때는 반복문 쓰면 안 되나...? */
     /* 상관없이 됐던 것 같은데... */
-    tableRow += `
-                    <tr>
-                        <td style="padding-right:20px;">${rows.bbs_title}</td>
-                        <td style="padding-right:20px;">${rows.bbs_bid}</td>
-                        <td style="padding-right:20px;">${rows.bbs_content}</td>
-                        <td style="padding-right:20px;">${rows.bbs_modTime}</td>
-                        <td style="padding-right:20px;">${rows.users_uid}</td>
-                        <td style="padding-right:20px;">${rows.bbs_viewCount}</td>
-                        <td style="padding-right:20px;">${rows.reply_comments}</td>
-                        <td style="padding-right:20px;">${rows.reply_NumComments}</td>
-                        <td style="padding-right:20px;">${rows.reply_isMine}</td>
-                    </tr>
-        
-        `
-    /* 여기서 뭐가 문제일까 */
+    // tableRow += `
+    //                 <tr>
+    //                     <td style="padding-right:20px;">${rows.bbs_title}</td>
+    //                     <td style="padding-right:20px;">${rows.bbs_bid}</td>
+    //                     <td style="padding-right:20px;">${rows.bbs_content}</td>
+    //                     <td style="padding-right:20px;">${rows.bbs_modTime}</td>
+    //                     <td style="padding-right:20px;">${rows.users_uid}</td>
+    //                     <td style="padding-right:20px;">${rows.bbs_viewCount}</td>
+    //                     <td style="padding-right:20px;">${rows.reply_comments}</td>
+    //                     <td style="padding-right:20px;">${rows.reply_NumComments}</td>
+    //                     <td style="padding-right:20px;">${rows.reply_isMine}</td>
+    //                 </tr>
+
+    //     `
+
+    // console.log(tableRow);
+    /* 이거 위에 키면 오류난다;;;; 왜 그러는진 모르겠음 */
+
     let others = '';
     for (let othersReply of othersReplies)
         others += `
@@ -41,8 +44,7 @@ exports.contentPage = function (uname, rows, othersReplies, myReplies) {
 
             `
     /* 여기 위에서 제대로 안 들어옴 */
-    console.log(others);
-    console.log(mine);
+
     // console.log(row.bbs_bid);
     return `
     ${template.header()}
@@ -86,20 +88,26 @@ exports.contentPage = function (uname, rows, othersReplies, myReplies) {
         <hr>
         <div class="row">
             <div class="col-8 mr-auto">
-               ${others}
+                ${mine}
             </div>
             <div class="col-8 ml-auto">
-                ${mine}
+               ${others}
             </div>
         </div>
         <br><br>
         <div class="row">
             <div class="col-10 ml-auto">
-                <span>댓글폼 등록비이이이이이이이이이이이이이이이이이이인칸</span>
+            <form action="/content/reply" method="post">
+                <input type="hidden" name="bid" value="${rows.bbs_bid}">
+                <textarea class="form-control" name="comments" id="comments"></textarea>
+        
             </div>
+
+
             <div class="col-2 mr-auto">
-                <span>댓글등록버튼</span>
+                <button type="submit" class="btn btn-outline-primary btn-sm active">제출</button>
             </div>
+            </form>
         </div>
         </div>
     ${template.footNavBar()}

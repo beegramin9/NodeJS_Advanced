@@ -12,21 +12,30 @@ cRouter.get('/bid/:bid', (req, res) => {
     let bid = req.params.bid;
     console.log(bid);
     dm.getContent(bid, result => {
-        /* 이렇게 써주면 회원가입할 때 정보가 계속 들어오지 */
         replyDM.getMyComment(bid, othersReplies => {
             replyDM.getOthersComment(bid, myReplies => {
-                console.log(othersReplies);
-                console.log(myReplies);
                 const view = require('./view/03_contentPage')
                 let html = view.contentPage(req.session.uname, result, othersReplies, myReplies);
                 res.send(html);
             })
         })
     })
-    /* 얘네 둘이 한 화면에 어떻게 합치지? */
-
-
 })
+
+cRouter.post('/reply', (req, res) => {
+    /* 화면은 띄우지 않고 데이터 받을 것만 받은 이후에 */
+    /* res.resdirect('/bid/${bid}')로 가면 됨 */
+    /* db reply에 집어 넣는거랑, 댓글 개수 올라갈 때? 두개?? */
+    let bid = req.body.bid;
+    // req.session.uid
+    let comments = req.body.comments;
+    let params = [bid, req.session.uid, comments]
+    console.log(params);
+    replyDM.createMyComment(params, () => {
+        res.redirect(`/content/bid/${bid}`)
+    })
+})
+
 
 /* */
 
@@ -54,14 +63,12 @@ cRouter.post('/create', (req, res) => {
     let title = req.body.title
     let content = req.body.content
     let params = [req.session.uid, title, content]
-    console.log(params);
-
 
     // let uname = req.body.uname
     // console.log('유저네임 안들어옴', uname);
     /* uname이 안나와서 그래? */
 
-    dm.makeNewContent(params, () => {
+    dm.createContent(params, () => {
         // let bid = result_bid
         // console.log('bid값나오냐', bid);
 
@@ -137,6 +144,8 @@ cRouter.post('/bid/:bid/delete', (req, res) => {
         res.redirect('/')
     })
 })
+
+
 
 /* 리플 쓰기 */
 /* 리플 수정 어케 하지 */
