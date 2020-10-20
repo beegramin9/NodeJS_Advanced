@@ -1,6 +1,6 @@
 const template = require('./00_template');
 
-exports.contentPage = function (uname, result, wholeComments) {
+exports.contentPage = function (sessionUname, result, wholeComments) {
     let total = ``
 
     for (let comment of wholeComments)
@@ -18,6 +18,7 @@ exports.contentPage = function (uname, result, wholeComments) {
                     <div class="col-4 ml-auto">
                         <div>
                         <form action="/content/reply/delete" method="post">
+                            <input type="hidden" name="uname" value="${comment.reply_uname}">
                             <input type="hidden" name="rid" id="rid" value="${comment.reply_rid}">
                             <input type="hidden" name="bid" id="bid" value="${result.bbs_bid}">
                             <button type="submit" class="btn btn-outline-primary btn-sm active">삭제</button>
@@ -40,6 +41,7 @@ exports.contentPage = function (uname, result, wholeComments) {
                     <div class="col-4 ml-auto">
                         <div>
                         <form action="/content/reply/delete" method="post">
+                            <input type="hidden" name="uname" value="${comment.reply_uname}">
                             <input type="hidden" name="rid" id="rid" value="${comment.reply_rid}">
                             <input type="hidden" name="bid" id="bid" value="${result.bbs_bid}">
                             <button type="submit" class="btn btn-outline-primary btn-sm active">삭제</button>
@@ -55,7 +57,7 @@ exports.contentPage = function (uname, result, wholeComments) {
 
     return `
     ${template.header()}
-    ${template.headNavBar(uname)}
+    ${template.headNavBar(sessionUname)}
     <div class="container">
         <div class="row">
             <div class="col-10">

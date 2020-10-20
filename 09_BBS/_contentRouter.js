@@ -15,6 +15,8 @@ cRouter.get('/bid/:bid', (req, res) => {
         dm.increaseViewCount(bid, () => {
             req.session.contentUname = result.users_uname
             replyDM.getWholeComment(bid, wholeComments => {
+
+
                 const view = require('./view/03_contentPage')
                 let html = view.contentPage(req.session.uname, result, wholeComments);
                 res.send(html);
@@ -111,7 +113,9 @@ cRouter.post('/reply/create', (req, res) => {
     /* res.resdirect('/bid/${bid}')로 가면 됨 */
     /* db reply에 집어 넣는거랑, 댓글 개수 올라갈 때? 두개?? */
     let bid = req.body.bid;
-    req.session.bid = bid
+
+    // console.log(req.session.replyUname);
+    /* 여기에서 폼으로 받아와야지 */
 
     let comments = req.body.comments;
     let isMine = '';
@@ -125,6 +129,7 @@ cRouter.post('/reply/create', (req, res) => {
 
     replyDM.increaseReplyCount(bid, () => {
         replyDM.createMyComment(params, () => {
+
             res.redirect(`/content/bid/${bid}`)
         })
     })
@@ -132,11 +137,13 @@ cRouter.post('/reply/create', (req, res) => {
 
 cRouter.post('/reply/delete', (req, res) => {
     // 여기서도 권한 줘야함
-    console.log(req.session.uname);
-    req.session.replyUname = '';
-    console.log(req.session.replyUname);
+    console.log('접속자:', req.session.uname);
+    // console.log('글주인:', req.session.contentUname);
 
-    console.log(req.session.contentUname)
+    let replyUsername = req.body.uname
+    console.log('리플주인:', replyUsername);
+
+
     /* 댓글의 사용자를 가져와야함 */
 
     /* replyname이 필요하다 */
@@ -144,7 +151,7 @@ cRouter.post('/reply/delete', (req, res) => {
     let bid = parseInt(req.body.bid);
     // console.log('안나오냐', rid, bid);
     // req.session.uid
-    if (req.session.uname === req.session.replyUname) {
+    if (req.session.uname === replyUsername) {
         replyDM.decreaseReplyCount(bid, () => {
             replyDM.deleteMyComment(rid, () => {
                 res.redirect(`/content/bid/${bid}`)
