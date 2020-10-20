@@ -1,56 +1,48 @@
 const template = require('./00_template');
 
-exports.contentPage = function (uname, result, othersReplies, myReplies) {
-    /* 한 줄만 받을 때는 반복문 쓰면 안 되나...? */
-    /* 상관없이 됐던 것 같은데... */
-    // tableRow += `
-    //                 <tr>
-    //                     <td style="padding-right:20px;">${result.bbs_title}</td>
-    //                     <td style="padding-right:20px;">${rows.bbs_bid}</td>
-    //                     <td style="padding-right:20px;">${rows.bbs_content}</td>
-    //                     <td style="padding-right:20px;">${rows.bbs_modTime}</td>
-    //                     <td style="padding-right:20px;">${rows.users_uid}</td>
-    //                     <td style="padding-right:20px;">${rows.bbs_viewCount}</td>
-    //                     <td style="padding-right:20px;">${rows.reply_comments}</td>
-    //                     <td style="padding-right:20px;">${rows.reply_NumComments}</td>
-    //                     <td style="padding-right:20px;">${rows.reply_isMine}</td>
-    //                 </tr>
-
-    //     `
-
-    // console.log(tableRow);
-    /* 이거 위에 키면 오류난다;;;; 왜 그러는진 모르겠음 */
-
-    /* contentPage에서 rid를 어떻게 받을지를 알아야 함 */
-
+exports.contentPage = function (uname, result, myReplies, othersReplies) {
     let mine = '';
     for (let myReply of myReplies)
         mine += `
-        <div>
-            <div>${myReply.reply_uname} ${myReply.reply_regTime} 
-            <form action="/content/reply/delete" method="post">
-                <input type="hidden" name="rid" id="rid" value="${myReply.reply_rid}">
-                <input type="hidden" name="bid" id="bid" value="${result.bbs_bid}">
-                <button type="submit" class="btn btn-outline-primary btn-sm active">삭제</button>
-            </form>
-            <a href="">댓글삭제</a></div>
-            <div>${myReply.reply_comments}</div>
+        <div class="row">
+            <div class="col-8">
+                <div>
+                    ${myReply.reply_uname} ${myReply.reply_regTime} 
+                </div>
+            </div>
+            <div class="col-4 ml-auto">
+                <div>
+                <form action="/content/reply/delete" method="post">
+                    <input type="hidden" name="rid" id="rid" value="${myReply.reply_rid}">
+                    <input type="hidden" name="bid" id="bid" value="${result.bbs_bid}">
+                    <button type="submit" class="btn btn-outline-primary btn-sm active">삭제</button>
+                </form>
+                </div>
+            </div>
         </div>
+        <div>${myReply.reply_comments}</div>
             `
 
     let others = '';
     for (let othersReply of othersReplies)
         others += `
-        <div>
-            <div>${othersReply.reply_uname} ${othersReply.reply_regTime} 
-            <form action="/content/reply/delete" method="post">
-                <input type="hidden" name="rid" id="rid" value="${othersReply.reply_rid}">
-                <input type="hidden" name="bid" id="bid" value="${result.bbs_bid}">
-                <button type="submit" class="btn btn-outline-primary btn-sm active">삭제</button>
-            </form>
-            <a href="">댓글삭제</a></div>
-            <div>${othersReply.reply_comments}</div>
+        <div class="row">
+            <div class="col-8">
+                <div>
+                ${othersReply.reply_uname} ${othersReply.reply_regTime} 
+                </div>
+            </div>
+            <div class="col-4 ml-auto">
+                <div>
+                <form action="/content/reply/delete" method="post">
+                    <input type="hidden" name="rid" id="rid" value="${othersReply.reply_rid}">
+                    <input type="hidden" name="bid" id="bid" value="${result.bbs_bid}">
+                    <button type="submit" class="btn btn-outline-primary btn-sm active">삭제</button>
+                </form>
+                </div>
+            </div>
         </div>
+        <div>${othersReply.reply_comments}</div>
         `
     return `
     ${template.header()}

@@ -9,13 +9,14 @@ module.exports = cRouter;
 /* bid를 정의해줘야 함. 세션으로 */
 
 cRouter.get('/bid/:bid', (req, res) => {
+    console.log(req.session.uname);
     let bid = req.params.bid;
-    console.log(bid);
     dm.getContent(bid, result => {
+        console.log(result.users_uname);
         replyDM.getMyComment(bid, myReplies => {
             replyDM.getOthersComment(bid, othersReplies => {
                 const view = require('./view/03_contentPage')
-                let html = view.contentPage(req.session.uname, result, othersReplies, myReplies);
+                let html = view.contentPage(req.session.uname, result, myReplies, othersReplies);
                 res.send(html);
             })
         })
@@ -23,16 +24,8 @@ cRouter.get('/bid/:bid', (req, res) => {
 })
 
 
-/* 삭제는 글 안에 들어가서 할 수 있도록 */
+
 cRouter.get('/create', (req, res) => {
-    /* db모듈에 새로운 내용들을 집어넣는 insert 구문이 있어야 함 */
-    /* 그리고 createpage가 있어야 함 */
-    /*  */
-    /* 세션 유네임이 안들어와서 그래 */
-    // req.session.uname
-    /* 로그인했을때 받은 세션이 어떻게 되어있지? */
-
-
     const view = require('./view/04_createContentPage')
     let html = view.createContentPage(req.session.uname);
     res.send(html);
@@ -51,22 +44,35 @@ cRouter.post('/create', (req, res) => {
 /* 좋아 여기까지 잘 들어왔어! */
 cRouter.get('/bid/:bid/update', (req, res) => {
     let bid = parseInt(req.params.bid)
+    console.log(req.session.uname);
     dm.contentToUpdate(bid, result => {
+        console.log(result.users_uname);
         const view = require('./view/05_updateContentPage')
         let html = view.updateContentPage(req.session.uname, result);
         res.send(html);
     })
 })
 
+//       if (req.params.uid === req.session.uid) { /* 권한 있음 */
+//           dm.getUserInfo(req.params.uid, (result) => {
+//               const view = require('./view/usePwdUpdate')
+//               let html = view.updatePwdForm(result);
+//               res.send(html);
+//           })
+//       } else {
+//           let html = aM.alertMsg(`수정 권한이 없습니다.`, '/'); /* 로그인은 됐는데 권한이 없으니 루트로 */
+//           res.send(html);
+//       }
+
 cRouter.post('/bid/:bid/update', (req, res) => {
     let title = req.body.title
     let content = req.body.content
     let bid = parseInt(req.body.bid)
     let params = [title, content, bid]
-    /* 타이틀이... */
-    /* db함수에 insert가 잘못되어서 잘못들어가는건지 */
-    /* 잘 들어간다! */
-    console.log(params);
+
+    /* 여기서 result.users_name을 가져와야 한다. */
+
+
     dm.updateContent(params, () => {
         res.redirect('/')
     })
@@ -115,4 +121,5 @@ cRouter.post('/reply/delete', (req, res) => {
         res.redirect(`/content/bid/${bid}`)
     })
 })
+
 

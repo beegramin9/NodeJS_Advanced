@@ -26,6 +26,7 @@ exports.updateContentPage = function (uname, result) {
     // console.log(row.bbs_bid);
 
     /* form을 hidder으로 해서 uname을 받아야겠네... */
+    /* bid, title, content 를 받는데 uname도 같이 받아와야 함 */
     return `
     ${template.header()}
     ${template.headNavBar(uname)}
@@ -36,16 +37,16 @@ exports.updateContentPage = function (uname, result) {
             <div class="col6">
                 <form action="/content/bid/:bid/update" method="post">
                     
-                    <input type="hidden" name="bid" id="bid" value="${result.bid}">
+                    <input type="hidden" name="bid" id="bid" value="${result.bbs_bid}">
                 
                     <table class="table table-borderless">
                         <tr>
                             <td><label for="title">글 제목</label></td>
-                            <td><input class="form-control" type="text" name="title" id="title" value="${result.title}"></td>
+                            <td><input class="form-control" type="text" name="title" id="title" value="${result.bbs_title}"></td>
                         </tr>
                         <tr>
                             <td><label for="content">글 내용</label></td>
-                            <td><textarea class="form-control" name="content" id="content">${result.content}</textarea>
+                            <td><textarea class="form-control" name="content" id="content">${result.bbs_content}</textarea>
                         </tr>
                         <tr>
                             <td colspan="2" style="text-align: center;">

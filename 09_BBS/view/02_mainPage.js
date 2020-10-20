@@ -5,7 +5,7 @@ const writeAlert = require('./writeAlert');
     어케하지?
     
  */
-exports.mainPage = function (rows, uname = '일반 사용자') {
+exports.mainPage = function (rows, uname) {
 
     // let today = new Date();
     // let whatToday = today.getTime()
@@ -40,7 +40,7 @@ exports.mainPage = function (rows, uname = '일반 사용자') {
             ${uname === '일반 사용자' ? ' <p><a href="/login">로그인</a></p>' : ''} */
 
     /* 글 쓰기 버튼 누를 수 있도록... */
-    if (uname === '일반 사용자')
+    if (!uname)
         return `
         ${template.header()}
         ${template.headNavBar(uname)}

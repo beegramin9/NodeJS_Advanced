@@ -143,7 +143,17 @@ module.exports = {
     },
     contentToUpdate: function (bid, callback) {
         let conn = this.getConnection();
-        let sql = `select * from bbs where bid =?`
+        /* 여기서 uname을 받아야 함 */
+        // let sql = `select * from bbs where bid =?`
+        let sql = `SELECT bbs.bid AS bbs_bid,
+        bbs.title AS bbs_title,
+        bbs.content AS bbs_content,
+        users.uname AS users_uname 
+        FROM bbs
+        left outer JOIN users
+        ON users.uid = bbs.uid
+        where bid = ?
+        `
         conn.query(sql, bid, (error, rows, fields) => {
             if (error)
                 console.log(`contentToUpdate 에러 발생: ${error}`);

@@ -19,7 +19,7 @@ module.exports = {
     /* 상단 NAVBAR까지 */
     /* 지금 사용자가 세션으로 안 들어가고 result로 들어가는 것 같거든 */
     headNavBar: function (uname) {
-        if (uname === '일반 사용자') {
+        if (!uname) {
             return `
             <body style="padding-top:70px">
             <nav class="navbar navbar-expand-lg bg-dark navbar-dark fixed-top">
@@ -36,7 +36,7 @@ module.exports = {
                     </li>
                 </ul>
                 <div class="navbar-text fixed-right" id="weather">
-                    ${uname}님 반갑습니다.&nbsp;&nbsp;&nbsp;&nbsp;
+                일반 사용자님 반갑습니다.&nbsp;&nbsp;&nbsp;&nbsp;
                     <i class="fas fa-cloud-sun"></i> 20&deg;C
                 </div>
             </nav>
