@@ -31,24 +31,9 @@ module.exports = {
 			DATE_FORMAT(modTime, '%H:%i:%s'),
 			DATE_FORMAT(modTime, '%Y-%m-%d')) AS bbs_modTime,
         bbs.viewCount AS bbs_viewCount  
-        FROM bbs 
-        LEFT JOIN reply
-        ON bbs.bid = reply.bid
-        UNION
-        SELECT bbs.bid AS bbs_bid, 
-        bbs.title AS bbs_title, 
-        bbs.uid AS users_uid, 
-        DATE_FORMAT(bbs.modTime, '%y-%m-%d %T') AS bbs_modTime,
-         bbs.replyCount as bbs_replyCount, 
-         if (date(modTime) = DATE(NOW()),
-			DATE_FORMAT(modTime, '%H:%i:%s'),
-			DATE_FORMAT(modTime, '%Y-%m-%d')) AS bbs_modTime,
-        bbs.viewCount AS bbs_viewCount 
-        FROM bbs 
-        RIGHT JOIN reply
-        ON bbs.bid = reply.bid
-     
-        ORDER BY bbs_bid DESC
+        
+        FROM bbs
+        ORDER BY bbs_bid desc
         `
         /* 내가 이름 지어주는 걸 완료했으면 */
         /* order by 할 때는 내가 지어준 이름으로! */
@@ -74,26 +59,7 @@ module.exports = {
         bbs.viewCount AS bbs_viewCount  
         
         FROM bbs 
-        LEFT JOIN reply
-        ON bbs.bid = reply.bid
-        WHERE bbs.title like ?
-        UNION
-        
-        SELECT bbs.bid AS bbs_bid, 
-        bbs.title AS bbs_title, 
-        bbs.uid AS users_uid, 
-        DATE_FORMAT(bbs.modTime, '%y-%m-%d %T') AS bbs_modTime,
-         bbs.replyCount as bbs_replyCount, 
-         if (date(modTime) = DATE(NOW()),
-			DATE_FORMAT(modTime, '%H:%i:%s'),
-			DATE_FORMAT(modTime, '%Y-%m-%d')) AS bbs_modTime,
-        bbs.viewCount AS bbs_viewCount 
-        
-        FROM bbs 
-        RIGHT JOIN reply
-        ON bbs.bid = reply.bid 
-        WHERE bbs.title like ?
-        ORDER BY bbs_bid DESC
+        WHERE bbs.title LIKE ?
         `
         /* 내가 이름 지어주는 걸 완료했으면 */
         /* order by 할 때는 내가 지어준 이름으로! */
@@ -125,7 +91,7 @@ module.exports = {
         LEFT outer JOIN reply 
         ON bbs.bid = reply.bid
         LEFT OUTER JOIN users
-        ON USERs.uid = bbs.uid
+        ON USERs.uid = bbs.uid 
         WHERE bbs.isDeleted = 0 and bbs.bid = ?
     
         `
