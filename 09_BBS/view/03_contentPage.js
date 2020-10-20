@@ -1,49 +1,58 @@
 const template = require('./00_template');
 
-exports.contentPage = function (uname, result, myReplies, othersReplies) {
-    let mine = '';
-    for (let myReply of myReplies)
-        mine += `
-        <div class="row">
-            <div class="col-8">
-                <div>
-                    ${myReply.reply_uname} ${myReply.reply_regTime} 
-                </div>
-            </div>
-            <div class="col-4 ml-auto">
-                <div>
-                <form action="/content/reply/delete" method="post">
-                    <input type="hidden" name="rid" id="rid" value="${myReply.reply_rid}">
-                    <input type="hidden" name="bid" id="bid" value="${result.bbs_bid}">
-                    <button type="submit" class="btn btn-outline-primary btn-sm active">삭제</button>
-                </form>
-                </div>
-            </div>
-        </div>
-        <div>${myReply.reply_comments}</div>
-            `
+exports.contentPage = function (uname, result, wholeComments) {
+    let total = ``
 
-    let others = '';
-    for (let othersReply of othersReplies)
-        others += `
-        <div class="row">
-            <div class="col-8">
-                <div>
-                ${othersReply.reply_uname} ${othersReply.reply_regTime} 
+    for (let comment of wholeComments)
+        if (comment.reply_isMine === 0) {
+
+
+            total += `
+            <div class="col-8 ml-auto">
+                <div class="row">
+                    <div class="col-8">
+                        <div>
+                            ${comment.reply_uname} ${comment.reply_regTime} 
+                        </div>
+                    </div>
+                    <div class="col-4 ml-auto">
+                        <div>
+                        <form action="/content/reply/delete" method="post">
+                            <input type="hidden" name="rid" id="rid" value="${comment.reply_rid}">
+                            <input type="hidden" name="bid" id="bid" value="${result.bbs_bid}">
+                            <button type="submit" class="btn btn-outline-primary btn-sm active">삭제</button>
+                        </form>
+                        </div>
+                    </div>
                 </div>
+                <div>${comment.reply_comments}</div>
             </div>
-            <div class="col-4 ml-auto">
-                <div>
-                <form action="/content/reply/delete" method="post">
-                    <input type="hidden" name="rid" id="rid" value="${othersReply.reply_rid}">
-                    <input type="hidden" name="bid" id="bid" value="${result.bbs_bid}">
-                    <button type="submit" class="btn btn-outline-primary btn-sm active">삭제</button>
-                </form>
+                    `
+        } else {
+            total += `
+            <div class="col-8 mr-auto">
+                <div class="row">
+                    <div class="col-8">
+                        <div>
+                        ${comment.reply_uname} ${comment.reply_regTime} 
+                        </div>
+                    </div>
+                    <div class="col-4 ml-auto">
+                        <div>
+                        <form action="/content/reply/delete" method="post">
+                            <input type="hidden" name="rid" id="rid" value="${comment.reply_rid}">
+                            <input type="hidden" name="bid" id="bid" value="${result.bbs_bid}">
+                            <button type="submit" class="btn btn-outline-primary btn-sm active">삭제</button>
+                        </form>
+                        </div>
+                    </div>
                 </div>
+                <div>${comment.reply_comments}</div>
             </div>
-        </div>
-        <div>${othersReply.reply_comments}</div>
-        `
+                `
+        }
+
+
     return `
     ${template.header()}
     ${template.headNavBar(uname)}
@@ -85,12 +94,7 @@ exports.contentPage = function (uname, result, myReplies, othersReplies) {
         <br>
         <hr>
         <div class="row">
-            <div class="col-8 mr-auto">
-                ${others}
-            </div>
-            <div class="col-8 ml-auto">
-                ${mine}
-            </div>
+            ${total}
         </div>
         <br><br>
         <div class="row">

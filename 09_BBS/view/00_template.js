@@ -21,7 +21,7 @@ module.exports = {
     headNavBar: function (uname) {
         if (!uname) {
             return `
-            <body style="padding-top:70px">
+            <body style="padding-top:70px ; padding-bottom:70px">
             <nav class="navbar navbar-expand-lg bg-dark navbar-dark fixed-top">
                 <a class="navbar-brand" href="/">
                     <img src="/img/hoseo.png" alt="호서직업능력개발원"
@@ -43,7 +43,7 @@ module.exports = {
             `
         } else {
             return `
-            <body style="padding-top:70px">
+            <body style="padding-top:70px ; padding-bottom:70px">
             <nav class="navbar navbar-expand-lg bg-dark navbar-dark fixed-top">
                 <a class="navbar-brand" href="/">
                     <img src="/img/hoseo.png" alt="호서직업능력개발원"

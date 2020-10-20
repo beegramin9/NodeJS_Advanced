@@ -19,7 +19,7 @@ exports.mainPage = function (rows, uname) {
                         <td style="padding-right:20px;">${row.bbs_bid}</td>
                         <td style="padding-right:20px;">
                             <a href="/content/bid/${row.bbs_bid}">${row.bbs_title}
-                            ${row.reply_NumComments}
+                            ${row.bbs_replyCount}
                         </td>
                         <td style="padding-right:20px;">${row.users_uid}</td>
                         <td style="padding-right:20px;">${row.bbs_modTime}</td>

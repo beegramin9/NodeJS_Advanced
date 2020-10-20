@@ -26,7 +26,10 @@ module.exports = {
         bbs.title AS bbs_title, 
         bbs.uid AS users_uid, 
         DATE_FORMAT(bbs.modTime, '%y-%m-%d %T') AS bbs_modTime,
-        reply.NumComments as reply_NumComments, 
+        bbs.replyCount as bbs_replyCount, 
+        if (date(modTime) = DATE(NOW()),
+			DATE_FORMAT(modTime, '%H:%i:%s'),
+			DATE_FORMAT(modTime, '%Y-%m-%d')) AS bbs_modTime,
         bbs.viewCount AS bbs_viewCount  
         FROM bbs 
         LEFT JOIN reply
@@ -36,7 +39,10 @@ module.exports = {
         bbs.title AS bbs_title, 
         bbs.uid AS users_uid, 
         DATE_FORMAT(bbs.modTime, '%y-%m-%d %T') AS bbs_modTime,
-     	reply.NumComments as reply_NumComments, 
+         bbs.replyCount as bbs_replyCount, 
+         if (date(modTime) = DATE(NOW()),
+			DATE_FORMAT(modTime, '%H:%i:%s'),
+			DATE_FORMAT(modTime, '%Y-%m-%d')) AS bbs_modTime,
         bbs.viewCount AS bbs_viewCount 
         FROM bbs 
         RIGHT JOIN reply
@@ -181,21 +187,16 @@ module.exports = {
 
     /* viewCount 올리는 함수도 해야 함 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    increaseViewCount: function (bid, callback) {
+        let conn = this.getConnection()
+        let sql = `update bbs set viewCount = viewCount + 1
+                    where bid = ?`
+        conn.query(sql, bid, (error, fields) => {
+            if (error)
+                console.log(`increaseViewCount 에러 발생: ${error} `);
+            callback();
+        })
+    },
 
 
     updatePwdUser: function (params, callback) {
@@ -209,6 +210,12 @@ module.exports = {
                 console.log(`updatePwdUser 에러 발생: ${error} `);
             callback();
         })
+    },
+    getDisplayTime: function (dt) {
+        let today = moment().format('YYYY-MM-DD')
+        let dbtime = moment(dt).format('YYYY-MM-DD')
+        return (dbtime.indexOf(today) == 0) ?
+            dbtime.substring(11) : dbtime.substring(0, 10)
     }
 
 

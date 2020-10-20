@@ -1,6 +1,7 @@
 const express = require('express');
 const dm = require('./db/dbModule');
 const replyDM = require('./db/dbReply')
+const aM = require('./view/alertMsg')
 let cRouter = express.Router();
 module.exports = cRouter;
 
@@ -9,21 +10,18 @@ module.exports = cRouter;
 /* bid를 정의해줘야 함. 세션으로 */
 
 cRouter.get('/bid/:bid', (req, res) => {
-    console.log(req.session.uname);
     let bid = req.params.bid;
     dm.getContent(bid, result => {
-        console.log(result.users_uname);
-        replyDM.getMyComment(bid, myReplies => {
-            replyDM.getOthersComment(bid, othersReplies => {
+        dm.increaseViewCount(bid, () => {
+            req.session.contentUname = result.users_uname
+            replyDM.getWholeComment(bid, wholeComments => {
                 const view = require('./view/03_contentPage')
-                let html = view.contentPage(req.session.uname, result, myReplies, othersReplies);
+                let html = view.contentPage(req.session.uname, result, wholeComments);
                 res.send(html);
             })
         })
     })
 })
-
-
 
 cRouter.get('/create', (req, res) => {
     const view = require('./view/04_createContentPage')
@@ -45,11 +43,16 @@ cRouter.post('/create', (req, res) => {
 cRouter.get('/bid/:bid/update', (req, res) => {
     let bid = parseInt(req.params.bid)
     console.log(req.session.uname);
+
     dm.contentToUpdate(bid, result => {
-        console.log(result.users_uname);
-        const view = require('./view/05_updateContentPage')
-        let html = view.updateContentPage(req.session.uname, result);
-        res.send(html);
+        if (req.session.uname === req.session.contentUname) {
+            const view = require('./view/05_updateContentPage')
+            let html = view.updateContentPage(req.session.uname, result);
+            res.send(html);
+        } else {
+            let html = aM.alertMsg(`수정 권한이 없습니다.`, `/content/bid/${bid}`); /* 로그인은 됐는데 권한이 없으니 루트로 */
+            res.send(html);
+        }
     })
 })
 
@@ -79,15 +82,22 @@ cRouter.post('/bid/:bid/update', (req, res) => {
 })
 
 cRouter.get('/bid/:bid/delete', (req, res) => {
-    /* 수정하기! */
+    /* 삭제하기! */
+    console.log(req.session.uname);
+    console.log(req.session.contentUname)
     let bid = parseInt(req.params.bid)
-    const view = require('./view/06_deleteContentPage')
-    let html = view.deleteContentPage(req.session.uname, bid);
-    res.send(html);
+    if (req.session.uname === req.session.contentUname) {
+        const view = require('./view/06_deleteContentPage')
+        let html = view.deleteContentPage(req.session.uname, bid);
+        res.send(html);
+    } else {
+        let html = aM.alertMsg(`삭제 권한이 없습니다.`, `/content/bid/${bid}`); /* 로그인은 됐는데 권한이 없으니 루트로 */
+        res.send(html);
+    }
 })
 
 cRouter.post('/bid/:bid/delete', (req, res) => {
-    /* 수정하기! */
+    /* 삭제하기! */
     let bid = parseInt(req.body.bid)
     console.log(bid);
     dm.deleteContent(bid, () => {
@@ -103,23 +113,47 @@ cRouter.post('/reply/create', (req, res) => {
     let bid = req.body.bid;
     req.session.bid = bid
 
-    console.log(bid);
-    // req.session.uid
     let comments = req.body.comments;
-    let params = [bid, req.session.uid, comments]
-    replyDM.createMyComment(params, () => {
-        res.redirect(`/content/bid/${bid}`)
+    let isMine = '';
+    if (req.session.uname === req.session.contentUname) {
+        isMine = 0
+    } else {
+        isMine = 1
+    }
+
+    let params = [bid, req.session.uid, comments, isMine]
+
+    replyDM.increaseReplyCount(bid, () => {
+        replyDM.createMyComment(params, () => {
+            res.redirect(`/content/bid/${bid}`)
+        })
     })
 })
 
 cRouter.post('/reply/delete', (req, res) => {
+    // 여기서도 권한 줘야함
+    console.log(req.session.uname);
+    req.session.replyUname = '';
+    console.log(req.session.replyUname);
+
+    console.log(req.session.contentUname)
+    /* 댓글의 사용자를 가져와야함 */
+
+    /* replyname이 필요하다 */
     let rid = parseInt(req.body.rid);
     let bid = parseInt(req.body.bid);
-    console.log('안나오냐', rid, bid);
+    // console.log('안나오냐', rid, bid);
     // req.session.uid
-    replyDM.deleteMyComment(rid, () => {
-        res.redirect(`/content/bid/${bid}`)
-    })
+    if (req.session.uname === req.session.replyUname) {
+        replyDM.decreaseReplyCount(bid, () => {
+            replyDM.deleteMyComment(rid, () => {
+                res.redirect(`/content/bid/${bid}`)
+            })
+        })
+    } else {
+        let html = aM.alertMsg(`삭제 권한이 없습니다.`, `/content/bid/${bid}`); /* 로그인은 됐는데 권한이 없으니 루트로 */
+        res.send(html);
+    }
 })
 
 
