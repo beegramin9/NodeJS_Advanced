@@ -5,7 +5,7 @@ exports.uRegister = function () {
     return `
     ${template.header()}
     ${template.headNavBar()} 
-        <div class="container">
+        <div class="container" style="padding-top:40px">
         <div class="row">
             <div class="col3"></div>
             <div class="col6">

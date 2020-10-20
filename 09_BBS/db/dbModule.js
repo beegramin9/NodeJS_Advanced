@@ -47,7 +47,7 @@ module.exports = {
         FROM bbs 
         RIGHT JOIN reply
         ON bbs.bid = reply.bid
-        WHERE bbs.isDeleted = 0
+     
         ORDER BY bbs_bid DESC
         `
         /* 내가 이름 지어주는 걸 완료했으면 */
@@ -57,6 +57,51 @@ module.exports = {
         conn.query(sql, (error, rows, fields) => {
             if (error)
                 console.log(`mainPageGetLists 에러 발생: ${error}`);
+            callback(rows);
+        })
+    },
+    searchKeywordGetLists: function (searchKeyword, callback) {
+        let conn = this.getConnection()
+        let sql = `
+        SELECT bbs.bid AS bbs_bid, 
+        bbs.title AS bbs_title, 
+        bbs.uid AS users_uid, 
+        DATE_FORMAT(bbs.modTime, '%y-%m-%d %T') AS bbs_modTime,
+        bbs.replyCount as bbs_replyCount, 
+        if (date(modTime) = DATE(NOW()),
+			DATE_FORMAT(modTime, '%H:%i:%s'),
+			DATE_FORMAT(modTime, '%Y-%m-%d')) AS bbs_modTime,
+        bbs.viewCount AS bbs_viewCount  
+        
+        FROM bbs 
+        LEFT JOIN reply
+        ON bbs.bid = reply.bid
+        WHERE bbs.title like ?
+        UNION
+        
+        SELECT bbs.bid AS bbs_bid, 
+        bbs.title AS bbs_title, 
+        bbs.uid AS users_uid, 
+        DATE_FORMAT(bbs.modTime, '%y-%m-%d %T') AS bbs_modTime,
+         bbs.replyCount as bbs_replyCount, 
+         if (date(modTime) = DATE(NOW()),
+			DATE_FORMAT(modTime, '%H:%i:%s'),
+			DATE_FORMAT(modTime, '%Y-%m-%d')) AS bbs_modTime,
+        bbs.viewCount AS bbs_viewCount 
+        
+        FROM bbs 
+        RIGHT JOIN reply
+        ON bbs.bid = reply.bid 
+        WHERE bbs.title like ?
+        ORDER BY bbs_bid DESC
+        `
+        /* 내가 이름 지어주는 걸 완료했으면 */
+        /* order by 할 때는 내가 지어준 이름으로! */
+        /* ORDER BY bbs_bid DESC LIMIT 30 */
+
+        conn.query(sql, searchKeyword, (error, rows, fields) => {
+            if (error)
+                console.log(`searchKeywordGetLists 에러 발생: ${error}`);
             callback(rows);
         })
     },

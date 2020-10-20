@@ -92,9 +92,6 @@ app.post('/login', (req, res) => {
             if (result.pwd === pwdHash) {
                 req.session.uid = uid;
                 req.session.uname = result.uname;
-                // console.log('나와라!', req.session.uid, req.session.uname);
-                /* 오케, 세션도 잘 들어왔어! */
-
                 req.session.save(function () {
                     res.redirect('/')
                 })
@@ -103,12 +100,6 @@ app.post('/login', (req, res) => {
                 res.send(html)
             }
         }
-
-
-
-
-        /* 아니면 로그인으로 할 수 있나...? */
-        /* 왜냐면 여기서 rows가 나와야하긴해 */
     })
 })
 
@@ -118,9 +109,20 @@ app.get('/logout', (req, res) => {
     res.redirect('/login')
 })
 
+app.post('/search', (req, res) => {
+    let searchKeyword = req.body.search
+    console.log(searchKeyword);
+    dm.searchKeywordGetLists(searchKeyword, rows => {
+        /* 페이지를 두개로 나눠야 돼...? */
+        /* 삼항연산자 아니면 함수 파라미터 줄 떄 파이썬처럼 디폴트값이 있나 */
+        // const view = require('./view/02_mainPage');
+        // let html = view.mainPage(rows, req.session.uname);
+        // /* 함수 기본값 매개변수로 하자 */
+        // res.send(html);
+        res.redirect('/')
+    })
+})
 
 
-/* 이제 세션으로 해서! 로그인 된 정보를 캐리할 수 있게 해줘야 함 */
-/* 회원가입 비밀번호 해시 */
 
 app.listen(3000, () => { console.log('Server Running at http://127.0.0.1:3000') });

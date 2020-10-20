@@ -1,4 +1,5 @@
 const express = require('express');
+const { get } = require('jquery');
 const dm = require('./db/dbModule');
 const replyDM = require('./db/dbReply')
 const aM = require('./view/alertMsg')
