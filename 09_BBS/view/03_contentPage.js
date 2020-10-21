@@ -1,22 +1,5 @@
 const template = require('./00_template');
 
-<<<<<<< HEAD
-exports.contentPage = function (uname, result, othersReplies, myReplies) {
-    let mine = '';
-    for (let myReply of myReplies)
-        mine += `
-        <div>
-            <div>${myReply.reply_uname} ${myReply.reply_regTime} 
-            <form action="/content/reply/delete" method="post">
-                <input type="hidden" name="rid" id="rid" value="${myReply.reply_rid}">
-                <input type="hidden" name="bid" id="bid" value="${result.bbs_bid}">
-                <button type="submit" class="btn btn-outline-primary btn-sm active">삭제</button>
-            </form>
-            <a href="">댓글삭제</a></div>
-            <div>${myReply.reply_comments}</div>
-        </div>
-            `
-=======
 exports.contentPage = function (sessionUname, result, wholeComments) {
     let total = ``
 
@@ -91,7 +74,6 @@ exports.contentPage = function (sessionUname, result, wholeComments) {
                 `
         }
 
->>>>>>> 4eeec8e426852d520f3536f8207515da4b875563
 
     return `
     ${template.header()}

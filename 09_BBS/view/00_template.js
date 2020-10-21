@@ -35,16 +35,14 @@ module.exports = {
                         <a class="nav-link" href="/login">로그인</a>
                     </li>
                 </ul>
-<<<<<<< HEAD
-                
-=======
                 <form class="form-inline" action="/search" method="post">
                     <input type="text" class="form-control" name="search" id="search" placeholder="검색어를 입력하세요.">
-                    <button type="submit" class="btn btn-primary btn-sm">검색</button>
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="fas fa-search"></i>
+                    </button>
                 </form>
                 &nbsp;&nbsp;&nbsp;&nbsp;
 
->>>>>>> 4eeec8e426852d520f3536f8207515da4b875563
                 <div class="navbar-text fixed-right" id="weather">
                 일반 사용자님 반갑습니다.&nbsp;&nbsp;&nbsp;&nbsp;
                     <i class="fas fa-cloud-sun"></i> 20&deg;C
@@ -68,16 +66,12 @@ module.exports = {
                         <a class="nav-link" href="/logout">로그아웃</a>
                     </li>
                 </ul>
-<<<<<<< HEAD
-               
-=======
                 <form class="form-inline" action="/search" method="post">
                     <input type="text" class="form-control" name="search" id="search" placeholder="검색어를 입력하세요.">
                     <button type="submit" class="btn btn-primary btn-sm">검색</button>
                 </form>
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 
->>>>>>> 4eeec8e426852d520f3536f8207515da4b875563
                 <div class="navbar-text fixed-right" id="weather">
                     ${uname}님 반갑습니다.&nbsp;&nbsp;&nbsp;&nbsp;
                     <i class="fas fa-cloud-sun"></i> 20&deg;C

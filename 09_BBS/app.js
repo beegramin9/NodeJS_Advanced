@@ -67,6 +67,7 @@ app.get('/page/:page', function (req, res) {
     req.session.currentPage = currentPage;
     let offset = (currentPage - 1) * 5;
 
+
     dm.getTotalNumContent(result => {
         let NumContent = result.bbs_count;
         let totalPage = Math.ceil(NumContent / 5);
@@ -150,17 +151,24 @@ app.get('/logout', (req, res) => {
 
 app.post('/search', (req, res) => {
     let searchKeyword = req.body.search
+    console.log(req.params);
+    console.log(req.session.currentBid);
+    /* 일회성으로 갈 수 있게... */
     /* 물음표가 2개가 있으니까 어레이로 묶어서 넣어주면 됨 */
     /* db에서 %?%로 하면 오류가 난다.*/
     dm.searchKeywordGetLists(`%${searchKeyword}%`, rows => {
         /* 페이지를 두개로 나눠야 돼...? */
         /* 삼항연산자 아니면 함수 파라미터 줄 떄 파이썬처럼 디폴트값이 있나 */
         if (rows.length === 0) {
-            let html = aM.alertMsg(`해당 검색어가 없습니다. 메인 페이지로 돌아가시겠습니까? `, '/');
+            let html = aM.alertMsg(`해당 검색어가 없습니다. 이전 페이지로 돌아가시겠습니까? `, !req.session.currentBid ? `/page/${req.session.currentPage}` : `/content/bid/${req.session.currentBid}`);
             res.send(html)
         } else if (!searchKeyword) {
-            let html = aM.alertMsg(`검색어를 입력하세요. `, '/');
+
+            let html = aM.alertMsg(`검색어를 입력하세요. `, !req.session.currentBid ? `/page/${req.session.currentPage}` : `/content/bid/${req.session.currentBid}`);
             res.send(html)
+            // req.session.currentBid = '';
+            // console.log('지워지나', req.session.currentBid);
+            req.session.destroy()
         } else {
 
             const view = require('./view/02_mainPage');

@@ -12,6 +12,7 @@ module.exports = cRouter;
 
 cRouter.get('/bid/:bid', (req, res) => {
     let bid = req.params.bid;
+    req.session.currentBid = bid
     dm.getContent(bid, result => {
         dm.increaseViewCount(bid, () => {
             req.session.contentUname = result.users_uname
@@ -115,12 +116,6 @@ cRouter.post('/reply/create', (req, res) => {
     /* db reply에 집어 넣는거랑, 댓글 개수 올라갈 때? 두개?? */
     let bid = req.body.bid;
 
-<<<<<<< HEAD
-    let comments = req.body.comments;
-    let params = [bid, req.session.uid, comments]
-    replyDM.createMyComment(params, (ㅉ) => {
-        res.redirect(`/content/bid/${bid}`)
-=======
     // console.log(req.session.replyUname);
     /* 여기에서 폼으로 받아와야지 */
 
@@ -134,13 +129,18 @@ cRouter.post('/reply/create', (req, res) => {
 
     let params = [bid, req.session.uid, comments, isMine]
 
-    replyDM.increaseReplyCount(bid, () => {
-        replyDM.createMyComment(params, () => {
+    if (!req.session.uname) {
+        let html = aM.alertMsg(`로그인이 필요한 서비스입니다.`, `/content/bid/${bid}`); /* 로그인은 됐는데 권한이 없으니 루트로 */
+        res.send(html);
 
-            res.redirect(`/content/bid/${bid}`)
+    } else {
+        replyDM.increaseReplyCount(bid, () => {
+            replyDM.createMyComment(params, () => {
+                res.redirect(`/content/bid/${bid}`)
+            })
         })
->>>>>>> 4eeec8e426852d520f3536f8207515da4b875563
-    })
+    }
+
 })
 
 cRouter.post('/reply/delete', (req, res) => {

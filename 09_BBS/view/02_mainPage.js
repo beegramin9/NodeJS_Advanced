@@ -67,11 +67,7 @@ ${page}<span class="sr-only">(current)</span>
         return `
         ${template.header()}
         ${template.headNavBar(uname)}
-<<<<<<< HEAD
-            <div class="container">
-=======
         <div class="container mt-5">
->>>>>>> 4eeec8e426852d520f3536f8207515da4b875563
             <p>글을 쓰려면 로그인이 필요합니다.</p>
             <hr>
             <table class="table table-hover">
@@ -85,20 +81,10 @@ ${page}<span class="sr-only">(current)</span>
                     </tr>
                 </thead>
                 ${tableRow}
-<<<<<<< HEAD
-                <tr>
-                    <td colspan="4" style="text-align:center;">
-                        <button onclick="location.href='/login'">로그인</button>
-                    </td>
-                </tr>
-            </table>
-            </div>
-=======
                 
-                </table>s
+                </table>
                 ${pagination}
         </div>
->>>>>>> 4eeec8e426852d520f3536f8207515da4b875563
         ${template.footNavBar()}
         ${template.footer()}
     `
@@ -106,27 +92,6 @@ ${page}<span class="sr-only">(current)</span>
         return `
         ${template.header()}
         ${template.headNavBar(uname)}
-<<<<<<< HEAD
-            <div class="container">
-            <p><a href="/content/create">글 쓰기</a></p>
-            <hr>
-            <table>
-                <tr>
-                    <th>번호</th>
-                    <th>제목</th>
-                    <th>글쓴이</th>
-                    <th>날짜</th>
-                    <th>조회수</th>
-                </tr>
-                ${tableRow}
-                <tr>
-                    <td colspan="4" style="text-align:center;">
-                        <button onclick="location.href='/login'">로그인</button>
-                    </td>
-                </tr>
-            </table>
-            </div>
-=======
         <div class="container mt-5">
             <hr>
             <div class="row">
@@ -157,7 +122,6 @@ ${page}<span class="sr-only">(current)</span>
         </div>
 
         
->>>>>>> 4eeec8e426852d520f3536f8207515da4b875563
         ${template.footNavBar()}
         ${template.footer()}
         `
