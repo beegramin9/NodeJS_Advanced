@@ -19,33 +19,33 @@ module.exports = {
         })
         return conn;
     },
-    mainPageGetLists: function (callback) {
-        let conn = this.getConnection()
-        let sql = `
-        SELECT bid AS bbs_bid, 
-        title AS bbs_title, 
-        uid AS users_uid, 
-        DATE_FORMAT(modTime, '%y-%m-%d %T') AS bbs_modTime,
-        replyCount as bbs_replyCount, 
-        if (date(modTime) = DATE(NOW()),
-			DATE_FORMAT(modTime, '%H:%i:%s'),
-			DATE_FORMAT(modTime, '%Y-%m-%d')) AS bbs_modTime,
-        viewCount AS bbs_viewCount  
-        
-        FROM bbs
-        ORDER BY bbs_bid desc
-        `
-        /* 내가 이름 지어주는 걸 완료했으면 */
-        /* order by 할 때는 내가 지어준 이름으로! */
-        /* ORDER BY bbs_bid DESC LIMIT 30 */
+    // mainPageGetLists: function (callback) {
+    //     let conn = this.getConnection()
+    //     let sql = `
+    //     SELECT bid AS bbs_bid, 
+    //     title AS bbs_title, 
+    //     uid AS users_uid, 
+    //     DATE_FORMAT(modTime, '%y-%m-%d %T') AS bbs_modTime,
+    //     replyCount as bbs_replyCount, 
+    //     if (date(modTime) = DATE(NOW()),
+    // 		DATE_FORMAT(modTime, '%H:%i:%s'),
+    // 		DATE_FORMAT(modTime, '%Y-%m-%d')) AS bbs_modTime,
+    //     viewCount AS bbs_viewCount  
 
-        conn.query(sql, (error, rows, fields) => {
-            if (error)
-                console.log(`mainPageGetLists 에러 발생: ${error}`);
-            callback(rows);
-        })
-    },
-    getTotalNumContent: function (offset, callback) {
+    //     FROM bbs
+    //     ORDER BY bbs_bid desc
+    //     `
+    //     /* 내가 이름 지어주는 걸 완료했으면 */
+    //     /* order by 할 때는 내가 지어준 이름으로! */
+    //     /* ORDER BY bbs_bid DESC LIMIT 30 */
+
+    //     conn.query(sql, (error, rows, fields) => {
+    //         if (error)
+    //             console.log(`mainPageGetLists 에러 발생: ${error}`);
+    //         callback(rows);
+    //     })
+    // },
+    mainPageGetLists2: function (offset, callback) {
         let conn = this.getConnection()
         let sql = `
         SELECT bid AS bbs_bid, 
@@ -68,8 +68,24 @@ module.exports = {
 
         conn.query(sql, offset, (error, rows, fields) => {
             if (error)
-                console.log(`mainPageGetLists 에러 발생: ${error}`);
+                console.log(`mainPageGetLists2 에러 발생: ${error}`);
             callback(rows);
+        })
+    },
+    getTotalNumContent: function (callback) {
+        let conn = this.getConnection()
+        let sql = `
+        SELECT COUNT(*) AS bbs_count FROM bbs 
+        where isDeleted=0
+        `
+        /* 내가 이름 지어주는 걸 완료했으면 */
+        /* order by 할 때는 내가 지어준 이름으로! */
+        /* ORDER BY bbs_bid DESC LIMIT 30 */
+
+        conn.query(sql, (error, result, fields) => {
+            if (error)
+                console.log(`mainPageGetLists2 에러 발생: ${error}`);
+            callback(result[0]);
         })
     },
 
@@ -90,7 +106,9 @@ module.exports = {
         bbs.viewCount AS bbs_viewCount  
         
         FROM bbs 
-        WHERE bbs.title LIKE ?
+        WHERE bbs.title LIKE ? 
+
+
         `
         /* 내가 이름 지어주는 걸 완료했으면 */
         /* order by 할 때는 내가 지어준 이름으로! */

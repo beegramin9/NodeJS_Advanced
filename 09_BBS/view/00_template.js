@@ -23,13 +23,13 @@ module.exports = {
             return `
             <body style="padding-top:70px ; padding-bottom:70px">
             <nav class="navbar navbar-expand-lg bg-dark navbar-dark fixed-top">
-                <a class="navbar-brand" href="/">
+                <a class="navbar-brand" href="/page/1">
                     <img src="/img/hoseo.png" alt="호서직업능력개발원"
                         style="height: 40px; margin-left: 50px; margin-right: 100px;">
                 </a>
                 <ul class="nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/"><i class="fas fa-home"></i>홈</a>
+                        <a class="nav-link" href="/page/1"><i class="fas fa-home"></i>홈</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/login">로그인</a>
@@ -51,13 +51,13 @@ module.exports = {
             return `
             <body style="padding-top:70px ; padding-bottom:70px">
             <nav class="navbar navbar-expand-lg bg-dark navbar-dark fixed-top">
-                <a class="navbar-brand" href="/">
+                <a class="navbar-brand" href="/page/1">
                     <img src="/img/hoseo.png" alt="호서직업능력개발원"
                         style="height: 40px; margin-left: 50px; margin-right: 100px;">
                 </a>
                 <ul class="nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/"><i class="fas fa-home"></i>홈</a>
+                        <a class="nav-link" href="/page/1"><i class="fas fa-home"></i>홈</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/logout">로그아웃</a>
@@ -86,17 +86,7 @@ module.exports = {
         `
         }
     },
-    pagiNation: function () {
-        return `
-        <ul class="pagination">
-          <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
-          <li class="page-item"><a class="page-link" href="/page/1">1</a></li>
-          <li class="page-item"><a class="page-link" href="/page/2">2</a></li>
-          <li class="page-item"><a class="page-link" href="/page/3">3</a></li>
-          <li class="page-item"><a class="page-link" href="#">Next</a></li>
-        </ul>
-        `
-    },
+
     /* 하단 NAVBAR까지 */
     footNavBar: function () {
         return `

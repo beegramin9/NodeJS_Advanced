@@ -9,48 +9,68 @@ exports.contentPage = function (sessionUname, result, wholeComments) {
 
             total += `
             <div class="col-8 ml-auto">
-                <div class="row">
-                    <div class="col-8">
-                        <div>
-                            ${comment.reply_uname} ${comment.reply_regTime} 
+                <div class="card bg-light text-dark">
+                    <div class="card-body">
+                    <div class="row">
+                        <div class="col-8">
+                                <strong>${comment.reply_uname}</strong>
+                                <span class="text-body">${comment.reply_regTime}</span> 
+
+                        </div>
+                        <div class="col-4 ml-auto">
+                            <div>
+                            <form action="/content/reply/delete" method="post">
+                                <input type="hidden" name="uname" value="${comment.reply_uname}">
+                                <input type="hidden" name="rid" id="rid" value="${comment.reply_rid}">
+                                <input type="hidden" name="bid" id="bid" value="${result.bbs_bid}">
+                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-4 ml-auto">
-                        <div>
-                        <form action="/content/reply/delete" method="post">
-                            <input type="hidden" name="uname" value="${comment.reply_uname}">
-                            <input type="hidden" name="rid" id="rid" value="${comment.reply_rid}">
-                            <input type="hidden" name="bid" id="bid" value="${result.bbs_bid}">
-                            <button type="submit" class="btn btn-outline-primary btn-sm active">삭제</button>
-                        </form>
-                        </div>
-                    </div>
+                    <div>${comment.reply_comments}</div>
                 </div>
-                <div>${comment.reply_comments}</div>
             </div>
+            </div>
+            
+            
+            
+                
+
                     `
         } else {
             total += `
+            
             <div class="col-8 mr-auto">
-                <div class="row">
-                    <div class="col-8">
-                        <div>
-                        ${comment.reply_uname} ${comment.reply_regTime} 
+                <div class="card bg-light text-dark">
+                    <div class="card-body">
+                    <div class="row">
+                        <div class="col-8">
+                            <div>
+                            <strong>${comment.reply_uname}</strong>
+                            <span class="text-body">${comment.reply_regTime}</span> 
+                            </div>
+                        </div>
+                        <div class="col-4 ml-auto">
+                            <div>
+                            <form action="/content/reply/delete" method="post">
+                                <input type="hidden" name="uname" value="${comment.reply_uname}">
+                                <input type="hidden" name="rid" id="rid" value="${comment.reply_rid}">
+                                <input type="hidden" name="bid" id="bid" value="${result.bbs_bid}">
+                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-4 ml-auto">
-                        <div>
-                        <form action="/content/reply/delete" method="post">
-                            <input type="hidden" name="uname" value="${comment.reply_uname}">
-                            <input type="hidden" name="rid" id="rid" value="${comment.reply_rid}">
-                            <input type="hidden" name="bid" id="bid" value="${result.bbs_bid}">
-                            <button type="submit" class="btn btn-outline-primary btn-sm active">삭제</button>
-                        </form>
-                        </div>
+                    <div>${comment.reply_comments}</div>
                     </div>
                 </div>
-                <div>${comment.reply_comments}</div>
-            </div>
+                </div>
+               
                 `
         }
 
@@ -58,22 +78,32 @@ exports.contentPage = function (sessionUname, result, wholeComments) {
     return `
     ${template.header()}
     ${template.headNavBar(sessionUname)}
-    <div class="container">
+    <div class="container mt-5">
         <div class="row">
             <div class="col-10">
                 <div>
-                    <strong>${result.bbs_title}</strong>
+                    <span class="text-body lead font-weight-bolder">${result.bbs_title}</span>
                 </div>
                 <div>
-                    <strong>글 번호: ${result.bbs_bid} | ${result.bbs_modTime}</strong>
+                    <p>
+                    <span class="text-body font-weight-bold">글 번호:</span>
+                    ${result.bbs_bid} 
+                    <span class="text-body font-weight-bold">작성 시간: </span>
+                    ${result.bbs_modTime}
+                    </p>
                 </div>
             </div>
             <div class="col-2 ml-auto">
                 <div>
-                    <strong>${result.users_uname}</strong>
+                    <span class="text-body font-weight-bold">${result.users_uname}</span>
                 </div>
                 <div>
-                    <strong>조회 ${result.bbs_viewCount} 리플 ${result.reply_NumComments}</strong>
+                    <p>
+                    <span class="text-body font-weight-bold">조회</span>
+                    ${result.bbs_viewCount} 
+                    <span class="text-body font-weight-bold">리플</span>
+                    ${result.reply_NumComments}
+                    </p>
                 </div>
             </div>
         </div>
@@ -82,15 +112,19 @@ exports.contentPage = function (sessionUname, result, wholeComments) {
         <div class="row">
             <div class="col-10 mr-auto">
                 <div>
-                    <strong>${result.bbs_content}</strong>
+                    <span class="text-body lead">${result.bbs_content}</span>
                 </div>
             </div>
         <br>
         </div>
          <div class="row">
             <div class="col-2 ml-auto">
-                <a href="/content/bid/${result.bbs_bid}/update">수정</a>
-                <a href="/content/bid/${result.bbs_bid}/delete">삭제</a>
+                <a class="btn btn-outline-primary btn-sm" href="/content/bid/${result.bbs_bid}/update">
+                    <i class="fas fa-edit"></i>
+                </a>
+                <a class="btn btn-outline-danger btn-sm" href="/content/bid/${result.bbs_bid}/delete">
+                    <i class="fas fa-trash-alt"></i>
+                </a>
             </div>
         </div>
         <br>
@@ -109,7 +143,9 @@ exports.contentPage = function (sessionUname, result, wholeComments) {
 
 
             <div class="col-2 mr-auto">
-                <button type="submit" class="btn btn-outline-primary btn-sm active">제출</button>
+                <button type="submit" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
             </div>
             </form>
         </div>

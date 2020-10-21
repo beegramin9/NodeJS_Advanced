@@ -1,11 +1,12 @@
 const template = require('./00_template');
 const writeAlert = require('./writeAlert');
+const ut = require('../util/util')
 /* ${writeAlert.writeAlert('로그인이 필요합니다', '/')}
     이렇게 쓰면 메인페이지가 안뜨고 그냥 바로 경고창이 떠버림
     어케하지?
     
  */
-exports.mainPage = function (uname, rows) {
+exports.mainPage = function (uname, rows, currentPage, startPage, endPage, totalPage) {
 
     // let today = new Date();
     // let whatToday = today.getTime()
@@ -16,14 +17,15 @@ exports.mainPage = function (uname, rows) {
     for (let row of rows) {
         tableRow += `
                     <tr>
-                        <td style="padding-right:20px;">${row.bbs_bid}</td>
+                        <td class="text-secondary" style="padding-right:20px;">${row.bbs_bid}</td>
                         <td style="padding-right:20px;">
-                            <a href="/content/bid/${row.bbs_bid}">${row.bbs_title}
-                            ${row.bbs_replyCount}
+                            <a class="text-body"href="/content/bid/${row.bbs_bid}">
+                            ${row.bbs_title}
+                            <span class="text-danger">[${row.bbs_replyCount}]</span>
                         </td>
-                        <td style="padding-right:20px;">${row.users_uid}</td>
-                        <td style="padding-right:20px;">${row.bbs_modTime}</td>
-                        <td style="padding-right:20px;">${row.bbs_viewCount}</td>
+                        <td class="text-body" style="padding-right:20px;">${row.users_uid}</td>
+                        <td class="text-secondary" style="padding-right:20px;">${row.bbs_modTime}</td>
+                        <td class="text-secondary" style="padding-right:20px;">${row.bbs_viewCount}</td>
                     </tr>
         
         `
@@ -40,26 +42,48 @@ exports.mainPage = function (uname, rows) {
             ${uname === '일반 사용자' ? ' <p><a href="/login">로그인</a></p>' : ''} */
 
     /* 글 쓰기 버튼 누를 수 있도록... */
+
+    // let NumContent = result.bbs_count;
+    // console.log(NumContent);
+    // let totalPage = Math.ceil(NumContent / 10);
+    // let startPage = Math.floor((currentPage - 1) / 10) * 10 + 1; /* 이거 왜 이렇게 함? */
+    // let endPage = Math.ceil(page / 10) * 10;
+    // endPage = (endPage > totalPage) ? totalPage : endPage;
+
+
+    {/* <li class="page-item active" aria-current="page">
+<span class="page-link">
+${page}<span class="sr-only">(current)</span>
+</span>
+</li> */}
+
+
+
+    let pagination = ut.viewPage(currentPage, startPage, endPage, totalPage)
+
+
+
     if (!uname)
         return `
         ${template.header()}
         ${template.headNavBar(uname)}
-        <div class="container">
+        <div class="container mt-5">
             <p>글을 쓰려면 로그인이 필요합니다.</p>
             <hr>
-            <table>
-                <tr>
-                    <th>번호</th>
-                    <th>제목</th>
-                    <th>글쓴이</th>
-                    <th>날짜</th>
-                    <th>조회수</th>
-                </tr>
+            <table class="table table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th>번호</th>
+                        <th>제목</th>
+                        <th>글쓴이</th>
+                        <th>날짜</th>
+                        <th>조회수</th>
+                    </tr>
+                </thead>
                 ${tableRow}
                 
-                
-                </table>
-                ${template.pagiNation()}
+                </table>s
+                ${pagination}
         </div>
         ${template.footNavBar()}
         ${template.footer()}
@@ -68,22 +92,33 @@ exports.mainPage = function (uname, rows) {
         return `
         ${template.header()}
         ${template.headNavBar(uname)}
-        <div class="container">
-            <p><a href="/content/create">글 쓰기</a></p>
+        <div class="container mt-5">
             <hr>
-            <table>
-                <tr>
-                    <th>번호</th>
-                    <th>제목</th>
-                    <th>글쓴이</th>
-                    <th>날짜</th>
-                    <th>조회수</th>
-                </tr>
-                ${tableRow}
-              
-              
-                </table>
-                ${template.pagiNation()}
+            <div class="row">
+                <div class="col-12">
+                    <table class="table table-hover">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>번호</th>
+                                <th>제목</th>
+                                <th>글쓴이</th>
+                                <th>날짜</th>
+                                <th>조회수</th>
+                            </tr>
+                        </thead>
+                        ${tableRow}
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-10">
+                    ${pagination}
+                </div>
+                <div class="col-2">
+                    <p><a href="/content/create">글 쓰기</a></p>
+                </div>
+            </div>
         </div>
 
         

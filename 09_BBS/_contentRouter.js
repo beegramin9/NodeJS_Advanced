@@ -38,7 +38,7 @@ cRouter.post('/create', (req, res) => {
     let params = [req.session.uid, title, content]
 
     dm.createContent(params, () => {
-        res.redirect('/')
+        res.redirect('/page/1')
     })
 })
 
@@ -80,7 +80,7 @@ cRouter.post('/bid/:bid/update', (req, res) => {
 
 
     dm.updateContent(params, () => {
-        res.redirect('/')
+        res.redirect('/page/1')
     })
 })
 
@@ -104,7 +104,7 @@ cRouter.post('/bid/:bid/delete', (req, res) => {
     let bid = parseInt(req.body.bid)
     console.log(bid);
     dm.deleteContent(bid, () => {
-        res.redirect('/')
+        res.redirect('/page/1')
     })
 })
 
