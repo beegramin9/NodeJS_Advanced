@@ -86,7 +86,17 @@ module.exports = {
         `
         }
     },
-
+    pagiNation: function () {
+        return `
+        <ul class="pagination">
+          <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+          <li class="page-item"><a class="page-link" href="/page/1">1</a></li>
+          <li class="page-item"><a class="page-link" href="/page/2">2</a></li>
+          <li class="page-item"><a class="page-link" href="/page/3">3</a></li>
+          <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+        `
+    },
     /* 하단 NAVBAR까지 */
     footNavBar: function () {
         return `

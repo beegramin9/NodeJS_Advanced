@@ -40,7 +40,8 @@ app.use('/content', cRouter);
 
 const dm = require('./db/dbModule');
 const ut = require('./util/util')
-const aM = require('./view/alertMsg')
+const aM = require('./view/alertMsg');
+const dbPagination = require('./db/dbPagination');
 
 app.get('/', /* ut.isLoggedIn, */(req, res) => {
     /* 로그인 안해도 볼 수 있게 하려면 */
@@ -53,11 +54,32 @@ app.get('/', /* ut.isLoggedIn, */(req, res) => {
         /* 페이지를 두개로 나눠야 돼...? */
         /* 삼항연산자 아니면 함수 파라미터 줄 떄 파이썬처럼 디폴트값이 있나 */
         const view = require('./view/02_mainPage');
-        let html = view.mainPage(rows, req.session.uname);
+        let html = view.mainPage(req.session.uname, rows);
         /* 함수 기본값 매개변수로 하자 */
         res.send(html);
     })
 })
+
+app.get('/page/:page', function (req, res) {
+    let page = parseInt(req.params.page);
+    req.session.currentPage = page;
+    let offset = (page - 1) * 10;
+    // dm.getTotalNumContent(result => {
+    // let totalPage = Math.ceil(result.count / 10);
+    // let startPage = Math.floor((page - 1) / 10) * 10 + 1;
+    // let endPage = Math.ceil(page / 10) * 10;
+    // endPage = (endPage > totalPage) ? totalPage : endPage;
+
+    dm.getTotalNumContent(offset, rows => {
+        let view = require('./view/02_mainPage');
+        let html = view.mainPage(req.session.uname, rows/* , page, startPage, endPage, totalPage */);
+        res.send(html);
+    })
+    // });
+});
+
+
+
 
 app.get('/login', (req, res) => {
     const view = require('./view/01_loginPage');
@@ -111,17 +133,23 @@ app.get('/logout', (req, res) => {
 
 app.post('/search', (req, res) => {
     let searchKeyword = req.body.search
-
     /* 물음표가 2개가 있으니까 어레이로 묶어서 넣어주면 됨 */
-    console.log(searchKeyword);
-    dm.searchKeywordGetLists(searchKeyword, rows => {
+    /* db에서 %?%로 하면 오류가 난다.*/
+    dm.searchKeywordGetLists(`%${searchKeyword}%`, rows => {
         /* 페이지를 두개로 나눠야 돼...? */
         /* 삼항연산자 아니면 함수 파라미터 줄 떄 파이썬처럼 디폴트값이 있나 */
-        const view = require('./view/02_mainPage');
-        let html = view.mainPage(rows, req.session.uname);
-        /* 함수 기본값 매개변수로 하자 */
-        res.send(html);
-
+        if (rows.length === 0) {
+            let html = aM.alertMsg(`해당 검색어가 없습니다. 메인 페이지로 돌아가시겠습니까? `, '/');
+            res.send(html)
+        } else if (!searchKeyword) {
+            let html = aM.alertMsg(`검색어를 입력하세요. `, '/');
+            res.send(html)
+        } else {
+            console.log(rows);
+            const view = require('./view/02_mainPage');
+            let html = view.mainPage(req.session.uname, rows);
+            res.send(html);
+        }
     })
 })
 

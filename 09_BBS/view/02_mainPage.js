@@ -5,7 +5,7 @@ const writeAlert = require('./writeAlert');
     어케하지?
     
  */
-exports.mainPage = function (rows, uname) {
+exports.mainPage = function (uname, rows) {
 
     // let today = new Date();
     // let whatToday = today.getTime()
@@ -56,8 +56,10 @@ exports.mainPage = function (rows, uname) {
                     <th>조회수</th>
                 </tr>
                 ${tableRow}
-               
-            </table>
+                
+                
+                </table>
+                ${template.pagiNation()}
         </div>
         ${template.footNavBar()}
         ${template.footer()}
@@ -78,10 +80,13 @@ exports.mainPage = function (rows, uname) {
                     <th>조회수</th>
                 </tr>
                 ${tableRow}
-               
-            </table>
+              
+              
+                </table>
+                ${template.pagiNation()}
         </div>
 
+        
         ${template.footNavBar()}
         ${template.footer()}
         `
