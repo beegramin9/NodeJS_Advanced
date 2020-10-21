@@ -19,7 +19,31 @@ module.exports = {
         })
         return conn;
     },
-    getMyComment: function (bid, callback) {
+    // getMyComment: function (bid, callback) {
+    //     /* bid랑 isMine이 필요함 */
+    //     let conn = this.getConnection()
+    //     /* 아마 이것도 full outer join인가봐... */
+    //     /* 테이블 3개 합치기 */
+    //     /* params로 들어가는 건 잘 받았는데. */
+    //     /* 여기서 bbs_bid를 제대로 안 주니까 다 1001로 나오잖아 */
+    //     let sql = `
+    //     SELECT users.uname as reply_uname, 
+    //     reply.comments as reply_comments, 
+    // 	DATE_FORMAT(reply.regTime, '%y-%m-%d %T') as reply_regTime,
+    //     reply.bid as reply_bid,
+    //     reply.rid as reply_rid
+    //     FROM reply
+    //     LEFT JOIN users
+    //     ON users.uid = reply.uid
+    //     WHERE isMine = 0 and bid = ?
+    //     `
+    //     conn.query(sql, bid, (error, rows, fields) => {
+    //         if (error)
+    //             console.log(`getMyComment 에러 발생: ${error}`);
+    //         callback(rows)
+    //     })
+    // },
+    getWholeComment: function (bid, callback) {
         /* bid랑 isMine이 필요함 */
         let conn = this.getConnection()
         /* 아마 이것도 full outer join인가봐... */
@@ -29,50 +53,56 @@ module.exports = {
         let sql = `
         SELECT users.uname as reply_uname, 
         reply.comments as reply_comments, 
-		DATE_FORMAT(reply.regTime, '%y-%m-%d %T') as reply_regTime,
-        reply.bid as reply_bid,
-        reply.rid as reply_rid
+
+        if (date(reply.regTime) = DATE(NOW()),
+			DATE_FORMAT(reply.regTime, '%H:%i:%s'),
+			DATE_FORMAT(reply.regTime, '%Y-%m-%d')) AS reply_regTime,
+		  
+		  reply.bid as reply_bid,
+        reply.rid as reply_rid,
+        reply.isMine as reply_isMine
+        
 	    FROM reply
 	    LEFT JOIN users
 	    ON users.uid = reply.uid
-	    WHERE isMine = 0 and bid = ?
+	    WHERE bid = ?
         `
         conn.query(sql, bid, (error, rows, fields) => {
             if (error)
-                console.log(`getMyComment 에러 발생: ${error}`);
+                console.log(`getWholeComment 에러 발생: ${error}`);
             callback(rows)
         })
     },
 
-    getOthersComment: function (bid, callback) {
-        /* bid랑 isMine이 필요함 */
-        let conn = this.getConnection()
-        let sql = `
-        SELECT users.uname as reply_uname, 
-		reply.comments as reply_comments, 
-        DATE_FORMAT(reply.regTime, '%y-%m-%d %T') as reply_regTime,
-        reply.bid as reply_bid,
-        reply.rid as reply_rid
-	    FROM reply
-	    LEFT JOIN users
-	    ON users.uid = reply.uid
-        WHERE isMine = 1 and bid = ?
-        `
-        conn.query(sql, bid, (error, rows, fields) => {
-            if (error)
-                console.log(`getOthersComment 에러 발생: ${error}`);
-            callback(rows)
-        })
-    }
-    ,
+
+    // getOthersComment: function (bid, callback) {
+    //     /* bid랑 isMine이 필요함 */
+    //     let conn = this.getConnection()
+    //     let sql = `
+    //     SELECT users.uname as reply_uname, 
+    // 	reply.comments as reply_comments, 
+    //     DATE_FORMAT(reply.regTime, '%y-%m-%d %T') as reply_regTime,
+    //     reply.bid as reply_bid,
+    //     reply.rid as reply_rid
+    //     FROM reply
+    //     LEFT JOIN users
+    //     ON users.uid = reply.uid
+    //     WHERE isMine = 1 and bid = ?
+    //     `
+    //     conn.query(sql, bid, (error, rows, fields) => {
+    //         if (error)
+    //             console.log(`getOthersComment 에러 발생: ${error}`);
+    //         callback(rows)
+    //     })
+    // }
+    // ,
     createMyComment: function (params, callback) {
         let conn = this.getConnection()
-        let sql = ` INSERT INTO reply (bid, uid, comments)
-        VALUES (?, ?, ?)
-        `
+        let sql = `INSERT INTO reply (bid, uid, comments, isMine)
+        VALUES (?, ?, ?, ?)`
         conn.query(sql, params, (error, fields) => {
             if (error)
-                console.log(`makeNewContent 에러 발생: ${error}`);
+                console.log(`createMyComment 에러 발생: ${error}`);
             console.log();
             /* 이게 왜 안 나오지? */
             callback();
@@ -89,6 +119,26 @@ module.exports = {
             /* 이게 왜 안 나오지? */
             callback();
         })
-    }
+    },
+    increaseReplyCount: function (bid, callback) {
+        let conn = this.getConnection()
+        let sql = `update bbs set replyCount = replyCount + 1
+                    WHERE bid = ?`
+        conn.query(sql, bid, (error, fields) => {
+            if (error)
+                console.log(`increaseReplyCount 에러 발생: ${error} `);
+            callback();
+        })
+    },
+    decreaseReplyCount: function (bid, callback) {
+        let conn = this.getConnection()
+        let sql = `update bbs set replyCount = replyCount - 1
+                    WHERE bid = ?`
+        conn.query(sql, bid, (error, fields) => {
+            if (error)
+                console.log(`decreaseReplyCount 에러 발생: ${error} `);
+            callback();
+        })
+    },
 
 }

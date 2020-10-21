@@ -19,38 +19,104 @@ module.exports = {
         })
         return conn;
     },
-    mainPageGetLists: function (callback) {
+    // mainPageGetLists: function (callback) {
+    //     let conn = this.getConnection()
+    //     let sql = `
+    //     SELECT bid AS bbs_bid, 
+    //     title AS bbs_title, 
+    //     uid AS users_uid, 
+    //     DATE_FORMAT(modTime, '%y-%m-%d %T') AS bbs_modTime,
+    //     replyCount as bbs_replyCount, 
+    //     if (date(modTime) = DATE(NOW()),
+    // 		DATE_FORMAT(modTime, '%H:%i:%s'),
+    // 		DATE_FORMAT(modTime, '%Y-%m-%d')) AS bbs_modTime,
+    //     viewCount AS bbs_viewCount  
+
+    //     FROM bbs
+    //     ORDER BY bbs_bid desc
+    //     `
+    //     /* 내가 이름 지어주는 걸 완료했으면 */
+    //     /* order by 할 때는 내가 지어준 이름으로! */
+    //     /* ORDER BY bbs_bid DESC LIMIT 30 */
+
+    //     conn.query(sql, (error, rows, fields) => {
+    //         if (error)
+    //             console.log(`mainPageGetLists 에러 발생: ${error}`);
+    //         callback(rows);
+    //     })
+    // },
+    mainPageGetLists2: function (offset, callback) {
+        let conn = this.getConnection()
+        let sql = `
+        SELECT bid AS bbs_bid, 
+        title AS bbs_title, 
+        uid AS users_uid, 
+        DATE_FORMAT(modTime, '%y-%m-%d %T') AS bbs_modTime,
+        replyCount as bbs_replyCount, 
+        if (date(modTime) = DATE(NOW()),
+			DATE_FORMAT(modTime, '%H:%i:%s'),
+			DATE_FORMAT(modTime, '%Y-%m-%d')) AS bbs_modTime,
+        viewCount AS bbs_viewCount  
+        
+        FROM bbs
+        ORDER BY bbs_bid desc
+        limit 10 offset ?
+        `
+        /* 내가 이름 지어주는 걸 완료했으면 */
+        /* order by 할 때는 내가 지어준 이름으로! */
+        /* ORDER BY bbs_bid DESC LIMIT 30 */
+
+        conn.query(sql, offset, (error, rows, fields) => {
+            if (error)
+                console.log(`mainPageGetLists2 에러 발생: ${error}`);
+            callback(rows);
+        })
+    },
+    getTotalNumContent: function (callback) {
+        let conn = this.getConnection()
+        let sql = `
+        SELECT COUNT(*) AS bbs_count FROM bbs 
+        where isDeleted=0
+        `
+        /* 내가 이름 지어주는 걸 완료했으면 */
+        /* order by 할 때는 내가 지어준 이름으로! */
+        /* ORDER BY bbs_bid DESC LIMIT 30 */
+
+        conn.query(sql, (error, result, fields) => {
+            if (error)
+                console.log(`mainPageGetLists2 에러 발생: ${error}`);
+            callback(result[0]);
+        })
+    },
+
+
+
+
+    searchKeywordGetLists: function (searchKeyword, callback) {
         let conn = this.getConnection()
         let sql = `
         SELECT bbs.bid AS bbs_bid, 
         bbs.title AS bbs_title, 
         bbs.uid AS users_uid, 
         DATE_FORMAT(bbs.modTime, '%y-%m-%d %T') AS bbs_modTime,
-        reply.NumComments as reply_NumComments, 
+        bbs.replyCount as bbs_replyCount, 
+        if (date(modTime) = DATE(NOW()),
+			DATE_FORMAT(modTime, '%H:%i:%s'),
+			DATE_FORMAT(modTime, '%Y-%m-%d')) AS bbs_modTime,
         bbs.viewCount AS bbs_viewCount  
+        
         FROM bbs 
-        LEFT JOIN reply
-        ON bbs.bid = reply.bid
-        UNION
-        SELECT bbs.bid AS bbs_bid, 
-        bbs.title AS bbs_title, 
-        bbs.uid AS users_uid, 
-        DATE_FORMAT(bbs.modTime, '%y-%m-%d %T') AS bbs_modTime,
-     	reply.NumComments as reply_NumComments, 
-        bbs.viewCount AS bbs_viewCount 
-        FROM bbs 
-        RIGHT JOIN reply
-        ON bbs.bid = reply.bid
-        WHERE bbs.isDeleted = 0
-        ORDER BY bbs_bid DESC
+        WHERE bbs.title LIKE ? 
+
+
         `
         /* 내가 이름 지어주는 걸 완료했으면 */
         /* order by 할 때는 내가 지어준 이름으로! */
         /* ORDER BY bbs_bid DESC LIMIT 30 */
 
-        conn.query(sql, (error, rows, fields) => {
+        conn.query(sql, searchKeyword, (error, rows, fields) => {
             if (error)
-                console.log(`mainPageGetLists 에러 발생: ${error}`);
+                console.log(`searchKeywordGetLists 에러 발생: ${error}`);
             callback(rows);
         })
     },
@@ -74,7 +140,7 @@ module.exports = {
         LEFT outer JOIN reply 
         ON bbs.bid = reply.bid
         LEFT OUTER JOIN users
-        ON USERs.uid = bbs.uid
+        ON USERs.uid = bbs.uid 
         WHERE bbs.isDeleted = 0 and bbs.bid = ?
     
         `
@@ -143,7 +209,17 @@ module.exports = {
     },
     contentToUpdate: function (bid, callback) {
         let conn = this.getConnection();
-        let sql = `select * from bbs where bid =?`
+        /* 여기서 uname을 받아야 함 */
+        // let sql = `select * from bbs where bid =?`
+        let sql = `SELECT bbs.bid AS bbs_bid,
+        bbs.title AS bbs_title,
+        bbs.content AS bbs_content,
+        users.uname AS users_uname 
+        FROM bbs
+        left outer JOIN users
+        ON users.uid = bbs.uid
+        where bid = ?
+        `
         conn.query(sql, bid, (error, rows, fields) => {
             if (error)
                 console.log(`contentToUpdate 에러 발생: ${error}`);
@@ -171,21 +247,16 @@ module.exports = {
 
     /* viewCount 올리는 함수도 해야 함 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    increaseViewCount: function (bid, callback) {
+        let conn = this.getConnection()
+        let sql = `update bbs set viewCount = viewCount + 1
+                    where bid = ?`
+        conn.query(sql, bid, (error, fields) => {
+            if (error)
+                console.log(`increaseViewCount 에러 발생: ${error} `);
+            callback();
+        })
+    },
 
 
     updatePwdUser: function (params, callback) {
@@ -199,6 +270,12 @@ module.exports = {
                 console.log(`updatePwdUser 에러 발생: ${error} `);
             callback();
         })
+    },
+    getDisplayTime: function (dt) {
+        let today = moment().format('YYYY-MM-DD')
+        let dbtime = moment(dt).format('YYYY-MM-DD')
+        return (dbtime.indexOf(today) == 0) ?
+            dbtime.substring(11) : dbtime.substring(0, 10)
     }
 
 

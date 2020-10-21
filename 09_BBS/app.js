@@ -40,24 +40,63 @@ app.use('/content', cRouter);
 
 const dm = require('./db/dbModule');
 const ut = require('./util/util')
-const aM = require('./view/alertMsg')
+const aM = require('./view/alertMsg');
+const dbPagination = require('./db/dbPagination');
+const e = require('express');
+const { pagination } = require('./db/dbPagination');
 
-app.get('/', /* ut.isLoggedIn, */(req, res) => {
-    /* 로그인 안해도 볼 수 있게 하려면 */
-    /* 내가 만든 삼항연산자 + 함수 기본값으로 지랄을 해야 가능 */
-    /* ㅋㅋㅋㅋ 머리 깨지는줄 */
+// app.get('/', /* ut.isLoggedIn, */(req, res) => {
+//     /* 로그인 안해도 볼 수 있게 하려면 */
+//     /* 내가 만든 삼항연산자 + 함수 기본값으로 지랄을 해야 가능 */
+//     /* ㅋㅋㅋㅋ 머리 깨지는줄 */
 
-    /* 지금 여기부터 쿠키가 들어가서 로그인으로 패싱이 안 되어있음 */
-    /* 로그아웃을 하고, 세션디스트로이가 안 들어가서 그렇다. */
-    dm.mainPageGetLists(rows => {
-        /* 페이지를 두개로 나눠야 돼...? */
-        /* 삼항연산자 아니면 함수 파라미터 줄 떄 파이썬처럼 디폴트값이 있나 */
-        const view = require('./view/02_mainPage');
-        let html = view.mainPage(rows, req.session.uname);
-        /* 함수 기본값 매개변수로 하자 */
-        res.send(html);
-    })
-})
+//     /* 지금 여기부터 쿠키가 들어가서 로그인으로 패싱이 안 되어있음 */
+//     /* 로그아웃을 하고, 세션디스트로이가 안 들어가서 그렇다. */
+//     dm.mainPageGetLists(rows => {
+//         /* 페이지를 두개로 나눠야 돼...? */
+//         /* 삼항연산자 아니면 함수 파라미터 줄 떄 파이썬처럼 디폴트값이 있나 */
+//         const view = require('./view/02_mainPage');
+//         let html = view.mainPage(req.session.uname, rows);
+//         /* 함수 기본값 매개변수로 하자 */
+//         res.send(html);
+//     })
+// })
+
+app.get('/page/:page', function (req, res) {
+    let currentPage = parseInt(req.params.page);
+    req.session.currentPage = currentPage;
+    let offset = (currentPage - 1) * 5;
+
+    dm.getTotalNumContent(result => {
+        let NumContent = result.bbs_count;
+        let totalPage = Math.ceil(NumContent / 5);
+
+        let startPage;
+        let endPage;
+        if (currentPage < 3) {
+            startPage = 1;
+            endPage = 5;
+        } else if (currentPage >= totalPage - 2) {
+            startPage = totalPage - 4;
+            endPage = totalPage;
+        } else {
+            startPage = parseInt(currentPage - 2);
+            endPage = parseInt(currentPage + 2);
+        }
+        // let endPage = Math.ceil(currentPage / 10) * 10;
+        endPage = (endPage > totalPage) ? totalPage : endPage;
+
+
+        dm.mainPageGetLists2(offset, rows => {
+            let view = require('./view/02_mainPage');
+            let html = view.mainPage(req.session.uname, rows, currentPage, startPage, endPage, totalPage, false);
+            res.send(html);
+        })
+    });
+});
+
+
+
 
 app.get('/login', (req, res) => {
     const view = require('./view/01_loginPage');
@@ -92,23 +131,14 @@ app.post('/login', (req, res) => {
             if (result.pwd === pwdHash) {
                 req.session.uid = uid;
                 req.session.uname = result.uname;
-                // console.log('나와라!', req.session.uid, req.session.uname);
-                /* 오케, 세션도 잘 들어왔어! */
-
                 req.session.save(function () {
-                    res.redirect('/')
+                    res.redirect('/page/1')
                 })
             } else {
                 let html = aM.alertMsg(`Sign in failed, wrong password`, '/login');
                 res.send(html)
             }
         }
-
-
-
-
-        /* 아니면 로그인으로 할 수 있나...? */
-        /* 왜냐면 여기서 rows가 나와야하긴해 */
     })
 })
 
@@ -118,9 +148,31 @@ app.get('/logout', (req, res) => {
     res.redirect('/login')
 })
 
+app.post('/search', (req, res) => {
+    let searchKeyword = req.body.search
+    /* 물음표가 2개가 있으니까 어레이로 묶어서 넣어주면 됨 */
+    /* db에서 %?%로 하면 오류가 난다.*/
+    dm.searchKeywordGetLists(`%${searchKeyword}%`, rows => {
+        /* 페이지를 두개로 나눠야 돼...? */
+        /* 삼항연산자 아니면 함수 파라미터 줄 떄 파이썬처럼 디폴트값이 있나 */
+        if (rows.length === 0) {
+            let html = aM.alertMsg(`해당 검색어가 없습니다. 메인 페이지로 돌아가시겠습니까? `, '/');
+            res.send(html)
+        } else if (!searchKeyword) {
+            let html = aM.alertMsg(`검색어를 입력하세요. `, '/');
+            res.send(html)
+        } else {
+
+            const view = require('./view/02_mainPage');
+            let html = view.mainPage(req.session.uname, rows);
+            res.send(html);
+            //  currentPage, startPage, endPage, totalPage
+        }
+    })
+})
 
 
-/* 이제 세션으로 해서! 로그인 된 정보를 캐리할 수 있게 해줘야 함 */
-/* 회원가입 비밀번호 해시 */
+
+
 
 app.listen(3000, () => { console.log('Server Running at http://127.0.0.1:3000') });
