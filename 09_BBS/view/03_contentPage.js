@@ -8,16 +8,16 @@ exports.contentPage = function (sessionUname, result, wholeComments) {
 
 
             total += `
-            <div class="col-8 ml-auto">
-                <div class="card bg-light text-dark">
+            <div class="col-8 ml-auto" style="padding-top:10px; padding-bottom:10px;">
+                <div class="card text-dark">
                     <div class="card-body">
                     <div class="row">
-                        <div class="col-8">
+                        <div class="col-10">
                                 <strong>${comment.reply_uname}</strong>
                                 <span class="text-body">${comment.reply_regTime}</span> 
 
                         </div>
-                        <div class="col-4 ml-auto">
+                        <div class="col-2 ml-auto">
                             <div>
                             <form action="/content/reply/delete" method="post">
                                 <input type="hidden" name="uname" value="${comment.reply_uname}">
@@ -43,17 +43,17 @@ exports.contentPage = function (sessionUname, result, wholeComments) {
         } else {
             total += `
             
-            <div class="col-8 mr-auto">
+            <div class="col-8 mr-auto" style="padding-top:10px; padding-bottom:10px;">
                 <div class="card bg-light text-dark">
                     <div class="card-body">
                     <div class="row">
-                        <div class="col-8">
+                        <div class="col-10">
                             <div>
                             <strong>${comment.reply_uname}</strong>
                             <span class="text-body">${comment.reply_regTime}</span> 
                             </div>
                         </div>
-                        <div class="col-4 ml-auto">
+                        <div class="col-2 ml-auto">
                             <div>
                             <form action="/content/reply/delete" method="post">
                                 <input type="hidden" name="uname" value="${comment.reply_uname}">
@@ -134,7 +134,7 @@ exports.contentPage = function (sessionUname, result, wholeComments) {
         </div>
         <br><br>
         <div class="row">
-            <div class="col-10 ml-auto">
+            <div class="col-11">
             <form action="/content/reply/create" method="post">
                 <input type="hidden" name="bid" value="${result.bbs_bid}">
                 <textarea class="form-control" name="comments" id="comments"></textarea>
@@ -142,7 +142,7 @@ exports.contentPage = function (sessionUname, result, wholeComments) {
             </div>
 
 
-            <div class="col-2 mr-auto">
+            <div class="col-1 mr-auto">
                 <button type="submit" class="btn btn-outline-primary btn-sm">
                     <i class="fas fa-paper-plane"></i>
                 </button>
