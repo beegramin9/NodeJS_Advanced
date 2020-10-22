@@ -11,8 +11,9 @@ module.exports = cRouter;
 /* 이건 회원가입 할 때나 그런거야 */
 /* bid를 정의해줘야 함. 세션으로 */
 
-cRouter.get('/bid/:bid', (req, res) => {
+cRouter.get('/bid/:bid/uid/:uid', (req, res) => {
     let bid = req.params.bid;
+    let uid = req.params.uid;
     req.session.currentBid = bid
     contentDM.getContent(bid, result => {
         contentDM.increaseViewCount(bid, () => {
@@ -46,8 +47,9 @@ cRouter.post('/create', (req, res) => {
 })
 
 /* 좋아 여기까지 잘 들어왔어! */
-cRouter.get('/bid/:bid/update', (req, res) => {
+cRouter.get('/update/bid/:bid', (req, res) => {
     let bid = parseInt(req.params.bid)
+    let uid = req.params.uid
     console.log(req.session.uname);
 
     contentDM.contentToUpdate(bid, result => {
@@ -60,9 +62,31 @@ cRouter.get('/bid/:bid/update', (req, res) => {
             res.send(html);
         }
     })
+    // let bid = req.params.bid;
+    // req.session.currentBid = bid
+    // contentDM.getContent(bid, result => {
+    //     contentDM.increaseViewCount(bid, () => {
+
+    //         console.log();
+    //         req.session.contentUname = result.users_uname
+    //         replyDM.getWholeComment(bid, wholeComments => {
+
+
+    //             const view = require('./view/03_contentPage')
+    //             let html = view.contentPage(req.session.uname, result, wholeComments);
+    //             res.send(html);
+    //         })
+    //     })
+    // })
+
+
+
+
+
+
 })
 
-cRouter.post('/bid/:bid/update', (req, res) => {
+cRouter.post('/update/bid/:bid/', (req, res) => {
     let title = req.body.title
     let content = req.body.content
     let bid = parseInt(req.body.bid)
@@ -76,7 +100,7 @@ cRouter.post('/bid/:bid/update', (req, res) => {
     })
 })
 
-cRouter.get('/bid/:bid/delete', (req, res) => {
+cRouter.get('/delete/bid/:bid', (req, res) => {
     /* 삭제하기! */
     console.log(req.session.uname);
     console.log(req.session.contentUname)
@@ -91,7 +115,7 @@ cRouter.get('/bid/:bid/delete', (req, res) => {
     }
 })
 
-cRouter.post('/bid/:bid/delete', (req, res) => {
+cRouter.post('/delete/bid/:bid', (req, res) => {
     /* 삭제하기! */
     let bid = parseInt(req.body.bid)
     console.log(bid);

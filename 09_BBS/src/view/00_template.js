@@ -29,15 +29,15 @@ module.exports = {
                 </a>
                 <ul class="nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/page/1"><i class="fas fa-home"></i>홈</a>
+                        <a class="nav-link text-white" href="/page/1"><i class="fas fa-home"></i>홈</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/login">로그인</a>
+                        <a class="nav-link text-white" href="/login">로그인</a>
                     </li>
                 </ul>
                 <form class="form-inline" action="/search" method="post">
                     <input type="text" class="form-control" name="search" id="search" placeholder="검색어를 입력하세요.">
-                    <button type="submit" class="btn btn-primary btn-sm">
+                    <button type="submit" class="btn btn-sm text-white">
                         <i class="fas fa-search"></i>
                     </button>
                 </form>
@@ -47,7 +47,7 @@ module.exports = {
                 일반 사용자님 반갑습니다.&nbsp;&nbsp;&nbsp;&nbsp;
                     <i class="fas fa-cloud-sun"></i> 20&deg;C
                 </div>
-            </nav>
+            </nav>  
             `
             /* 아마 디자인을 column으로 나눠야 하나...? */
         } else if (uname === '관리자') {
@@ -60,18 +60,20 @@ module.exports = {
                 </a>
                 <ul class="nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/page/1"><i class="fas fa-home"></i>홈</a>
+                        <a class="nav-link text-white" href="/page/1"><i class="fas fa-home"></i>홈</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/logout">로그아웃</a>
+                        <a class="nav-link text-white" href="/logout">로그아웃</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/user/getUsers/1">사용자 관리</a>
+                    <li class="nav-item" style="padding-left:50px">
+                        <a class="nav-link text-white" href="/user/getUsers/1">사용자관리</a>
                     </li>
                 </ul>
                 <form class="form-inline" action="/search" method="post">
                     <input type="text" class="form-control" name="search" id="search" placeholder="검색어를 입력하세요.">
-                    <button type="submit" class="btn btn-primary btn-sm">검색</button>
+                    <button type="submit" class="btn btn-sm text-white">
+                        <i class="fas fa-search"></i>
+                    </button>
                 </form>
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 
@@ -91,18 +93,20 @@ module.exports = {
                 </a>
                 <ul class="nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/page/1"><i class="fas fa-home"></i>홈</a>
+                        <a class="nav-link text-white" href="/page/1"><i class="fas fa-home"></i>홈</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/logout">로그아웃</a>
+                        <a class="nav-link text-white" href="/logout">로그아웃</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/user/myPage">마이 페이지</a>
+                    <li class="nav-item" style="padding-left:50px">
+                        <a class="nav-link text-white" href="/user/myPage">마이페이지</a>
                     </li>
                 </ul>
                 <form class="form-inline" action="/search" method="post">
                     <input type="text" class="form-control" name="search" id="search" placeholder="검색어를 입력하세요.">
-                    <button type="submit" class="btn btn-primary btn-sm">검색</button>
+                    <button type="submit" class="btn btn-sm text-white">
+                        <i class="fas fa-search"></i>
+                    </button>
                 </form>
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 

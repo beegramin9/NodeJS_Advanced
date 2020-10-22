@@ -119,10 +119,10 @@ exports.contentPage = function (sessionUname, result, wholeComments) {
         </div>
          <div class="row">
             <div class="col-2 ml-auto">
-                <a class="btn btn-outline-primary btn-sm" href="/content/bid/${result.bbs_bid}/update">
+                <a class="btn btn-outline-primary btn-sm" href="/content/update/bid/${result.bbs_bid}">
                     <i class="fas fa-edit"></i>
                 </a>
-                <a class="btn btn-outline-danger btn-sm" href="/content/bid/${result.bbs_bid}/delete">
+                <a class="btn btn-outline-danger btn-sm" href="/content/delete/bid/${result.bbs_bid}">
                     <i class="fas fa-trash-alt"></i>
                 </a>
             </div>

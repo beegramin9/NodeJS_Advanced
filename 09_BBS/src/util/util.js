@@ -30,78 +30,41 @@ module.exports = {
     //     }
     // },
     viewPage: function (currentPage, startPage, endPage, totalPage, isSearch) {
-        if (!isSearch) {
-            let leftPage = (currentPage > 1) ? `/page/${currentPage - 1}` : '#';
-            console.log('startPage', startPage);
-            console.log('currentPage', currentPage);
-            console.log('leftPage', leftPage);
-            let pages = `
-                <ul class="pagination justify-content-center">
-                    <li class="page-item">
-                        <a class="page-link active" href="${leftPage}" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span></a>
-                    </li>`;
-            for (let page = startPage; page <= endPage; page++) {
-                if (page === currentPage)
-                    pages += `<li class="page-item active">
-                            <a class="page-link" href="#">
-                            ${page}
-                            </a>
-                    </li>`;
-                else
-                    pages += `<li class="page-item">
-                        <a class="page-link" href="/page/${page}">
-                          ${page}
-                        </a>
-                      </li>`;
-            }
-            let rightPage = (endPage < totalPage) ? `/page/${currentPage + 1}` : '#';
-            console.log('rightPage', rightPage);
-            console.log('endPage', endPage);
-            console.log('totalPage', totalPage);
-            pages += `  <li class="page-item">
-                    <a class="page-link" href="${rightPage}" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span></a>
-                </li>
-            </ul>`;
-            return pages
-        } else {
-            let leftPage = (currentPage > 1) ? `/page/search/${currentPage - 1}` : '#';
-            console.log('startPage', startPage);
-            console.log('currentPage', currentPage);
-            console.log('leftPage', leftPage);
-            let pages = `
-                <ul class="pagination justify-content-center">
-                    <li class="page-item">
-                        <a class="page-link active" href="${leftPage}" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span></a>
-                    </li>`;
-            for (let page = startPage; page <= endPage; page++) {
-                if (page === currentPage)
-                    pages += `<li class="page-item active">
-                            <a class="page-link" href="#">
-                            ${page}
-                            </a>
-                    </li>`;
-                else
-                    pages += `<li class="page-item">
-                        <a class="page-link" href="/page/search/${page}">
-                          ${page}
-                        </a>
-                      </li>`;
-            }
-            let rightPage = (endPage < totalPage) ? `/page/search/${currentPage + 1}` : '#';
-            console.log('rightPage', rightPage);
-            console.log('endPage', endPage);
-            console.log('totalPage', totalPage);
-            pages += `  <li class="page-item">
-                    <a class="page-link" href="${rightPage}" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span></a>
-                </li>
-            </ul>`;
-            return pages
 
+        let leftPage = (currentPage > 1) ? `/page/${currentPage - 1}` : '#';
+        console.log('startPage', startPage);
+        console.log('currentPage', currentPage);
+        console.log('leftPage', leftPage);
+        let pages = `
+                <ul class="pagination justify-content-center">
+                    <li class="page-item">
+                        <a class="page-link active text-body" href="${leftPage}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span></a>
+                    </li>`;
+        for (let page = startPage; page <= endPage; page++) {
+            if (page === currentPage)
+                pages += `<li class="page-item">
+                            <a class="page-link text-body bg-secondary" href="#">
+                            ${page}
+                            </a>
+                    </li>`;
+            else
+                pages += `<li class="page-item">
+                        <a class="page-link text-body" href="/page/${page}">
+                          ${page}
+                        </a>
+                      </li>`;
         }
+        let rightPage = (endPage < totalPage) ? `/page/${currentPage + 1}` : '#';
+        console.log('rightPage', rightPage);
+        console.log('endPage', endPage);
+        console.log('totalPage', totalPage);
+        pages += `  <li class="page-item">
+                    <a class="page-link text-body" href="${rightPage}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span></a>
+                </li>
+            </ul>`;
+        return pages
 
     },
     viewAdminUsersPage: function (currentPage, startPage, endPage, totalPage, isSearch) {
@@ -113,19 +76,19 @@ module.exports = {
         let pages = `
                 <ul class="pagination justify-content-center">
                     <li class="page-item">
-                        <a class="page-link active" href="${leftPage}" aria-label="Previous">
+                        <a class="page-link active text-body" href="${leftPage}" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span></a>
                     </li>`;
         for (let page = startPage; page <= endPage; page++) {
             if (page === currentPage)
-                pages += `<li class="page-item active">
-                            <a class="page-link" href="#">
+                pages += `<li class="page-item">
+                            <a class="page-link bg-secondary text-body" href="#">
                             ${page}
                             </a>
                     </li>`;
             else
                 pages += `<li class="page-item">
-                        <a class="page-link" href="/user/getUsers/${page}">
+                        <a class="page-link text-body" href="/user/getUsers/${page}">
                           ${page}
                         </a>
                       </li>`;
@@ -135,7 +98,7 @@ module.exports = {
         console.log('endPage', endPage);
         console.log('totalPage', totalPage);
         pages += `  <li class="page-item">
-                    <a class="page-link" href="${rightPage}" aria-label="Next">
+                    <a class="page-link text-body" href="${rightPage}" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span></a>
                 </li>
             </ul>`;
@@ -151,19 +114,19 @@ module.exports = {
         let pages = `
                 <ul class="pagination justify-content-center">
                     <li class="page-item">
-                        <a class="page-link active" href="${leftPage}" aria-label="Previous">
+                        <a class="page-link active text-body" href="${leftPage}" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span></a>
                     </li>`;
         for (let page = startPage; page <= endPage; page++) {
             if (page === currentPage)
-                pages += `<li class="page-item active">
-                            <a class="page-link" href="#">
+                pages += `<li class="page-item">
+                            <a class="page-link text-body bg-secondary" href="#">
                             ${page}
                             </a>
                     </li>`;
             else
                 pages += `<li class="page-item">
-                        <a class="page-link" href="/search/${searchKeyword}/${page}">
+                        <a class="page-link text-body" href="/search/${searchKeyword}/${page}">
                           ${page}
                         </a>
                       </li>`;
@@ -173,7 +136,7 @@ module.exports = {
         console.log('endPage', endPage);
         console.log('totalPage', totalPage);
         pages += `  <li class="page-item">
-                    <a class="page-link" href="${rightPage}" aria-label="Next">
+                    <a class="page-link text-body" href="${rightPage}" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span></a>
                 </li>
             </ul>`;

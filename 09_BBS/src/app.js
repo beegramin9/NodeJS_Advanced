@@ -105,7 +105,7 @@ app.post('/login', (req, res) => {
         /* 화면에 뿌려주는거랑 다르게 해야할거같은데 */
         /* 콜백함수를 두번쓰는거지. 콜백지옥? */
         if (!result) {
-            let html = aM.alertMsg(`Sign in failed, ${uid} to be the wrong uid`, '/login');
+            let html = aM.alertMsg(`${uid}는 없는 아이디입니다.`, '/login');
 
             res.send(html)
 
@@ -117,7 +117,7 @@ app.post('/login', (req, res) => {
                     res.redirect('/page/1')
                 })
             } else {
-                let html = aM.alertMsg(`Sign in failed, wrong password`, '/login');
+                let html = aM.alertMsg(`잘못된 비밀번호입니다.`, '/login');
                 res.send(html)
             }
         }
@@ -129,5 +129,12 @@ app.get('/logout', (req, res) => {
     /* 세션 없애기 */
     res.redirect('/login')
 })
+
+app.get('/cantCreateWithoutLogin', (req, res) => {
+    let html = aM.alertMsg(`로그인이 필요한 서비스입니다.`, '/login');
+    res.send(html)
+})
+
+
 
 app.listen(3000, () => { console.log('Server Running at http://127.0.0.1:3000') });
