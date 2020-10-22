@@ -47,7 +47,7 @@ exports.deleteContentPage = function (uname, bid) {
         <div class="row">
             <div class="col-3"></div>
             <div class="col-6">
-                <form action="/content/bid/:bid/delete" method="post">
+                <form action="/content/delete/bid/:bid/" method="post">
                     
                     <input type="hidden" name="bid" id="bid" value="${bid}">
                 
@@ -57,7 +57,7 @@ exports.deleteContentPage = function (uname, bid) {
                         </tr>
                         <tr>
                             <td colspan="2" style="text-align: center;">
-                                <button type="submit" class="btn btn-outline-primary btn-sm active">삭제</button>
+                                <button type="submit" class="btn btn-outline-dark btn-sm">삭제</button>
                                 <button type="dismiss" class="btn btn-outline-danger btn-sm">취소</button>
                             </td>
                         </tr>

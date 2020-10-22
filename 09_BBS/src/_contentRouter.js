@@ -14,8 +14,10 @@ module.exports = cRouter;
 cRouter.get('/bid/:bid/uid/:uid', (req, res) => {
     let bid = req.params.bid;
     let uid = req.params.uid;
+    req.session.uid = uid
     req.session.currentBid = bid
     contentDM.getContent(bid, result => {
+        console.log(result);
         contentDM.increaseViewCount(bid, () => {
 
             req.session.contentUname = result.users_uname
@@ -47,7 +49,7 @@ cRouter.post('/create', (req, res) => {
 })
 
 /* 좋아 여기까지 잘 들어왔어! */
-cRouter.get('/update/bid/:bid', (req, res) => {
+cRouter.get('/update/bid/:bid/uid/:uid', (req, res) => {
     let bid = parseInt(req.params.bid)
     let uid = req.params.uid
     console.log(req.session.uname);
@@ -58,7 +60,7 @@ cRouter.get('/update/bid/:bid', (req, res) => {
             let html = view.updateContentPage(req.session.uname, result);
             res.send(html);
         } else {
-            let html = aM.alertMsg(`수정 권한이 없습니다.`, `/content/bid/${bid}`); /* 로그인은 됐는데 권한이 없으니 루트로 */
+            let html = aM.alertMsg(`수정 권한이 없습니다.`, `/content/bid/${bid}/uid/${uid}`); /* 로그인은 됐는데 권한이 없으니 루트로 */
             res.send(html);
         }
     })
@@ -86,7 +88,7 @@ cRouter.get('/update/bid/:bid', (req, res) => {
 
 })
 
-cRouter.post('/update/bid/:bid/', (req, res) => {
+cRouter.post('/update/bid/:bid/uid/:uid', (req, res) => {
     let title = req.body.title
     let content = req.body.content
     let bid = parseInt(req.body.bid)
@@ -100,17 +102,20 @@ cRouter.post('/update/bid/:bid/', (req, res) => {
     })
 })
 
-cRouter.get('/delete/bid/:bid', (req, res) => {
+cRouter.get('/delete/bid/:bid/uid/:uid', (req, res) => {
     /* 삭제하기! */
+
     console.log(req.session.uname);
     console.log(req.session.contentUname)
     let bid = parseInt(req.params.bid)
+    let uid = req.params.uid
+
     if (req.session.uname === req.session.contentUname) {
         const view = require('./view/06_deleteContentPage')
         let html = view.deleteContentPage(req.session.uname, bid);
         res.send(html);
     } else {
-        let html = aM.alertMsg(`삭제 권한이 없습니다.`, `/content/bid/${bid}`); /* 로그인은 됐는데 권한이 없으니 루트로 */
+        let html = aM.alertMsg(`삭제 권한이 없습니다.`, `/content/bid/${bid}/uid/${uid}`); /* 로그인은 됐는데 권한이 없으니 루트로 */
         res.send(html);
     }
 })

@@ -119,10 +119,10 @@ exports.contentPage = function (sessionUname, result, wholeComments) {
         </div>
          <div class="row">
             <div class="col-2 ml-auto">
-                <a class="btn btn-outline-primary btn-sm" href="/content/update/bid/${result.bbs_bid}">
+                <a class="btn btn-outline-dark btn-sm" href="/content/update/bid/${result.bbs_bid}/uid/${result.users_uid}">
                     <i class="fas fa-edit"></i>
                 </a>
-                <a class="btn btn-outline-danger btn-sm" href="/content/delete/bid/${result.bbs_bid}">
+                <a class="btn btn-outline-danger btn-sm" href="/content/delete/bid/${result.bbs_bid}/uid/${result.users_uid}">
                     <i class="fas fa-trash-alt"></i>
                 </a>
             </div>
@@ -143,7 +143,7 @@ exports.contentPage = function (sessionUname, result, wholeComments) {
 
 
             <div class="col-1 mr-auto">
-                <button type="submit" class="btn btn-outline-primary btn-sm">
+                <button type="submit" class="btn btn-outline-dark btn-sm">
                     <i class="fas fa-paper-plane"></i>
                 </button>
             </div>

@@ -129,10 +129,10 @@ module.exports = {
                 </a>
                 <ul class="nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/page/1"><i class="fas fa-home"></i>홈</a>
+                        <a class="nav-link text-white" href="/page/1"><i class="fas fa-home"></i>홈</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/login">로그인</a>
+                        <a class="nav-link text-white" href="/login">로그인</a>
                     </li>
                 </ul>
                 
@@ -153,10 +153,10 @@ module.exports = {
                 </a>
                 <ul class="nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/page/1"><i class="fas fa-home"></i>홈</a>
+                        <a class="nav-link text-white" href="/page/1"><i class="fas fa-home"></i>홈</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/logout">로그아웃</a>
+                        <a class="nav-link text-white" href="/logout">로그아웃</a>
                     </li>
                 </ul>
                 

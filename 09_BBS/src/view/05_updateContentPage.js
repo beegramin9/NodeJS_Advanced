@@ -1,16 +1,16 @@
 const template = require('./00_template');
-
+// http://localhost:3000/content/bid/1001/uid/admin
 exports.updateContentPage = function (uname, result) {
-
+    console.log(result);
     return `
     ${template.header()}
     ${template.headNavBar(uname)}
-        <h3>글 수정</h3>
-        <div class="container">
+    <div class="container">
+        <h3 style="text-align:center;" class="pt-5">글 수정</h3>
         <div class="row">   
-            <div class="col3"></div>
-            <div class="col6">
-                <form action="/content/update/bid/:bid" method="post">
+            <div class="col-3"></div>
+            <div class="col-6">
+                <form action="/content/bid/${result.bbs_bid}/uid/${result.users_uid}" method="post">
                     
                     <input type="hidden" name="bid" id="bid" value="${result.bbs_bid}">
                 
@@ -21,11 +21,11 @@ exports.updateContentPage = function (uname, result) {
                         </tr>
                         <tr>
                             <td><label for="content">글 내용</label></td>
-                            <td><textarea class="form-control" name="content" id="content">${result.bbs_content}</textarea>
+                            <td><textarea rows="10" cols="30" class="form-control" name="content" id="content">${result.bbs_content}</textarea>
                         </tr>
                         <tr>
                             <td colspan="2" style="text-align: center;">
-                                <button type="submit" class="btn btn-outline-primary btn-sm active">제출</button>
+                                <button type="submit" class="btn btn-outline-dark btn-sm">수정</button>
                                 <button type="dismiss" class="btn btn-outline-danger btn-sm">취소</button>
                             </td>
                         </tr>
@@ -33,7 +33,7 @@ exports.updateContentPage = function (uname, result) {
                     </table>
                 </form>
             </div>
-            <div class="col3"></div>
+            <div class="col-3"></div>
         </div>
     </div>
 

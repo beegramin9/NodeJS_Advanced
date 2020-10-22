@@ -30,6 +30,7 @@ module.exports = {
         bbs.bid as bbs_bid,
         DATE_FORMAT(bbs.modTime, '%y-%m-%d %T') as bbs_modTime,
         users.uname AS users_uname,
+        users.uid as users_uid,
         bbs.viewCount as bbs_viewCount, 
         reply.NumComments as reply_NumComments,
         bbs.content as bbs_content, 
@@ -87,7 +88,8 @@ module.exports = {
         let sql = `SELECT bbs.bid AS bbs_bid,
         bbs.title AS bbs_title,
         bbs.content AS bbs_content,
-        users.uname AS users_uname 
+        users.uname AS users_uname,
+        users.uid AS users_uid
         FROM bbs
         left outer JOIN users
         ON users.uid = bbs.uid

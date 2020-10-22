@@ -15,6 +15,7 @@ rRouter.post('/create', (req, res) => {
 
     // console.log(req.session.replyUname);
     /* 여기에서 폼으로 받아와야지 */
+    let uid = req.session.uid
 
     let comments = req.body.comments;
     let isMine = '';
@@ -27,13 +28,13 @@ rRouter.post('/create', (req, res) => {
     let params = [bid, req.session.uid, comments, isMine]
 
     if (!req.session.uname) {
-        let html = aM.alertMsg(`로그인이 필요한 서비스입니다.`, `/content/bid/${bid}`); /* 로그인은 됐는데 권한이 없으니 루트로 */
+        let html = aM.alertMsg(`로그인이 필요한 서비스입니다.`, `/content/bid/${bid}/uid/${uid}`); /* 로그인은 됐는데 권한이 없으니 루트로 */
         res.send(html);
 
     } else {
         replyDM.increaseReplyCount(bid, () => {
             replyDM.createMyComment(params, () => {
-                res.redirect(`/content/bid/${bid}`)
+                res.redirect(`/content/bid/${bid}/uid/${uid}`)
             })
         })
     }
@@ -55,15 +56,15 @@ rRouter.post('/delete', (req, res) => {
     let rid = parseInt(req.body.rid);
     let bid = parseInt(req.body.bid);
     // console.log('안나오냐', rid, bid);
-    // req.session.uid
+    let uid = req.session.uid
     if (req.session.uname === replyUsername) {
         replyDM.decreaseReplyCount(bid, () => {
             replyDM.deleteMyComment(rid, () => {
-                res.redirect(`/content/bid/${bid}`)
+                res.redirect(`/content/bid/${bid}/uname/${uid}`)
             })
         })
     } else {
-        let html = aM.alertMsg(`삭제 권한이 없습니다.`, `/content/bid/${bid}`); /* 로그인은 됐는데 권한이 없으니 루트로 */
+        let html = aM.alertMsg(`삭제 권한이 없습니다.`, `/content/bid/${bid}/uname/${uid}`); /* 로그인은 됐는데 권한이 없으니 루트로 */
         res.send(html);
     }
 })
