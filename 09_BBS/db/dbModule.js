@@ -107,19 +107,56 @@ module.exports = {
         
         FROM bbs 
         WHERE bbs.title LIKE ? 
-
-
         `
-        /* 내가 이름 지어주는 걸 완료했으면 */
-        /* order by 할 때는 내가 지어준 이름으로! */
-        /* ORDER BY bbs_bid DESC LIMIT 30 */
-
         conn.query(sql, searchKeyword, (error, rows, fields) => {
             if (error)
                 console.log(`searchKeywordGetLists 에러 발생: ${error}`);
             callback(rows);
         })
     },
+
+    searchPaginationLists: function (searchParams, callback) {
+        let conn = this.getConnection()
+        let sql = `
+        SELECT bbs.bid AS bbs_bid, 
+        bbs.title AS bbs_title, 
+        bbs.uid AS users_uid, 
+        bbs.replyCount as bbs_replyCount, 
+        if (date(modTime) = DATE(NOW()),
+			DATE_FORMAT(modTime, '%H:%i:%s'),
+			DATE_FORMAT(modTime, '%Y-%m-%d')) AS bbs_modTime,
+        bbs.viewCount AS bbs_viewCount  
+        
+        FROM bbs 
+        WHERE bbs.title LIKE ? 
+        limit 10 offset ?
+        `
+        conn.query(sql, searchParams, (error, rows, fields) => {
+            if (error)
+                console.log(`searchPaginationLists 에러 발생: ${error}`);
+            callback(rows);
+        })
+    },
+    getTotalNumSearch: function (searchKeyword, callback) {
+        let conn = this.getConnection()
+        let sql = `
+        SELECT COUNT(*) AS search_count
+        FROM bbs 
+        WHERE bbs.title LIKE ?
+        `
+        conn.query(sql, searchKeyword, (error, result, fields) => {
+            if (error)
+                console.log(`searchKeywordGetLists 에러 발생: ${error}`);
+            callback(result[0]);
+        })
+    },
+
+
+
+
+
+
+
     getContent: function (bid, callback) {
         let conn = this.getConnection()
         /* 아마 이것도 full outer join인가봐... */
@@ -259,24 +296,6 @@ module.exports = {
     },
 
 
-    updatePwdUser: function (params, callback) {
-        let conn = this.getConnection()
-        /*  사용자 아이디, 패스워드, 패스워드확인, 이름 */
-        let sql = `insert into users (uid, pwd, uname, tel, email)
-        values(?,?,?,?,?)`
-
-        conn.query(sql, params, (error, fields) => {
-            if (error)
-                console.log(`updatePwdUser 에러 발생: ${error} `);
-            callback();
-        })
-    },
-    getDisplayTime: function (dt) {
-        let today = moment().format('YYYY-MM-DD')
-        let dbtime = moment(dt).format('YYYY-MM-DD')
-        return (dbtime.indexOf(today) == 0) ?
-            dbtime.substring(11) : dbtime.substring(0, 10)
-    }
 
 
 
@@ -298,8 +317,6 @@ module.exports = {
 
 
 
-
-    ,
     getUserInfo: function (uid, callback) {
         let conn = this.getConnection()
         let sql = `select uid, pwd, uname, DATE_FORMAT(regDate, '%y-%m-%d %T') AS regDate from users where uid like ? `

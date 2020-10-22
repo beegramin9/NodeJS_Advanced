@@ -103,5 +103,81 @@ module.exports = {
 
         }
 
+    },
+    viewAdminUsersPage: function (currentPage, startPage, endPage, totalPage, isSearch) {
+
+        let leftPage = (currentPage > 1) ? `/user/getUsers/${currentPage - 1}` : '#';
+        console.log('startPage', startPage);
+        console.log('currentPage', currentPage);
+        console.log('leftPage', leftPage);
+        let pages = `
+                <ul class="pagination justify-content-center">
+                    <li class="page-item">
+                        <a class="page-link active" href="${leftPage}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span></a>
+                    </li>`;
+        for (let page = startPage; page <= endPage; page++) {
+            if (page === currentPage)
+                pages += `<li class="page-item active">
+                            <a class="page-link" href="#">
+                            ${page}
+                            </a>
+                    </li>`;
+            else
+                pages += `<li class="page-item">
+                        <a class="page-link" href="/user/getUsers/${page}">
+                          ${page}
+                        </a>
+                      </li>`;
+        }
+        let rightPage = (endPage < totalPage) ? `/user/getUsers/${currentPage + 1}` : '#';
+        console.log('rightPage', rightPage);
+        console.log('endPage', endPage);
+        console.log('totalPage', totalPage);
+        pages += `  <li class="page-item">
+                    <a class="page-link" href="${rightPage}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span></a>
+                </li>
+            </ul>`;
+        return pages
+
+    },
+    searchResult: function (searchKeyword, currentPage, startPage, endPage, totalPage, isSearch) {
+
+        let leftPage = (currentPage > 1) ? `/search/${searchKeyword}/${currentPage - 1}` : '#';
+        console.log('startPage', startPage);
+        console.log('currentPage', currentPage);
+        console.log('leftPage', leftPage);
+        let pages = `
+                <ul class="pagination justify-content-center">
+                    <li class="page-item">
+                        <a class="page-link active" href="${leftPage}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span></a>
+                    </li>`;
+        for (let page = startPage; page <= endPage; page++) {
+            if (page === currentPage)
+                pages += `<li class="page-item active">
+                            <a class="page-link" href="#">
+                            ${page}
+                            </a>
+                    </li>`;
+            else
+                pages += `<li class="page-item">
+                        <a class="page-link" href="/search/${searchKeyword}/${page}">
+                          ${page}
+                        </a>
+                      </li>`;
+        }
+        let rightPage = (endPage < totalPage) ? `/search/${searchKeyword}/${currentPage + 1}` : '#';
+        console.log('rightPage', rightPage);
+        console.log('endPage', endPage);
+        console.log('totalPage', totalPage);
+        pages += `  <li class="page-item">
+                    <a class="page-link" href="${rightPage}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span></a>
+                </li>
+            </ul>`;
+        return pages
+
     }
 }

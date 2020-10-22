@@ -77,7 +77,7 @@ exports.contentPage = function (sessionUname, result, wholeComments) {
 
     return `
     ${template.header()}
-    ${template.headNavBar(sessionUname)}
+    ${template.contentNavBar(sessionUname)}
     <div class="container mt-5">
         <div class="row">
             <div class="col-10">

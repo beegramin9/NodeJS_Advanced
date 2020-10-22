@@ -65,12 +65,13 @@ const { pagination } = require('./db/dbPagination');
 app.get('/page/:page', function (req, res) {
     let currentPage = parseInt(req.params.page);
     req.session.currentPage = currentPage;
-    let offset = (currentPage - 1) * 5;
+    let offset = (currentPage - 1) * 10;
+    console.log('offset', offset);
 
 
     dm.getTotalNumContent(result => {
         let NumContent = result.bbs_count;
-        let totalPage = Math.ceil(NumContent / 5);
+        let totalPage = Math.ceil(NumContent / 10);
 
         let startPage;
         let endPage;
@@ -151,8 +152,7 @@ app.get('/logout', (req, res) => {
 
 app.post('/search', (req, res) => {
     let searchKeyword = req.body.search
-    console.log(req.params);
-    console.log(req.session.currentBid);
+    // console.log(req.params);
     /* 일회성으로 갈 수 있게... */
     /* 물음표가 2개가 있으니까 어레이로 묶어서 넣어주면 됨 */
     /* db에서 %?%로 하면 오류가 난다.*/
@@ -160,25 +160,57 @@ app.post('/search', (req, res) => {
         /* 페이지를 두개로 나눠야 돼...? */
         /* 삼항연산자 아니면 함수 파라미터 줄 떄 파이썬처럼 디폴트값이 있나 */
         if (rows.length === 0) {
-            let html = aM.alertMsg(`해당 검색어가 없습니다. 이전 페이지로 돌아가시겠습니까? `, !req.session.currentBid ? `/page/${req.session.currentPage}` : `/content/bid/${req.session.currentBid}`);
+            let html = aM.alertMsgHistory(`해당 검색어가 없습니다. 이전 페이지로 돌아가시겠습니까? `);
             res.send(html)
         } else if (!searchKeyword) {
-
-            let html = aM.alertMsg(`검색어를 입력하세요. `, !req.session.currentBid ? `/page/${req.session.currentPage}` : `/content/bid/${req.session.currentBid}`);
+            let html = aM.alertMsgHistory(`검색어를 입력하세요. `);
             res.send(html)
-            // req.session.currentBid = '';
-            // console.log('지워지나', req.session.currentBid);
-            req.session.destroy()
         } else {
-
-            const view = require('./view/02_mainPage');
-            let html = view.mainPage(req.session.uname, rows);
-            res.send(html);
+            res.redirect(`/search/${searchKeyword}/1`)
+            // const view = require('./view/02_mainPage');
+            // let html = view.mainPage(req.session.uname, rows);
+            // res.send(html);
             //  currentPage, startPage, endPage, totalPage
         }
     })
 })
 
+app.get('/search/:keyword/:page', (req, res) => {
+    let searchKeyword = req.params.keyword
+    let currentPage = parseInt(req.params.page)
+    console.log(searchKeyword, currentPage);
+    let offset = (currentPage - 1) * 10;
+
+    dm.getTotalNumSearch(`%${searchKeyword}%`, result => {
+        let NumContent = result.search_count;
+        let totalPage = Math.ceil(NumContent / 10);
+
+        console.log(NumContent);
+        let startPage;
+        let endPage;
+        if (currentPage < 3) {
+            startPage = 1;
+            endPage = 5;
+        } else if (currentPage >= totalPage - 2) {
+            startPage = totalPage - 4;
+            endPage = totalPage;
+        } else {
+            startPage = parseInt(currentPage - 2);
+            endPage = parseInt(currentPage + 2);
+        }
+        // let endPage = Math.ceil(currentPage / 10) * 10;
+        endPage = (endPage > totalPage) ? totalPage : endPage;
+
+        let searchParams = [`%${searchKeyword}%`, offset]
+        dm.searchPaginationLists(searchParams, rows => {
+            console.log(rows);
+            let view = require('./view/09_searchResult');
+            let html = view.searchResult(req.session.uname, searchKeyword, rows, currentPage, startPage, endPage, totalPage, false);
+            res.send(html);
+        })
+    });
+
+})
 
 
 
