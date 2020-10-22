@@ -5,7 +5,7 @@ const ut = require('../util/util')
     어케하지?
     
  */
-exports.mainPage = function (uname, rows, currentPage, startPage, endPage, totalPage) {
+exports.searchResult = function (uname, searchKeyword, rows, currentPage, startPage, endPage, totalPage) {
 
     // let today = new Date();
     // let whatToday = today.getTime()
@@ -58,7 +58,7 @@ ${page}<span class="sr-only">(current)</span>
 
 
 
-    let pagination = ut.viewPage(currentPage, startPage, endPage, totalPage)
+    let pagination = ut.searchResult(searchKeyword, currentPage, startPage, endPage, totalPage)
 
 
 
@@ -67,6 +67,7 @@ ${page}<span class="sr-only">(current)</span>
         ${template.header()}
         ${template.headNavBar(uname)}
         <div class="container mt-5">
+            <p>글을 쓰려면 로그인이 필요합니다.</p>
             <hr>
             <table class="table table-hover">
                 <thead class="thead-light">
@@ -77,29 +78,12 @@ ${page}<span class="sr-only">(current)</span>
                         <th>날짜</th>
                         <th>조회수</th>
                     </tr>
-                    </thead>
-                    ${tableRow}
-                </table>
-                </div>
-            </div>
+                </thead>
+                ${tableRow}
                 
-            
-            <div class="row">
-                <div class="col-10">
-                    ${pagination}
-                </div>
-                <div class="col-2">
-                    <p><a href="/cantCreateWithoutLogin">
-                    <button class="btn btn-outline-dark text-white disabled">
-                        <span class="text-body">
-                            <i class="fas fa-edit"></i>
-                        </span>
-                    </button>
-                    </a></p>
-                </div>
-            </div>
+                </table>
+                ${pagination}
         </div>
-
         ${template.footNavBar()}
         ${template.footer()}
     `
@@ -131,13 +115,6 @@ ${page}<span class="sr-only">(current)</span>
                     ${pagination}
                 </div>
                 <div class="col-2">
-                    <p><a href="/content/create">
-                    <button class="btn btn-outline-dark text-white disabled">
-                        <span class="text-body">
-                            <i class="fas fa-edit"></i>
-                        </span>
-                    </button>
-                    </a></p>
                 </div>
             </div>
         </div>
