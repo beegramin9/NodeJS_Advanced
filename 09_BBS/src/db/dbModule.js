@@ -28,7 +28,7 @@ module.exports = {
         DATE_FORMAT(modTime, '%y-%m-%d %T') AS bbs_modTime,
         replyCount as bbs_replyCount, 
         if (date(modTime) = DATE(NOW()),
-			DATE_FORMAT(modTime, '%H:%i:%s'),
+			DATE_FORMAT(modTime, '  %H :  %i  :  %s'),
 			DATE_FORMAT(modTime, '%Y-%m-%d')) AS bbs_modTime,
         viewCount AS bbs_viewCount  
         

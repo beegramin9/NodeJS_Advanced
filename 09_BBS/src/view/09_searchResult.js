@@ -24,7 +24,9 @@ exports.searchResult = function (uname, searchKeyword, rows, currentPage, startP
                         </td>
                         <td class="text-body" style="padding-right:20px;">${row.users_uid}</td>
                         <td class="text-secondary" style="padding-right:20px;">${row.bbs_modTime}</td>
-                        <td class="text-secondary" style="padding-right:20px;">${row.bbs_viewCount}</td>
+                        <td class="text-secondary" style="padding-right:20px;">
+                        <i class="fas fa-eye"></i>
+                        ${row.bbs_viewCount}</td>
                     </tr>
         
         `

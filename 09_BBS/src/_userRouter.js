@@ -7,7 +7,19 @@ const aM = require('./view/alertMsg');
 let uRouter = express.Router();
 module.exports = uRouter;
 
-/* 세션 사용해서 회원가입 했을 때 그거를 req.session.에다가 담아내야함 */
+/* 멀터 사용 */
+const multer = require('multer');
+
+const upload = multer({
+    storage: multer.diskStorage({
+        // set a localstorage destination
+        destination: __dirname + '/../public/upload/',
+        filename: (req, file, callback) => {
+            callback(null, new Date().toISOString().replace(/[-:\.A-Z]/g, '') + '_' + file.originalname)
+        }
+
+    })
+})
 
 uRouter.get('/register', (req, res) => {
     const view = require('./view/10_userRegister')
@@ -16,17 +28,19 @@ uRouter.get('/register', (req, res) => {
 
 })
 
-uRouter.post('/register', (req, res) => {
+uRouter.post('/register', upload.single('photo'), (req, res) => {
     let uname = req.body.uname;
     let tel = req.body.tel;
     let email = req.body.email;
     let uid = req.body.uid;
     let pwd = req.body.pwd;
     let pwd2 = req.body.pwd2;
+    console.log('회원가입할때 req.file', req.file);
+    let photo = req.file ? `upload/${req.file.filename}` : 'upload/blank.png'
 
     if (pwd === pwd2) {
         let pwdHash = ut.generateHash(pwd);
-        let params = [uid, pwdHash, uname, tel, email]
+        let params = [uid, pwdHash, uname, tel, email, photo]
         userDM.newUser(params, () => {
             /* 여기에서 uname을 받아서 화면에 뿌리려면.. */
             /* 로그인 페이지로 돌아가야지 */
@@ -54,15 +68,14 @@ uRouter.get('/getUsers/:page', (req, res) => {
     userDM.getTotalNumUsers(result => {
         let NumContent = result.users_count;
         let totalPage = Math.ceil(NumContent / 10);
-
         let startPage;
         let endPage;
         if (currentPage < 3) {
             startPage = 1;
             endPage = 5;
         } else if (currentPage >= totalPage - 2) {
-            startPage = totalPage - 4;
-            endPage = totalPage;
+            startPage = totalPage - 2;
+            endPage = totalPage + 2;
         } else {
             startPage = parseInt(currentPage - 2);
             endPage = parseInt(currentPage + 2);
@@ -88,31 +101,31 @@ uRouter.get('/myPage', (req, res) => {
     })
 })
 
-uRouter.post('/myPage', (req, res) => {
+uRouter.post('/myPage', upload.single('photo'), (req, res) => {
     let uname = req.body.uname
     let tel = req.body.tel
     let email = req.body.email
     let pwd = req.body.pwd;
     let pwd2 = req.body.pwd2;
+    let photo = req.file ? '/upload/' + req.file.filename : null;
+    console.log(req.file);
+    console.log('post에서 들어갈 때', photo);
 
     if (pwd === pwd2) {
-        console.log(pwd, pwd2);
         let pwdHash = ut.generateHash(pwd);
-        console.log(pwdHash);
         let pwdParams = [pwdHash, uname];
-        console.log(pwdParams);
 
         userDM.updatePwdUser(pwdParams, () => {
-            let params = [uname, tel, email, req.session.uid]
-            userDM.updateMyInfo(params, () => {
+            let params = [uname, tel, email]
+            userDM.updateMyInfo(params, photo, req.session.uid, () => {
                 let html = aM.alertMsgHistory(`회원정보가 성공적으로 변경되었습니다.`);
                 res.send(html);
             })
         })
-        /* 아직 안 들어가네 */
     } else {
         let html = aM.alertMsg(`패스워드가 일치하지 않습니다.`, `/user/myPage`); /* 로그인은 됐는데 권한이 없으니 루트로 */
         res.send(html);
     }
+
 
 })

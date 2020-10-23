@@ -2,6 +2,7 @@ const mysql = require('mysql');
 
 const fs = require('fs');
 const { callbackify } = require('util');
+const { photo } = require('../view/00_template');
 let info = fs.readFileSync('./mysql.json', 'utf8');
 let config = JSON.parse(info);
 
@@ -60,20 +61,19 @@ module.exports = {
     },
     newUser: function (params, callback) {
         let conn = this.getConnection()
-        let sql = `insert into users (uid, pwd, uname, tel, email)
-            values (?,?,?,?,?)`
+        let sql = `insert into users (uid, pwd, uname, tel, email, photo)
+            values (?,?,?,?,?,?)`
         conn.query(sql, params, (error, fields) => {
             if (error)
                 console.log(`newUser 에러 발생: ${error}`);
             callback();
         })
-
     },
 
     myPageInfo: function (uname, callback) {
         let conn = this.getConnection()
         let sql = `
-        SELECT uid, uname, tel, email
+        SELECT uid, uname, tel, email ,photo
         FROM users
         WHERE uname = ?
         `
@@ -85,9 +85,19 @@ module.exports = {
         })
 
     },
-    updateMyInfo: function (params, callback) {
+    updateMyInfo: function (params, photo, uid, callback) {
         let conn = this.getConnection();
-        let sql = `update users set uname=?, tel=?, email = ? where uid = ?`
+        let sql;
+        if (photo) {
+            sql = `update users set uname=?, tel=?, email = ?, photo=? where uid = ?`
+            params.push(photo)
+            params.push(uid)
+            console.log('사진 새로 들어감', photo);
+        } else {
+            sql = `update users set uname=?, tel=?, email = ? where uid = ?`
+            params.push(uid)
+            console.log('사진 새로 안 들어감', photo);
+        }
         conn.query(sql, params, (error, fields) => {
             if (error)
                 console.log(`updateContent 에러 발생: ${error}`);

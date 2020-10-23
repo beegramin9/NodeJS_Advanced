@@ -30,7 +30,7 @@ exports.contentPage = function (sessionUname, result, wholeComments) {
                             </div>
                         </div>
                     </div>
-                    <div>${comment.reply_comments}</div>
+                    <div>${comment.reply_comments.indexOf('\n') > 0 ? comment.reply_comments.replace(/\n/g, '<br>') : comment.reply_comments}</div>
                 </div>
             </div>
             </div>
@@ -65,8 +65,8 @@ exports.contentPage = function (sessionUname, result, wholeComments) {
                             </form>
                             </div>
                         </div>
-                    </div>
-                    <div>${comment.reply_comments}</div>
+                    </div> 
+                    <div>${comment.reply_comments.indexOf('\n') > 0 ? comment.reply_comments.replace(/\n/g, '<br>') : comment.reply_comments}</div>
                     </div>
                 </div>
                 </div>
@@ -86,10 +86,10 @@ exports.contentPage = function (sessionUname, result, wholeComments) {
                 </div>
                 <div>
                     <p>
-                    <span class="text-body font-weight-bold">글 번호:</span>
-                    ${result.bbs_bid} 
-                    <span class="text-body font-weight-bold">작성 시간: </span>
-                    ${result.bbs_modTime}
+                    <span class="text-body font-weight-bold">글 번호</span>
+                    <span class="text-secondary">${result.bbs_bid}</span>
+                    <span class="text-body font-weight-bold">작성 시간:</span>
+                    <span class="text-secondary">${result.bbs_modTime}</span>
                     </p>
                 </div>
             </div>
@@ -100,9 +100,10 @@ exports.contentPage = function (sessionUname, result, wholeComments) {
                 <div>
                     <p>
                     <span class="text-body font-weight-bold">조회</span>
-                    ${result.bbs_viewCount} 
+                    <span class="text-secondary">${result.bbs_viewCount}</span>
                     <span class="text-body font-weight-bold">리플</span>
-                    ${result.reply_NumComments}
+                    <span class="text-secondary">${result.reply_NumComments}</span>
+                    
                     </p>
                 </div>
             </div>
@@ -110,9 +111,10 @@ exports.contentPage = function (sessionUname, result, wholeComments) {
         <br>
         <hr>
         <div class="row">
+
             <div class="col-10 mr-auto">
                 <div>
-                    <span class="text-body lead">${result.bbs_content}</span>
+                    <span class="text-body lead">${result.bbs_content.indexOf('\n') > 0 ? result.bbs_content.replace(/\n/g, '<br>') : result.bbs_content}</span>
                 </div>
             </div>
         <br>

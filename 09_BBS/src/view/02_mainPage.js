@@ -12,6 +12,7 @@ exports.mainPage = function (uname, rows, currentPage, startPage, endPage, total
     // console.log(new Date(whatToday))
     // 시간 맞추는 건 나중에
     // row.bbs_modTime
+
     let tableRow = '';
     for (let row of rows) {
         tableRow += `
@@ -24,7 +25,9 @@ exports.mainPage = function (uname, rows, currentPage, startPage, endPage, total
                         </td>
                         <td class="text-body" style="padding-right:20px;">${row.users_uid}</td>
                         <td class="text-secondary" style="padding-right:20px;">${row.bbs_modTime}</td>
-                        <td class="text-secondary" style="padding-right:20px;">${row.bbs_viewCount}</td>
+                        <td class="text-secondary" style="padding-right:20px;">
+                        <i class="fas fa-eye"></i>
+                        ${row.bbs_viewCount}</td>
                     </tr>
         
         `
@@ -61,7 +64,6 @@ ${page}<span class="sr-only">(current)</span>
     let pagination = ut.viewPage(currentPage, startPage, endPage, totalPage)
 
 
-
     if (!uname)
         return `
         ${template.header()}
@@ -85,10 +87,11 @@ ${page}<span class="sr-only">(current)</span>
                 
             
             <div class="row">
-                <div class="col-10">
+                <div class="col-3"></div>
+                <div class="col-6">
                     ${pagination}
                 </div>
-                <div class="col-2">
+                <div class="col-3">
                     <p><a href="/cantCreateWithoutLogin">
                     <button class="btn btn-outline-dark text-white disabled">
                         <span class="text-body">

@@ -38,15 +38,13 @@ app.use('/search', sRouter);
 const rRouter = require('./_replyRouter')
 app.use('/content/reply', rRouter);
 
-
-/* app.js에서는 /home, /login, /logout만 처리하고 */
-/* userRouter는 사용자 관리 /user/list, /user/reqister, /user/update, /user/delete */
-/* bbsRouter는 글,댓글 보는 경로 /bbs/create, /bbs/list, /bbs/view, /bbs/update , /bbs/delete */
-
 const dm = require('./db/dbModule');
 const ut = require('./util/util')
 const aM = require('./view/alertMsg');
 const e = require('express');
+
+
+
 
 app.get('/', (req, res) => {
     res.redirect('/page/1')

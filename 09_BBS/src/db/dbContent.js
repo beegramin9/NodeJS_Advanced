@@ -28,7 +28,7 @@ module.exports = {
         let sql = `
         SELECT bbs.title as bbs_title,
         bbs.bid as bbs_bid,
-        DATE_FORMAT(bbs.modTime, '%y-%m-%d %T') as bbs_modTime,
+        DATE_FORMAT(bbs.modTime, '%y-%m-%d %H: %i: %s') as bbs_modTime,
         users.uname AS users_uname,
         users.uid as users_uid,
         bbs.viewCount as bbs_viewCount, 

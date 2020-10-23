@@ -29,10 +29,12 @@ module.exports = {
                 </a>
                 <ul class="nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/page/1"><i class="fas fa-home"></i>홈</a>
+                        <a class="nav-link text-white" href="/page/1">홈
+                        <i class="fas fa-home"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/login">로그인</a>
+                        <a class="nav-link text-white" href="/login">로그인
+                        <i class="fas fa-sign-in-alt"></i></a>
                     </li>
                 </ul>
                 <form class="form-inline" action="/search" method="post">
@@ -60,13 +62,16 @@ module.exports = {
                 </a>
                 <ul class="nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/page/1"><i class="fas fa-home"></i>홈</a>
+                        <a class="nav-link text-white" href="/page/1">홈
+                        <i class="fas fa-home"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/logout">로그아웃</a>
+                        <a class="nav-link text-white" href="/logout">로그아웃
+                        <i class="fas fa-sign-out-alt"></i></a>
                     </li>
                     <li class="nav-item" style="padding-left:50px">
-                        <a class="nav-link text-white" href="/user/getUsers/1">사용자관리</a>
+                        <a class="nav-link text-white" href="/user/getUsers/1">사용자관리
+                        <i class="fas fa-tasks"></i></a>
                     </li>
                 </ul>
                 <form class="form-inline" action="/search" method="post">
@@ -93,13 +98,18 @@ module.exports = {
                 </a>
                 <ul class="nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/page/1"><i class="fas fa-home"></i>홈</a>
+                        <a class="nav-link text-white" href="/page/1">홈
+                        <i class="fas fa-home"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/logout">로그아웃</a>
+                        <a class="nav-link text-white" href="/logout">로그아웃
+                        <i class="fas fa-sign-out-alt"></i></a>
                     </li>
                     <li class="nav-item" style="padding-left:50px">
-                        <a class="nav-link text-white" href="/user/myPage">마이페이지</a>
+                        <a class="nav-link text-white" href="/user/myPage">
+                        마이페이지
+                            <i class="fas fa-user-edit"></i>
+                        </a>
                     </li>
                 </ul>
                 <form class="form-inline" action="/search" method="post">
@@ -132,7 +142,8 @@ module.exports = {
                         <a class="nav-link text-white" href="/page/1"><i class="fas fa-home"></i>홈</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/login">로그인</a>
+                        <a class="nav-link text-white" href="/login">로그인
+                        <i class="fas fa-sign-in-alt"></i></a>
                     </li>
                 </ul>
                 
@@ -156,8 +167,15 @@ module.exports = {
                         <a class="nav-link text-white" href="/page/1"><i class="fas fa-home"></i>홈</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/logout">로그아웃</a>
+                        <a class="nav-link text-white" href="/logout">로그아웃
+                        <i class="fas fa-sign-out-alt"></i></a>
                     </li>
+                    <li class="nav-item" style="padding-left:50px">
+                    <a class="nav-link text-white" href="/user/myPage">
+                    마이페이지
+                        <i class="fas fa-user-edit"></i>
+                    </a>
+                </li>
                 </ul>
                 
                 <div class="navbar-text fixed-right" id="weather">
@@ -168,15 +186,15 @@ module.exports = {
             `
         }
     },
-    afterLogin: function (uname) {
-        if (!uname) {
-            return ``
-        } else {
-            return `
-        <p>${uname}님 환영합니다. &nbsp;&nbsp; <a href="/logout">로그아웃</a></p>
-        `
-        }
-    },
+    // afterLogin: function (uname) {
+    //     if (!uname) {
+    //         return ``
+    //     } else {
+    //         return `
+    //     <p>${uname}님 환영합니다. &nbsp;&nbsp; <a href="/logout">로그아웃</a></p>
+    //     `
+    //     }
+    // },
 
     /* 하단 NAVBAR까지 */
     footNavBar: function () {
@@ -192,6 +210,39 @@ module.exports = {
         return `
             </body>
         </html>
+        `
+    },
+    /* 사진 넣을 때 필요한 JavaScript 코드 */
+    photo: function () {
+        return `
+        <script>
+        // Add the following code if you want the name of the file appear on select
+        $(".custom-file-input").on("change", function() {
+          var fileName = $(this).val().split("\\\\").pop();
+          $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+        </script>
+        `
+    },
+    formValidation: function () {
+        return `
+        <script>
+            (function() {
+              'use strict';
+              window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                  form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                      event.preventDefault();
+                      event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                  }, false);
+                });
+              }, false);
+            })();
+            </script>
         `
     }
 }
