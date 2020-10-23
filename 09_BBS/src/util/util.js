@@ -1,3 +1,5 @@
+const aM = require('../view/alertMsg')
+
 module.exports = {
     generateHash: function (sth) {
         const crypto = require('crypto')
@@ -6,8 +8,10 @@ module.exports = {
         return shasum.digest('base64')
     },
     isLoggedIn: function (req, res, next) {
-        if (!req.session.uid) {
-            res.redirect('/login')
+        if (!req.session.uname) {
+            let html = aM.alertMsgHistory(`로그인이 필요한 서비스입니다.`); /* 로그인은 됐는데 권한이 없으니 루트로 */
+            res.send(html);
+
             /* 쿠키가 없다면 로그인 창으로 */
         } else {
             next();
@@ -17,18 +21,26 @@ module.exports = {
             /* 다음 미들웨어에서 새로운 (req,res)를 처리 */
         }
     },
-    // pagiNation: function (currentPage, totalPage) {
-    //     if (currentPage < 3) {
-    //         let startPage = 1; let endPage = 5
-    //         return startPage, endPage
-    //     } else if (currentPage >= totalPage - 2) {
-    //         let startPage = totalPage - 4; let endPage = totalPage;
-    //         return startPage, endPage
-    //     } else {
-    //         let startPage = parseInt(currentPage - 2); let endPage = parseInt(currentPage + 2);
-    //         return startPage, endPage
-    //     }
-    // },
+
+    isAdmin: function (req, res, next) {
+        if (req.session.uid !== 'admin') {
+            let html = alert.alertMsgHistory('권한이 없습니다.');
+            res.send(html);
+        } else {
+            next();
+        }
+    },
+    loginCheck: function () {
+
+    },
+
+
+
+
+
+
+
+
     viewPage: function (currentPage, startPage, endPage, totalPage, isSearch) {
 
         let leftPage = (currentPage > 1) ? `/page/${currentPage - 1}` : '#';

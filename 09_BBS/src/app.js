@@ -104,7 +104,7 @@ app.post('/login', (req, res) => {
         /* 화면에 뿌려주는거랑 다르게 해야할거같은데 */
         /* 콜백함수를 두번쓰는거지. 콜백지옥? */
         if (!result) {
-            let html = aM.alertMsg(`${uid}는 없는 아이디입니다.`, '/login');
+            let html = aM.alertMsg(`없는 아이디입니다.`, '/login');
 
             res.send(html)
 

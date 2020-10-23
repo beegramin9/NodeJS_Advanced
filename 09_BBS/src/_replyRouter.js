@@ -3,11 +3,12 @@ const { get } = require('jquery');
 const dm = require('./db/dbModule');
 const replyDM = require('./db/dbReply')
 const aM = require('./view/alertMsg')
+const ut = require('./util/util')
 let rRouter = express.Router();
 module.exports = rRouter;
 
 
-rRouter.post('/create', (req, res) => {
+rRouter.post('/create', ut.isLoggedIn, (req, res) => {
     /* 화면은 띄우지 않고 데이터 받을 것만 받은 이후에 */
     /* res.resdirect('/bid/${bid}')로 가면 됨 */
     /* db reply에 집어 넣는거랑, 댓글 개수 올라갈 때? 두개?? */
@@ -24,22 +25,13 @@ rRouter.post('/create', (req, res) => {
     } else {
         isMine = 1
     }
-
     let params = [bid, req.session.uid, comments, isMine]
+    replyDM.increaseReplyCount(bid, () => {
+        replyDM.createMyComment(params, () => {
 
-    if (!req.session.uname) {
-        let html = aM.alertMsg(`로그인이 필요한 서비스입니다.`, `/content/bid/${bid}/uid/${uid}`); /* 로그인은 됐는데 권한이 없으니 루트로 */
-        res.send(html);
-
-    } else {
-        replyDM.increaseReplyCount(bid, () => {
-            replyDM.createMyComment(params, () => {
-
-                res.redirect(`/content/bid/${bid}`)
-            })
+            res.redirect(`/content/bid/${bid}`)
         })
-    }
-
+    })
 })
 
 rRouter.post('/delete', (req, res) => {
@@ -65,7 +57,7 @@ rRouter.post('/delete', (req, res) => {
             })
         })
     } else {
-        let html = aM.alertMsg(`삭제 권한이 없습니다.`, `/content/bid/${bid}/uname/${uid}`); /* 로그인은 됐는데 권한이 없으니 루트로 */
+        let html = aM.alertMsgHistory(`삭제 권한이 없습니다.`); /* 로그인은 됐는데 권한이 없으니 루트로 */
         res.send(html);
     }
 })

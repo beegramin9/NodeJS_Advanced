@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 
 const fs = require('fs');
-let info = fs.readFileSync('../mysql.json', 'utf8');
+let info = fs.readFileSync('./mysql.json', 'utf8');
 let config = JSON.parse(info);
 
 module.exports = {

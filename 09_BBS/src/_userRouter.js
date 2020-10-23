@@ -44,11 +44,6 @@ uRouter.post('/register', (req, res) => {
         res.send(html);
     }
 
-
-    /* 해시 빠짐 */
-
-    /* 로그인/ 아이디를 신경써줘야 하는데... */
-    /* 데이터베이스에 넣어야 되네... */
 })
 
 uRouter.get('/getUsers/:page', (req, res) => {
