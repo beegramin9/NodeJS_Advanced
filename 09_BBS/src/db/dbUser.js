@@ -5,6 +5,8 @@ const { callbackify } = require('util');
 const { photo } = require('../view/00_template');
 let info = fs.readFileSync('./mysql.json', 'utf8');
 let config = JSON.parse(info);
+const connectionPool = mysql.createPool(config);
+
 
 module.exports = {
     getConnection: function () {
