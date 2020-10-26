@@ -1,4 +1,4 @@
-const mysql = require('mysql');
+const mysql = require('mysql2/promise');
 
 const fs = require('fs');
 let info = fs.readFileSync('./mysql.json', 'utf8');

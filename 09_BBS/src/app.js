@@ -56,32 +56,35 @@ app.get('/page/:page', function (req, res) {
     req.session.currentPage = currentPage;
     let offset = (currentPage - 1) * 10;
 
-    dm.getTotalNumContent(result => {
-        let NumContent = result.bbs_count;
-        let totalPage = Math.ceil(NumContent / 10);
+    Promise.all([dm.getTotalNumContent(), dm.mainPageGetLists(offset)])
+        .then(([result, rows]) => {
+            let NumContent = result.bbs_count;
+            let totalPage = Math.ceil(NumContent / 10);
 
-        let startPage;
-        let endPage;
-        if (currentPage < 3) {
-            startPage = 1;
-            endPage = 5;
-        } else if (currentPage >= totalPage - 2) {
-            startPage = totalPage - 4;
-            endPage = totalPage;
-        } else {
-            startPage = parseInt(currentPage - 2);
-            endPage = parseInt(currentPage + 2);
-        }
-        // let endPage = Math.ceil(currentPage / 10) * 10;
-        endPage = (endPage > totalPage) ? totalPage : endPage;
-
-
-        dm.mainPageGetLists(offset, rows => {
+            let startPage;
+            let endPage;
+            if (currentPage < 3) {
+                startPage = 1;
+                endPage = 5;
+            } else if (currentPage >= totalPage - 2) {
+                startPage = totalPage - 4;
+                endPage = totalPage;
+            } else {
+                startPage = parseInt(currentPage - 2);
+                endPage = parseInt(currentPage + 2);
+            }
+            // let endPage = Math.ceil(currentPage / 10) * 10;
+            endPage = (endPage > totalPage) ? totalPage : endPage;
             let view = require('./view/02_mainPage');
             let html = view.mainPage(req.session.uname, rows, currentPage, startPage, endPage, totalPage, false);
             res.send(html);
         })
-    });
+    // dm.getTotalNumContent(result => {
+
+
+    //     dm.mainPageGetLists(offset, rows => {
+    //     })
+    // });
 });
 
 app.get('/login', (req, res) => {
