@@ -7,80 +7,130 @@ const connectionPool = mysql.createPool(config);
 
 
 module.exports = {
-    getConnection: function () {
-        let conn = mysql.createConnection({
-            host: config.host,
-            user: config.user,
-            password: config.password,
-            database: config.database,
-            port: config.port
-        })
-        conn.connect((error) => {
-            if (error)
-                console.log(`getConnection 에러 발생: ${error}`);
-        })
-        return conn;
-    },
-    getContent: function (bid, callback) {
-        let conn = this.getConnection()
-        /* 아마 이것도 full outer join인가봐... */
-        /* 테이블 3개 합치기 */
-        /* params로 들어가는 건 잘 받았는데. */
-        /* 여기서 bbs_bid를 제대로 안 주니까 다 1001로 나오잖아 */
-        let sql = `
-        SELECT bbs.title as bbs_title,
-        bbs.bid as bbs_bid,
-        DATE_FORMAT(bbs.modTime, '%y-%m-%d %H: %i: %s') as bbs_modTime,
-        users.uname AS users_uname,
-        users.uid as users_uid,
-        bbs.viewCount as bbs_viewCount, 
-        reply.NumComments as reply_NumComments,
-        bbs.content as bbs_content, 
-        reply.comments as reply_comments, 
-        reply.isMine as reply_isMine
-        FROM bbs 
-        LEFT outer JOIN reply 
-        ON bbs.bid = reply.bid
-        LEFT OUTER JOIN users
-        ON USERs.uid = bbs.uid 
-        WHERE bbs.isDeleted = 0 and bbs.bid = ?
-    
-        `
-        conn.query(sql, bid, (error, results, fields) => {
-            if (error)
-                console.log(`getContent 에러 발생: ${error}`);
-            callback(results[0])
-        })
-    },
-    increaseViewCount: function (bid, callback) {
-        let conn = this.getConnection()
-        let sql = `update bbs set viewCount = viewCount + 1
-                    where bid = ?`
-        conn.query(sql, bid, (error, fields) => {
-            if (error)
-                console.log(`increaseViewCount 에러 발생: ${error} `);
-            callback();
-        })
-    },
-    createContent: function (params, callback) {
-        let conn = this.getConnection()
-        let sql = `INSERT into bbs (uid, title, content)
-        VALUES(?,?,?)
-        `
-        /* 구문이 두개로 나눠져있네... 시발 */
+    // getConnection: function () {
+    //     let conn = mysql.createConnection({
+    //         host: config.host,
+    //         user: config.user,
+    //         password: config.password,
+    //         database: config.database,
+    //         port: config.port
+    //     })
+    //     conn.connect((error) => {
+    //         if (error)
+    //             console.log(`getConnection 에러 발생: ${error}`);
+    //     })
+    //     return conn;
+    // },
+    getContent: async function (bid) {
+        try {
+            let conn = await connectionPool.getConnection(async conn => conn)
+            let sql = `
+            SELECT bbs.title as bbs_title,
+            bbs.bid as bbs_bid,
+            DATE_FORMAT(bbs.modTime, '%y-%m-%d %H: %i: %s') as bbs_modTime,
+            users.uname AS users_uname,
+            users.uid as users_uid,
+            bbs.viewCount as bbs_viewCount, 
+            reply.NumComments as reply_NumComments,
+            bbs.content as bbs_content, 
+            reply.comments as reply_comments, 
+            reply.isMine as reply_isMine
+            FROM bbs 
+            LEFT outer JOIN reply 
+            ON bbs.bid = reply.bid
+            LEFT OUTER JOIN users
+            ON USERs.uid = bbs.uid 
+            WHERE bbs.isDeleted = 0 and bbs.bid = ?`
+            let [result] = await conn.query(sql, bid)
+            conn.release()
+            return result[0]
 
-        conn.query(sql, params, (error, fields) => {
-            if (error)
-                console.log(`createContent 에러 발생: ${error}`);
+        } catch (error) {
+            console.log(`getContent 에러 발생: ${error}`);
+            return false
+        }
+        // let conn = this.getConnection()
+        // /* 아마 이것도 full outer join인가봐... */
+        // /* 테이블 3개 합치기 */
+        // /* params로 들어가는 건 잘 받았는데. */
+        // /* 여기서 bbs_bid를 제대로 안 주니까 다 1001로 나오잖아 */
+        // let sql = `
+        // SELECT bbs.title as bbs_title,
+        // bbs.bid as bbs_bid,
+        // DATE_FORMAT(bbs.modTime, '%y-%m-%d %H: %i: %s') as bbs_modTime,
+        // users.uname AS users_uname,
+        // users.uid as users_uid,
+        // bbs.viewCount as bbs_viewCount, 
+        // reply.NumComments as reply_NumComments,
+        // bbs.content as bbs_content, 
+        // reply.comments as reply_comments, 
+        // reply.isMine as reply_isMine
+        // FROM bbs 
+        // LEFT outer JOIN reply 
+        // ON bbs.bid = reply.bid
+        // LEFT OUTER JOIN users
+        // ON USERs.uid = bbs.uid 
+        // WHERE bbs.isDeleted = 0 and bbs.bid = ?
 
-            console.log();
-            /* 이게 왜 안 나오지? */
-            callback();
-        })
-        /* 여기엔 문제가 없다. 하이디에서 잘 들어오니까 */
+        // `
+        // conn.query(sql, bid, (error, results, fields) => {
+        //     if (error)
+        //         console.log(`getContent 에러 발생: ${error}`);
+        //     callback(results[0])
+        // })
+    },
+    increaseViewCount: async function (bid) {
+        try {
+            let conn = await connectionPool.getConnection(async conn => conn)
+            let sql = `update bbs set viewCount = viewCount + 1
+            where bid = ?`
+            let [rows] = await conn.query(sql, bid)
+            conn.release()
+            return;
+            /* 리턴값이 없으면, 원래같으면 callback()이면 그냥 비워놓는다. */
+        } catch (error) {
+            return false
+        }
+        // let conn = this.getConnection()
+        // let sql = `update bbs set viewCount = viewCount + 1
+        //             where bid = ?`
+        // conn.query(sql, bid, (error, fields) => {
+        //     if (error)
+        //         console.log(`increaseViewCount 에러 발생: ${error} `);
+        //     callback();
+        // })
+    },
+    createContent: async function (params) {
+        try {
+            let conn = await connectionPool.getConnection(async conn => conn)
+            let sql = `INSERT into bbs (uid, title, content)
+            VALUES(?,?,?)`
+            let [rows] = await conn.query(sql, params)
+            conn.release()
+            return;
+        } catch (error) {
+            console.log(`createContent 에러 발생: ${error}`);
+            return false
+        }
 
-        /* 이제 여기서 뭘 받아와야 하는지... */
-        /* select 해서 row를 받는게 아니니까 콜백이 없지 */
+        // let conn = this.getConnection()
+        // let sql = `INSERT into bbs (uid, title, content)
+        // VALUES(?,?,?)
+        // `
+        // /* 구문이 두개로 나눠져있네... 시발 */
+
+        // conn.query(sql, params, (error, fields) => {
+        //     if (error)
+        //         console.log(`createContent 에러 발생: ${error}`);
+
+        //     console.log();
+        //     /* 이게 왜 안 나오지? */
+        //     callback();
+        // })
+        // /* 여기엔 문제가 없다. 하이디에서 잘 들어오니까 */
+
+        // /* 이제 여기서 뭘 받아와야 하는지... */
+        // /* select 해서 row를 받는게 아니니까 콜백이 없지 */
     },
 
     contentToUpdate: function (bid, callback) {

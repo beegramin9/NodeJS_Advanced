@@ -22,8 +22,35 @@ module.exports = {
         return conn;
     },
 
-    getWholeComment: function (bid, callback) {
+    getWholeComment: async function (bid) {
         /* bid랑 isMine이 필요함 */
+        try {
+            let conn = await connectionPool.getConnection(async conn => conn)
+            let sql = `
+            SELECT users.uname as reply_uname, 
+            reply.comments as reply_comments, 
+
+            if (date(reply.regTime) = DATE(NOW()),
+		    	DATE_FORMAT(reply.regTime, '%H:%i:%s'),
+		    	DATE_FORMAT(reply.regTime, '%Y-%m-%d')) AS reply_regTime,
+            
+		      reply.bid as reply_bid,
+            reply.rid as reply_rid,
+            reply.isMine as reply_isMine
+            
+	        FROM reply
+	        LEFT JOIN users
+	        ON users.uid = reply.uid
+	        WHERE bid = ?
+            `
+            let [rows] = await conn.query(sql, bid)
+            conn.release()
+            return rows
+        } catch (error) {
+            console.log(`getWholeComment 에러 발생: ${error}`);
+            return false
+
+        }
         let conn = this.getConnection()
         let sql = `
         SELECT users.uname as reply_uname, 

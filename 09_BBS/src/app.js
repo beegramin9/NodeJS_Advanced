@@ -17,7 +17,6 @@ app.use(express.static(__dirname + '/../public'))
 /* 제일 나중에 오는 애는(여기서는 아이콘) 위에 bootstrap, popper, jquery를 제외한 애들은 */
 /* public에서 하겠다는 뜻임 */
 
-
 const session = require('express-session')
 const FileStore = require('session-file-store')(session);
 const cookieParser = require('cookie-parser');
@@ -42,9 +41,6 @@ const dm = require('./db/dbModule');
 const ut = require('./util/util')
 const aM = require('./view/alertMsg');
 const e = require('express');
-
-
-
 
 app.get('/', (req, res) => {
     res.redirect('/page/1')
@@ -73,18 +69,11 @@ app.get('/page/:page', function (req, res) {
                 startPage = parseInt(currentPage - 2);
                 endPage = parseInt(currentPage + 2);
             }
-            // let endPage = Math.ceil(currentPage / 10) * 10;
             endPage = (endPage > totalPage) ? totalPage : endPage;
             let view = require('./view/02_mainPage');
             let html = view.mainPage(req.session.uname, rows, currentPage, startPage, endPage, totalPage, false);
             res.send(html);
         })
-    // dm.getTotalNumContent(result => {
-
-
-    //     dm.mainPageGetLists(offset, rows => {
-    //     })
-    // });
 });
 
 app.get('/login', (req, res) => {
@@ -100,33 +89,28 @@ app.post('/login', (req, res) => {
     // console.log('나와라!', uid, pwd);
     let pwdHash = ut.generateHash(pwd);
 
-    dm.loginUserInfo(uid, (result) => {
-        /* 로그인해서 정보 받는거랑 */
-        /* 화면에 뿌려주는거랑 다르게 해야할거같은데 */
-        /* 콜백함수를 두번쓰는거지. 콜백지옥? */
-        if (!result) {
-            let html = aM.alertMsg(`없는 아이디입니다.`, '/login');
-
-            res.send(html)
-
-        } else {
-            if (result.pwd === pwdHash) {
-                req.session.uid = uid;
-                req.session.uname = result.uname;
-                req.session.save(function () {
-                    res.redirect('/page/1')
-                })
-            } else {
-                let html = aM.alertMsg(`잘못된 비밀번호입니다.`, '/login');
+    dm.loginUserInfo(uid)
+        .then(result => {
+            if (!result) {
+                let html = aM.alertMsg(`없는 아이디입니다.`, '/login');
                 res.send(html)
+            } else {
+                if (result.pwd === pwdHash) {
+                    req.session.uid = uid;
+                    req.session.uname = result.uname;
+                    req.session.save(function () {
+                        res.redirect('/page/1')
+                    })
+                } else {
+                    let html = aM.alertMsg(`잘못된 비밀번호입니다.`, '/login');
+                    res.send(html)
+                }
             }
-        }
-    })
+        })
 })
 
 app.get('/logout', (req, res) => {
     req.session.destroy();
-    /* 세션 없애기 */
     res.redirect('/login')
 })
 
@@ -134,7 +118,5 @@ app.get('/cantCreateWithoutLogin', (req, res) => {
     let html = aM.alertMsg(`로그인이 필요한 서비스입니다.`, '/login');
     res.send(html)
 })
-
-
 
 app.listen(3000, () => { console.log('Server Running at http://127.0.0.1:3000') });

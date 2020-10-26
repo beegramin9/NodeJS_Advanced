@@ -14,19 +14,21 @@ module.exports = cRouter;
 cRouter.get('/bid/:bid', (req, res) => {
     let bid = req.params.bid;
     req.session.currentBid = bid
-    console.log('왜 바뀜', req.session.uname);
-    contentDM.getContent(bid, result => {
-        contentDM.increaseViewCount(bid, () => {
 
+    Promise.all([contentDM.getContent(bid), replyDM.getWholeComment(bid), contentDM.increaseViewCount(bid)])
+        .then(([result, wholeComments]) => {
             req.session.contentUname = result.users_uname
-            replyDM.getWholeComment(bid, wholeComments => {
-
-                const view = require('./view/03_contentPage')
-                let html = view.contentPage(req.session.uname, result, wholeComments);
-                res.send(html);
-            })
+            const view = require('./view/03_contentPage')
+            let html = view.contentPage(req.session.uname, result, wholeComments);
+            res.send(html);
         })
-    })
+    // contentDM.getContent(bid, result => {
+    //     contentDM.increaseViewCount(bid, () => {
+    //         req.session.contentUname = result.users_uname
+    //         replyDM.getWholeComment(bid, wholeComments => {
+    //         })
+    //     })
+    // })
 })
 
 cRouter.get('/create', (req, res) => {
@@ -39,11 +41,14 @@ cRouter.post('/create', (req, res) => {
     let title = req.body.title
     let content = req.body.content
     let params = [req.session.uid, title, content]
-    console.log('포스트할때도 마티나?', req.session.uname);
-    console.log('크리에', params);
-    contentDM.createContent(params, () => {
-        res.redirect('/page/1')
-    })
+    contentDM.createContent(params)
+        .then(() => {
+            res.redirect('/page/1')
+        })
+
+    // contentDM.createContent(params, () => {
+    //     res.redirect('/page/1')
+    // })
 })
 
 /* 좋아 여기까지 잘 들어왔어! */

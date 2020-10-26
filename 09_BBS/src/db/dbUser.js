@@ -9,41 +9,38 @@ const connectionPool = mysql.createPool(config);
 
 
 module.exports = {
-    getConnection: function () {
-        let conn = mysql.createConnection({
-            host: config.host,
-            user: config.user,
-            password: config.password,
-            database: config.database,
-            port: config.port
-        })
-        conn.connect((error) => {
-            if (error)
-                console.log(`getConnection 에러 발생: ${error}`);
-        })
-        return conn;
-    },
-    getAllUsersForAdmin: function (offset, callback) {
-        let conn = this.getConnection()
-        let sql = `
-        SELECT uid, uname, tel, email, 
-        DATE_FORMAT(regDate, '%y-%m-%d %T') as regDate
-        FROM users
-        WHERE isDeleted = 0
-        ORDER BY regDate desc
-        limit 10 OFFSET ?
-        `
-        /* 내가 이름 지어주는 걸 완료했으면 */
-        /* order by 할 때는 내가 지어준 이름으로! */
-        /* ORDER BY bbs_bid DESC LIMIT 30 */
-
-        conn.query(sql, offset, (error, rows, fields) => {
-            if (error)
-                console.log(`getAllUsersForAdmin 에러 발생: ${error}`);
-            callback(rows);
-        })
-
-
+    // getConnection: function () {
+    //     let conn = mysql.createConnection({
+    //         host: config.host,
+    //         user: config.user,
+    //         password: config.password,
+    //         database: config.database,
+    //         port: config.port
+    //     })
+    //     conn.connect((error) => {
+    //         if (error)
+    //             console.log(`getConnection 에러 발생: ${error}`);
+    //     })
+    //     return conn;
+    // },
+    getAllUsersForAdmin: async function (offset) {
+        try {
+            let conn = connectionPool.getConnection(async conn => conn)
+            let sql = `
+            SELECT uid, uname, tel, email, 
+            DATE_FORMAT(regDate, '%y-%m-%d %T') as regDate
+            FROM users
+            WHERE isDeleted = 0
+            ORDER BY regDate desc
+            limit 10 OFFSET ?
+            `
+            let [rows] = conn.query(sql, offset)
+            conn.release()
+            return rows
+        } catch (error) {
+            console.log(`getAllUsersForAdmin 에러 발생: ${error}`);
+            return false
+        }
     },
     getTotalNumUsers: function (callback) {
         let conn = this.getConnection()
