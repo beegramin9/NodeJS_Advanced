@@ -33,7 +33,7 @@ rRouter.post('/create', ut.isLoggedIn, (req, res) => {
         })
     })
 })
-
+//
 rRouter.post('/delete', (req, res) => {
     // 여기서도 권한 줘야함
     console.log('접속자:', req.session.uname);
