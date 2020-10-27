@@ -1,2 +1,0 @@
-Promise함수를 불러서
-.then()
