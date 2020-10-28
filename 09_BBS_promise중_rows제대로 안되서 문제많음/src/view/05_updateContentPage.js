@@ -1,7 +1,6 @@
 const template = require('./00_template');
 // http://localhost:3000/content/bid/1001/uid/admin
 exports.updateContentPage = function (uname, result) {
-    console.log(result);
     return `
     ${template.header()}
     ${template.headNavBar(uname)}

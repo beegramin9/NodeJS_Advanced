@@ -179,15 +179,3 @@ module.exports = {
         }
     }
 }
-
-// 프로미스화
-// try {
-//     let conn = await connectionPool.getConnection(async conn => conn)
-
-//     let [rows] = await conn.query(sql)
-//     conn.release();
-//     return;
-// } catch (error) {
-//     console.log(`insertTableUsers 에러 발생: ${error}`);
-//     return false
-// }

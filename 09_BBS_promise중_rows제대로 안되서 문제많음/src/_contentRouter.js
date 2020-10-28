@@ -22,13 +22,6 @@ cRouter.get('/bid/:bid', (req, res) => {
             let html = view.contentPage(req.session.uname, result, wholeComments);
             res.send(html);
         })
-    // contentDM.getContent(bid, result => {
-    //     contentDM.increaseViewCount(bid, () => {
-    //         req.session.contentUname = result.users_uname
-    //         replyDM.getWholeComment(bid, wholeComments => {
-    //         })
-    //     })
-    // })
 })
 
 cRouter.get('/create', (req, res) => {
@@ -54,19 +47,18 @@ cRouter.post('/create', (req, res) => {
 /* 좋아 여기까지 잘 들어왔어! */
 cRouter.get('/update/bid/:bid', (req, res) => {
     let bid = parseInt(req.params.bid)
-    console.log('수정할때', req.session.uname);
 
-    contentDM.contentToUpdate(bid, result => {
-        if (req.session.uname === req.session.contentUname) {
-            const view = require('./view/05_updateContentPage')
-            let html = view.updateContentPage(req.session.uname, result);
-            res.send(html);
-        } else {
-            let html = aM.alertMsg(`수정 권한이 없습니다.`, `/content/bid/${bid}`); /* 로그인은 됐는데 권한이 없으니 루트로 */
-            res.send(html);
-        }
-    })
-
+    contentDM.contentToUpdate(bid)
+        .then(result => {
+            if (req.session.uname === req.session.contentUname) {
+                const view = require('./view/05_updateContentPage')
+                let html = view.updateContentPage(req.session.uname, result);
+                res.send(html);
+            } else {
+                let html = aM.alertMsg(`수정 권한이 없습니다.`, `/content/bid/${bid}`); /* 로그인은 됐는데 권한이 없으니 루트로 */
+                res.send(html);
+            }
+        })
 })
 
 cRouter.post('/update/bid/:bid', (req, res) => {
@@ -75,22 +67,15 @@ cRouter.post('/update/bid/:bid', (req, res) => {
     let bid = parseInt(req.body.bid)
     let params = [title, content, bid]
 
-    let uid = req.body.uid
     /* 여기서 result.users_name을 가져와야 한다. */
-
-    contentDM.updateContent(params, () => {
-        res.redirect(`/content/bid/${bid}`)
-    })
+    contentDM.updateContent(params)
+        .then(res.redirect(`/content/bid/${bid}`))
 })
 
 cRouter.get('/delete/bid/:bid', (req, res) => {
-    /* 삭제하기! */
-
     // console.log(req.session.uname);
     // console.log(req.session.contentUname)
     let bid = parseInt(req.params.bid)
-    let uid = req.params.uid
-    console.log('삭제할때 uid 넘어오나', uid);
 
     if (req.session.uname === req.session.contentUname) {
         const view = require('./view/06_deleteContentPage')
@@ -103,9 +88,7 @@ cRouter.get('/delete/bid/:bid', (req, res) => {
 })
 
 cRouter.post('/delete/bid/:bid', (req, res) => {
-    /* 삭제하기! */
     let bid = parseInt(req.body.bid)
-    contentDM.deleteContent(bid, () => {
-        res.redirect(`/page/${req.session.currentPage}`)
-    })
+    contentDM.deleteContent(bid)
+        .then(res.redirect(`/page/${req.session.currentPage}`))
 })

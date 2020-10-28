@@ -5,7 +5,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 const fs = require('fs');
 
 app.use('/bootstrap', express.static(__dirname + '/../node_modules/bootstrap/dist'))
-console.log(__dirname);
 /* template script 주소에서 /bootstrap으로 시작하는 애들은 */
 /* 경로를 바로  /node_modules/bootstrap/dist 로 잡아주겠다.*/
 /* template을 보면 /bootstrap/css/bootstrap.min.css 으로 되어있는데 */
@@ -47,7 +46,6 @@ app.get('/', (req, res) => {
 })
 
 app.get('/page/:page', function (req, res) {
-    console.log(req.session.uid);
     let currentPage = parseInt(req.params.page);
     req.session.currentPage = currentPage;
     let offset = (currentPage - 1) * 10;
@@ -56,7 +54,6 @@ app.get('/page/:page', function (req, res) {
         .then(([result, rows]) => {
             let NumContent = result.bbs_count;
             let totalPage = Math.ceil(NumContent / 10);
-
             let startPage;
             let endPage;
             if (currentPage < 3) {
@@ -86,9 +83,7 @@ app.post('/login', (req, res) => {
     let uid = req.body.uid;
     let pwd = req.body.pwd;
 
-    // console.log('나와라!', uid, pwd);
     let pwdHash = ut.generateHash(pwd);
-
     dm.loginUserInfo(uid)
         .then(result => {
             if (!result) {
@@ -119,4 +114,4 @@ app.get('/cantCreateWithoutLogin', (req, res) => {
     res.send(html)
 })
 
-app.listen(3000, () => { console.log('Server Running at http://127.0.0.1:3000') });
+app.listen(3001, () => { console.log('Server Running at http://127.0.0.1:3001') });

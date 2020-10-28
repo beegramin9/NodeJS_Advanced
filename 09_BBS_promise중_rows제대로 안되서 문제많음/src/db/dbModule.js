@@ -7,20 +7,6 @@ let config = JSON.parse(info);
 const connectionPool = mysql.createPool(config);
 
 module.exports = {
-    // getConnection: function () {
-    //     let conn = mysql.createConnection({
-    //         host: config.host,
-    //         user: config.user,
-    //         password: config.password,
-    //         database: config.database,
-    //         port: config.port
-    //     })
-    //     conn.connect((error) => {
-    //         if (error)
-    //             console.log(`getConnection 에러 발생: ${error}`);
-    //     })
-    //     return conn;
-    // },
     mainPageGetLists: async function (offset) {
         try {
             let conn = await connectionPool.getConnection(async conn => conn);
@@ -44,7 +30,7 @@ module.exports = {
             return rows
 
         } catch (error) {
-            console.log(`mainPageGetLists2 에러 발생: ${error}`);
+            console.log(`mainPageGetLists 에러 발생: ${error}`);
             return false
         }
     },
@@ -55,9 +41,9 @@ module.exports = {
             SELECT COUNT(*) AS bbs_count FROM bbs 
             where isDeleted=0
             `
-            let [rows] = await conn.query(sql)
+            let [result] = await conn.query(sql)
             conn.release();
-            return rows
+            return result[0]
         } catch (error) {
             console.log(`getTotalNumContent 에러 발생: ${error}`);
             return false
@@ -75,7 +61,7 @@ module.exports = {
             conn.release()
             return result[0]
         } catch (error) {
-            console.log(`getUserInfo 에러 발생: ${error}`);
+            console.log(`loginUserInfo 에러 발생: ${error}`);
             return false
         }
     }
